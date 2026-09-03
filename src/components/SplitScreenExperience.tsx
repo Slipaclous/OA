@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { FullscreenGallery, GalleryPhoto } from "@/components/FullscreenGallery";
 import { DressCodeSection } from "@/components/DressCodeSection";
+import { MobileAppleScrollytelling } from "@/components/MobileAppleScrollytelling";
 
 interface LookbookChapter {
   id: string;
@@ -335,8 +336,23 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
         </div>
       </header>
 
-      {/* DISPOSITION : Plein écran poétique sur mobile, Split-Screen interactif sur Desktop */}
-      <div className="pt-14 lg:pt-0 lg:flex min-h-screen overflow-x-hidden">
+      {/* EXPÉRIENCE MOBILE : Apple Scrollytelling (Photo plein écran fixée + texte qui glisse en surimpression) */}
+      <MobileAppleScrollytelling
+        chapters={dynamicChapters}
+        config={config}
+        timeLeft={timeLeft}
+        timelineSteps={timelineSteps}
+        rsvpState={rsvpState}
+        formAction={formAction}
+        isPending={isPending}
+        attendance={attendance}
+        setAttendance={setAttendance}
+        guestsCount={guestsCount}
+        setGuestsCount={setGuestsCount}
+      />
+
+      {/* DISPOSITION DESKTOP : Split-Screen interactif haute couture */}
+      <div className="hidden lg:flex min-h-screen pt-0 overflow-x-hidden">
         {/* ========================================================
             VOLET GAUCHE (DESKTOP) : Le Lookbook Photo Fixe & Immersif
            ======================================================== */}
