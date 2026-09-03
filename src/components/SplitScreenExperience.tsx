@@ -448,155 +448,106 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
         </div>
 
         {/* ========================================================
-            VOLET DROIT : Déroulé Interactif & Rythme Editorial Photo-Texte
+            VOLET DROIT : Déroulé Interactif
+            Sur Mobile : Photo sticky 100dvh par chapitre, et informations qui glissent par-dessus au scroll
+            Sur Desktop : Défilement fluide élégant à droite du Lookbook
            ======================================================== */}
         <div className="w-full lg:w-1/2 lg:px-12 xl:px-16 lg:py-24 lg:space-y-32">
-          {/* ----------------------------------------------------
-              CHAPITRE 1 : INVITATION
-             ---------------------------------------------------- */}
-          {/* ÉTAPE A (MOBILE) : PLEIN ÉCRAN PHOTO PURE SANS TEXTE */}
-          <div className="lg:hidden mobile-snap-section relative h-[100dvh] w-full overflow-hidden">
-            <Image
-              src={dynamicChapters[0].image}
-              alt={dynamicChapters[0].imageAlt}
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover object-center"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-            
-            {/* Légende discrète et invitation à glisser */}
-            <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white z-10">
-              <div>
-                <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/70 block mb-1">
-                  Chapitre 01 • Lookbook
-                </span>
-                <p className="font-serif italic text-lg text-white/95">
-                  {dynamicChapters[0].imageCaption}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => scrollToChapter("invitation-details", 0)}
-                className="flex flex-col items-center gap-1 text-white/80 animate-bounce cursor-pointer"
-              >
-                <span className="text-[10px] tracking-widest uppercase font-sans">Découvrir</span>
-                <ChevronDown className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* ÉTAPE B : INFORMATIONS DU CHAPITRE 01 (PAR-DESSUS LA PHOTO) */}
-          <section
-            id="invitation-details"
-            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0"
-          >
-            {/* Même photo en arrière-plan avec voile protecteur pour superposition */}
-            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
+          {/* ====================================================
+              CHAPITRE 01 : L'INVITATION
+             ==================================================== */}
+          <section id="invitation" className="relative w-full lg:min-h-[75vh]">
+            {/* SUR MOBILE : Image calée plein écran sticky en arrière-plan */}
+            <div className="lg:hidden sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
               <Image
                 src={dynamicChapters[0].image}
                 alt={dynamicChapters[0].imageAlt}
                 fill
+                priority
                 sizes="100vw"
                 className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-black/45 backdrop-blur-[2px]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+
+              {/* Indicateur élégant invitant au scroll */}
+              <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
+                <div>
+                  <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/75 block mb-1">
+                    Chapitre 01 • Lookbook
+                  </span>
+                  <p className="font-serif italic text-lg text-white/95">
+                    {dynamicChapters[0].imageCaption}
+                  </p>
+                </div>
+                <div className="flex flex-col items-center gap-1 text-white/80 animate-bounce">
+                  <span className="text-[10px] tracking-widest uppercase font-sans">Défiler</span>
+                  <ChevronDown className="w-4 h-4" />
+                </div>
+              </div>
             </div>
 
-            <div className="relative z-10 space-y-4 mb-20 lg:mb-0">
-              <div className="space-y-3 text-white lg:text-[#121316]">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs uppercase tracking-[0.3em] text-white/80 lg:text-[#5C626C] font-semibold font-sans">
-                    Chapitre 01
-                  </span>
-                  <div className="h-[1px] w-8 bg-white/30 lg:bg-black/15" />
-                  <span className="text-xs uppercase tracking-[0.2em] text-white/70 lg:text-[#949BA5] font-sans">
-                    {config?.invitationSubtitle || "Invitation"}
-                  </span>
-                </div>
+            {/* CONTENU QUI GLISSE PAR-DESSUS LA PHOTO AU SCROLL */}
+            <div className="relative z-10 -mt-16 lg:mt-0 p-4 sm:p-8 lg:p-0">
+              <div className="emboss-card rounded-3xl p-6 sm:p-8 border border-white/90 bg-white shadow-2xl space-y-6">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                      Chapitre 01
+                    </span>
+                    <div className="h-[1px] w-8 bg-black/15" />
+                    <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                      {config?.invitationSubtitle || "Invitation"}
+                    </span>
+                  </div>
 
-                <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl tracking-tight text-white lg:text-[#121316] leading-[0.98] font-light drop-shadow-sm">
-                  {config?.groomName || "Anthony"} <br />
-                  <span className="font-serif italic text-white/80 lg:text-[#5C626C]">&</span> {config?.brideName || "Ophélie"}
-                </h1>
+                  <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl tracking-tight text-[#121316] leading-[0.98] font-light">
+                    {config?.groomName || "Anthony"} <br />
+                    <span className="font-serif italic text-[#5C626C]">&</span> {config?.brideName || "Ophélie"}
+                  </h1>
 
-                <p className="font-sans text-sm sm:text-base md:text-lg text-white/90 lg:text-[#5C626C] leading-relaxed pt-1 max-w-lg">
-                  {config?.invitationText ||
-                    "Deux regards complices, des projets partagés et l'envie de sceller notre histoire entourés de ceux qui comptent le plus. Nous serions infiniment touchés de vous compter parmi nous."}
-                </p>
-              </div>
-
-              <div className="emboss-card rounded-2xl p-5 sm:p-6 border border-white/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 backdrop-blur-xl bg-white/95 shadow-2xl">
-                <div>
-                  <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#5C626C] font-semibold block">
-                    Date & Lieu
-                  </span>
-                  <p className="font-serif text-xl sm:text-2xl text-[#121316] mt-0.5">
-                    {config?.weddingDate
-                      ? new Date(config.weddingDate).toLocaleDateString("fr-FR", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        })
-                      : "19 Juin 2027"}
-                  </p>
-                  <p className="text-xs text-[#5C626C] font-sans">
-                    {config?.venueName || "Domaine des Vignes Blanches"}, {config?.venueCity || "Provence"}
+                  <p className="font-sans text-sm sm:text-base md:text-lg text-[#5C626C] leading-relaxed pt-1 max-w-lg">
+                    {config?.invitationText ||
+                      "Deux regards complices, des projets partagés et l'envie de sceller notre histoire entourés de ceux qui comptent le plus. Nous serions infiniment touchés de vous compter parmi nous."}
                   </p>
                 </div>
 
-                <button
-                  onClick={() => scrollToChapter("rsvp-details", 4)}
-                  className="w-full sm:w-auto px-6 py-3.5 rounded-xl convex-dark-btn text-white text-xs uppercase tracking-[0.2em] font-semibold cursor-pointer flex items-center justify-center gap-2"
-                >
-                  Confirmer
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+                <div className="p-5 sm:p-6 rounded-2xl deboss-input border border-black/[0.05] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#5C626C] font-semibold block">
+                      Date & Lieu
+                    </span>
+                    <p className="font-serif text-xl sm:text-2xl text-[#121316] mt-0.5">
+                      {config?.weddingDate
+                        ? new Date(config.weddingDate).toLocaleDateString("fr-FR", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })
+                        : "19 Juin 2027"}
+                    </p>
+                    <p className="text-xs text-[#5C626C] font-sans">
+                      {config?.venueName || "Domaine des Vignes Blanches"}, {config?.venueCity || "Provence"}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => scrollToChapter("rsvp", 4)}
+                    className="w-full sm:w-auto px-6 py-3.5 rounded-xl convex-dark-btn text-white text-xs uppercase tracking-[0.2em] font-semibold cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    Confirmer
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
           </section>
 
-          {/* ----------------------------------------------------
-              CHAPITRE 2 : COMPTE À REBOURS
-             ---------------------------------------------------- */}
-          {/* ÉTAPE A (MOBILE) : PLEIN ÉCRAN PHOTO PURE SANS TEXTE */}
-          <div className="lg:hidden mobile-snap-section relative h-[100dvh] w-full overflow-hidden">
-            <Image
-              src={dynamicChapters[1].image}
-              alt={dynamicChapters[1].imageAlt}
-              fill
-              sizes="100vw"
-              className="object-cover object-center"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-            <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white z-10">
-              <div>
-                <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/70 block mb-1">
-                  Chapitre 02 • Lookbook
-                </span>
-                <p className="font-serif italic text-lg text-white/95">
-                  {dynamicChapters[1].imageCaption}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => scrollToChapter("countdown-details", 1)}
-                className="flex flex-col items-center gap-1 text-white/80 animate-bounce cursor-pointer"
-              >
-                <span className="text-[10px] tracking-widest uppercase font-sans">Décompte</span>
-                <ChevronDown className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* ÉTAPE B : DÉCOMPTE HORLOGER (PAR-DESSUS LA PHOTO) */}
-          <section
-            id="countdown-details"
-            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0"
-          >
-            {/* Même photo en arrière-plan avec voile protecteur */}
-            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
+          {/* ====================================================
+              CHAPITRE 02 : LE DÉCOMPTE
+             ==================================================== */}
+          <section id="countdown" className="relative w-full lg:min-h-[75vh]">
+            {/* SUR MOBILE : Image calée plein écran sticky en arrière-plan */}
+            <div className="lg:hidden sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
               <Image
                 src={dynamicChapters[1].image}
                 alt={dynamicChapters[1].imageAlt}
@@ -604,31 +555,47 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 sizes="100vw"
                 className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-black/45 backdrop-blur-[2px]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+
+              <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
+                <div>
+                  <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/75 block mb-1">
+                    Chapitre 02 • Lookbook
+                  </span>
+                  <p className="font-serif italic text-lg text-white/95">
+                    {dynamicChapters[1].imageCaption}
+                  </p>
+                </div>
+                <div className="flex flex-col items-center gap-1 text-white/80 animate-bounce">
+                  <span className="text-[10px] tracking-widest uppercase font-sans">Décompte</span>
+                  <ChevronDown className="w-4 h-4" />
+                </div>
+              </div>
             </div>
 
-            <div className="relative z-10 space-y-4 mb-20 lg:mb-0">
-              <div className="space-y-2 text-white lg:text-[#121316]">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs uppercase tracking-[0.3em] text-white/80 lg:text-[#5C626C] font-semibold font-sans">
-                    Chapitre 02
-                  </span>
-                  <div className="h-[1px] w-8 bg-white/30 lg:bg-black/15" />
-                  <span className="text-xs uppercase tracking-[0.2em] text-white/70 lg:text-[#949BA5] font-sans">
-                    L&apos;Horizon
-                  </span>
+            {/* CONTENU QUI GLISSE PAR-DESSUS LA PHOTO AU SCROLL */}
+            <div className="relative z-10 -mt-16 lg:mt-0 p-4 sm:p-8 lg:p-0">
+              <div className="emboss-card rounded-3xl p-6 sm:p-8 border border-white/90 bg-white shadow-2xl space-y-6">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                      Chapitre 02
+                    </span>
+                    <div className="h-[1px] w-8 bg-black/15" />
+                    <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                      L&apos;Horizon
+                    </span>
+                  </div>
+
+                  <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
+                    {config?.countdownTitle || "Le Décompte"}
+                  </h2>
+                  <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C] max-w-md">
+                    {config?.countdownText ||
+                      "Les mois, les jours et les secondes qui nous séparent du moment où nous nous dirons « oui »."}
+                  </p>
                 </div>
 
-                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white lg:text-[#121316] font-normal tracking-tight drop-shadow-sm">
-                  {config?.countdownTitle || "Le Décompte"}
-                </h2>
-                <p className="font-sans text-xs sm:text-sm md:text-base text-white/90 lg:text-[#5C626C] max-w-md">
-                  {config?.countdownText ||
-                    "Les mois, les jours et les secondes qui nous séparent du moment où nous nous dirons « oui »."}
-                </p>
-              </div>
-
-              <div className="emboss-card rounded-2xl p-5 sm:p-8 border border-white/80 bg-white/95 backdrop-blur-xl shadow-2xl">
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
                   {[
                     { label: "Jours", value: timeLeft.days },
@@ -638,7 +605,7 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                   ].map((unit) => (
                     <div
                       key={unit.label}
-                      className="flex flex-col items-center justify-center p-3 rounded-2xl convex-pill"
+                      className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl convex-pill"
                     >
                       <span className="font-serif text-3xl sm:text-5xl text-[#121316] font-light tracking-tight">
                         {String(unit.value).padStart(2, "0")}
@@ -653,46 +620,12 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
             </div>
           </section>
 
-          {/* ----------------------------------------------------
-              CHAPITRE 3 : LE PROGRAMME & DRESS CODE
-             ---------------------------------------------------- */}
-          {/* ÉTAPE A (MOBILE) : PLEIN ÉCRAN PHOTO PURE SANS TEXTE */}
-          <div className="lg:hidden mobile-snap-section relative h-[100dvh] w-full overflow-hidden">
-            <Image
-              src={dynamicChapters[2].image}
-              alt={dynamicChapters[2].imageAlt}
-              fill
-              sizes="100vw"
-              className="object-cover object-center"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-            <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white z-10">
-              <div>
-                <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/70 block mb-1">
-                  Chapitre 03 • Lookbook
-                </span>
-                <p className="font-serif italic text-lg text-white/95">
-                  {dynamicChapters[2].imageCaption}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => scrollToChapter("programme-details", 2)}
-                className="flex flex-col items-center gap-1 text-white/80 animate-bounce cursor-pointer"
-              >
-                <span className="text-[10px] tracking-widest uppercase font-sans">Programme</span>
-                <ChevronDown className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* ÉTAPE B : TIMELINE & DRESS CODE (PAR-DESSUS LA PHOTO) */}
-          <section
-            id="programme-details"
-            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0"
-          >
-            {/* Même photo en arrière-plan avec voile protecteur */}
-            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
+          {/* ====================================================
+              CHAPITRE 03 : LE PROGRAMME DE LA JOURNÉE
+             ==================================================== */}
+          <section id="programme" className="relative w-full lg:min-h-[75vh]">
+            {/* SUR MOBILE : Image calée plein écran sticky en arrière-plan */}
+            <div className="lg:hidden sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
               <Image
                 src={dynamicChapters[2].image}
                 alt={dynamicChapters[2].imageAlt}
@@ -700,146 +633,130 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 sizes="100vw"
                 className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+
+              <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
+                <div>
+                  <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/75 block mb-1">
+                    Chapitre 03 • Lookbook
+                  </span>
+                  <p className="font-serif italic text-lg text-white/95">
+                    {dynamicChapters[2].imageCaption}
+                  </p>
+                </div>
+                <div className="flex flex-col items-center gap-1 text-white/80 animate-bounce">
+                  <span className="text-[10px] tracking-widest uppercase font-sans">Programme</span>
+                  <ChevronDown className="w-4 h-4" />
+                </div>
+              </div>
             </div>
 
-            <div className="relative z-10 space-y-4 mb-20 lg:mb-0 max-h-[82vh] lg:max-h-none overflow-y-auto lg:overflow-visible pr-1 no-scrollbar">
-              <div className="space-y-2 text-white lg:text-[#121316]">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs uppercase tracking-[0.3em] text-white/80 lg:text-[#5C626C] font-semibold font-sans">
-                    Chapitre 03
-                  </span>
-                  <div className="h-[1px] w-8 bg-white/30 lg:bg-black/15" />
-                  <span className="text-xs uppercase tracking-[0.2em] text-white/70 lg:text-[#949BA5] font-sans">
-                    Déroulé
-                  </span>
+            {/* CONTENU QUI GLISSE PAR-DESSUS LA PHOTO AU SCROLL */}
+            <div className="relative z-10 -mt-16 lg:mt-0 p-4 sm:p-8 lg:p-0">
+              <div className="emboss-card rounded-3xl p-6 sm:p-8 border border-white/90 bg-white shadow-2xl space-y-6">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                      Chapitre 03
+                    </span>
+                    <div className="h-[1px] w-8 bg-black/15" />
+                    <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                      Déroulé
+                    </span>
+                  </div>
+
+                  <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
+                    {config?.programmeTitle || "Le Programme de la Journée"}
+                  </h2>
+                  <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C]">
+                    {config?.programmeText || "Une partition rythmée pour savourer chaque instant ensemble."}
+                  </p>
                 </div>
 
-                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white lg:text-[#121316] font-normal tracking-tight drop-shadow-sm">
-                  {config?.programmeTitle || "Le Programme de la Journée"}
-                </h2>
-                <p className="font-sans text-xs sm:text-sm md:text-base text-white/90 lg:text-[#5C626C]">
-                  {config?.programmeText || "Une partition rythmée pour savourer chaque instant ensemble."}
-                </p>
-              </div>
+                {/* Timeline dynamique */}
+                <div className="space-y-3">
+                  {(() => {
+                    let dynamicSteps = timelineSteps;
+                    if (config?.programmeSchedule) {
+                      try {
+                        const parsed = JSON.parse(config.programmeSchedule);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                          dynamicSteps = parsed;
+                        }
+                      } catch {}
+                    }
 
-              {/* Timeline dynamique */}
-              <div className="space-y-3">
-                {(() => {
-                  let dynamicSteps = timelineSteps;
-                  if (config?.programmeSchedule) {
-                    try {
-                      const parsed = JSON.parse(config.programmeSchedule);
-                      if (Array.isArray(parsed) && parsed.length > 0) {
-                        dynamicSteps = parsed;
-                      }
-                    } catch {}
-                  }
-
-                  return dynamicSteps.map((step, idx) => (
-                    <div
-                      key={`${step.title}-${idx}`}
-                      className="emboss-card rounded-2xl p-4 sm:p-5 border border-white/80 flex items-start gap-3 sm:gap-5 bg-white/95 backdrop-blur-xl shadow-lg"
-                    >
-                      <div className="deboss-input rounded-xl px-3 py-1.5 text-center shrink-0 min-w-[65px] sm:min-w-[80px]">
-                        <span className="font-serif text-lg sm:text-2xl text-[#121316] font-medium">
-                          {step.time}
-                        </span>
-                      </div>
-                      <div className="space-y-0.5 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-serif text-base sm:text-xl text-[#121316]">
-                            {step.title}
-                          </h3>
-                          <span className="text-[10px] uppercase tracking-wider text-[#949BA5] font-sans shrink-0">
-                            0{idx + 1}
+                    return dynamicSteps.map((step, idx) => (
+                      <div
+                        key={`${step.title}-${idx}`}
+                        className="p-4 sm:p-5 rounded-2xl deboss-input border border-black/[0.05] flex items-start gap-3 sm:gap-5"
+                      >
+                        <div className="rounded-xl px-3 py-1.5 text-center shrink-0 min-w-[65px] sm:min-w-[80px] bg-white shadow-sm border border-black/[0.04]">
+                          <span className="font-serif text-lg sm:text-2xl text-[#121316] font-medium">
+                            {step.time}
                           </span>
                         </div>
-                        <p className="text-xs text-[#5C626C] font-sans leading-relaxed">
-                          {step.desc}
-                        </p>
-                        {step.location && (
-                          <p className="text-[11px] text-[#121316] font-sans font-medium flex items-center gap-1 pt-0.5">
-                            <MapPin className="w-3 h-3 text-[#5C626C] shrink-0" />
-                            {step.location}
+                        <div className="space-y-0.5 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-serif text-base sm:text-xl text-[#121316]">
+                              {step.title}
+                            </h3>
+                            <span className="text-[10px] uppercase tracking-wider text-[#949BA5] font-sans shrink-0">
+                              0{idx + 1}
+                            </span>
+                          </div>
+                          <p className="text-xs text-[#5C626C] font-sans leading-relaxed">
+                            {step.desc}
                           </p>
-                        )}
+                          {step.location && (
+                            <p className="text-[11px] text-[#121316] font-sans font-medium flex items-center gap-1 pt-0.5">
+                              <MapPin className="w-3 h-3 text-[#5C626C] shrink-0" />
+                              {step.location}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ));
-                })()}
-              </div>
+                    ));
+                  })()}
+                </div>
 
-              <div className="flex flex-wrap gap-2.5 pt-1 text-xs uppercase tracking-wider font-sans font-semibold">
-                <a
-                  href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mariage+Anthony+%26+Oph%C3%A9lie&dates=20270619T123000Z/20270620T040000Z&details=Mariage+au+Domaine+des+Vignes+Blanches&location=Domaine+des+Vignes+Blanches,+Provence"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2.5 rounded-xl deboss-input text-[#121316] hover:bg-white flex items-center gap-1.5 transition-all text-[11px] bg-white/90 shadow-sm"
-                >
-                  <Calendar className="w-3.5 h-3.5 text-[#5C626C]" />
-                  Google Calendar
-                </a>
-                <a
-                  href="https://maps.google.com/?q=Domaine+des+Vignes+Blanches+Provence"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2.5 rounded-xl deboss-input text-[#121316] hover:bg-white flex items-center gap-1.5 transition-all text-[11px] bg-white/90 shadow-sm"
-                >
-                  <MapPin className="w-3.5 h-3.5 text-[#5C626C]" />
-                  Localiser
-                </a>
-              </div>
+                <div className="flex flex-wrap gap-2.5 pt-1 text-xs uppercase tracking-wider font-sans font-semibold">
+                  <a
+                    href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mariage+Anthony+%26+Oph%C3%A9lie&dates=20270619T123000Z/20270620T040000Z&details=Mariage+au+Domaine+des+Vignes+Blanches&location=Domaine+des+Vignes+Blanches,+Provence"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2.5 rounded-xl deboss-input text-[#121316] hover:bg-white flex items-center gap-1.5 transition-all text-[11px] bg-white shadow-sm border border-black/[0.05]"
+                  >
+                    <Calendar className="w-3.5 h-3.5 text-[#5C626C]" />
+                    Google Calendar
+                  </a>
+                  <a
+                    href="https://maps.google.com/?q=Domaine+des+Vignes+Blanches+Provence"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2.5 rounded-xl deboss-input text-[#121316] hover:bg-white flex items-center gap-1.5 transition-all text-[11px] bg-white shadow-sm border border-black/[0.05]"
+                  >
+                    <MapPin className="w-3.5 h-3.5 text-[#5C626C]" />
+                    Localiser
+                  </a>
+                </div>
 
-              <DressCodeSection
-                title={config?.dressCodeTitle}
-                desc={config?.dressCodeDesc}
-                colors={config?.dressCodeColors}
-                advice={config?.dressCodeAdvice}
-              />
+                <DressCodeSection
+                  title={config?.dressCodeTitle}
+                  desc={config?.dressCodeDesc}
+                  colors={config?.dressCodeColors}
+                  advice={config?.dressCodeAdvice}
+                />
+              </div>
             </div>
           </section>
 
-          {/* ----------------------------------------------------
-              CHAPITRE 4 : CADEAUX & ATTENTIONS
-             ---------------------------------------------------- */}
-          {/* ÉTAPE A (MOBILE) : PLEIN ÉCRAN PHOTO PURE SANS TEXTE */}
-          <div className="lg:hidden mobile-snap-section relative h-[100dvh] w-full overflow-hidden">
-            <Image
-              src={dynamicChapters[3].image}
-              alt={dynamicChapters[3].imageAlt}
-              fill
-              sizes="100vw"
-              className="object-cover object-center"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-            <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white z-10">
-              <div>
-                <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/70 block mb-1">
-                  Chapitre 04 • Lookbook
-                </span>
-                <p className="font-serif italic text-lg text-white/95">
-                  {dynamicChapters[3].imageCaption}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => scrollToChapter("cadeaux-details", 3)}
-                className="flex flex-col items-center gap-1 text-white/80 animate-bounce cursor-pointer"
-              >
-                <span className="text-[10px] tracking-widest uppercase font-sans">Cadeaux</span>
-                <ChevronDown className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* ÉTAPE B : URNE & LISTE DE MARIAGE (PAR-DESSUS LA PHOTO) */}
-          <section
-            id="cadeaux-details"
-            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0"
-          >
-            {/* Même photo en arrière-plan avec voile protecteur */}
-            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
+          {/* ====================================================
+              CHAPITRE 04 : CADEAUX & ATTENTIONS
+             ==================================================== */}
+          <section id="cadeaux" className="relative w-full lg:min-h-[75vh]">
+            {/* SUR MOBILE : Image calée plein écran sticky en arrière-plan */}
+            <div className="lg:hidden sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
               <Image
                 src={dynamicChapters[3].image}
                 alt={dynamicChapters[3].imageAlt}
@@ -847,123 +764,106 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 sizes="100vw"
                 className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-black/45 backdrop-blur-[2px]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+
+              <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
+                <div>
+                  <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/75 block mb-1">
+                    Chapitre 04 • Lookbook
+                  </span>
+                  <p className="font-serif italic text-lg text-white/95">
+                    {dynamicChapters[3].imageCaption}
+                  </p>
+                </div>
+                <div className="flex flex-col items-center gap-1 text-white/80 animate-bounce">
+                  <span className="text-[10px] tracking-widest uppercase font-sans">Cadeaux</span>
+                  <ChevronDown className="w-4 h-4" />
+                </div>
+              </div>
             </div>
 
-            <div className="relative z-10 space-y-4 mb-20 lg:mb-0">
-              <div className="space-y-2 text-white lg:text-[#121316]">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs uppercase tracking-[0.3em] text-white/80 lg:text-[#5C626C] font-semibold font-sans">
-                    Chapitre 04
-                  </span>
-                  <div className="h-[1px] w-8 bg-white/30 lg:bg-black/15" />
-                  <span className="text-xs uppercase tracking-[0.2em] text-white/70 lg:text-[#949BA5] font-sans">
-                    Attentions
-                  </span>
+            {/* CONTENU QUI GLISSE PAR-DESSUS LA PHOTO AU SCROLL */}
+            <div className="relative z-10 -mt-16 lg:mt-0 p-4 sm:p-8 lg:p-0">
+              <div className="emboss-card rounded-3xl p-6 sm:p-8 border border-white/90 bg-white shadow-2xl space-y-6">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                      Chapitre 04
+                    </span>
+                    <div className="h-[1px] w-8 bg-black/15" />
+                    <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                      Attentions
+                    </span>
+                  </div>
+
+                  <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
+                    {config?.giftsTitle || "Cadeaux & Attentions"}
+                  </h2>
+                  <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C]">
+                    {config?.giftsSubtitle || "Votre présence est notre plus beau présent"}
+                  </p>
                 </div>
 
-                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white lg:text-[#121316] font-normal tracking-tight drop-shadow-sm">
-                  {config?.giftsTitle || "Cadeaux & Attentions"}
-                </h2>
-                <p className="font-sans text-xs sm:text-sm md:text-base text-white/90 lg:text-[#5C626C]">
-                  {config?.giftsSubtitle || "Votre présence est notre plus beau présent"}
-                </p>
-              </div>
-
-              {/* Carte Cadeaux */}
-              <div className="emboss-card rounded-2xl p-5 sm:p-8 border border-white/80 space-y-5 bg-white/95 backdrop-blur-xl shadow-2xl">
-                <div className="flex items-start gap-3.5">
-                  <div className="w-11 h-11 rounded-2xl convex-pill flex items-center justify-center shrink-0">
-                    <Gift className="w-5 h-5 text-[#121316]" />
+                <div className="p-5 sm:p-6 rounded-2xl deboss-input border border-black/[0.05] space-y-5">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-black/[0.04] flex items-center justify-center shrink-0">
+                      <Gift className="w-6 h-6 text-[#121316]" />
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="font-serif text-xl text-[#121316]">
+                        {config?.giftsMode === "LIST"
+                          ? "Notre Liste de Mariage"
+                          : config?.giftsMode === "BOTH"
+                          ? "Urne de Voyage & Liste en Ligne"
+                          : "Une Urne à Mots Doux sur Place"}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-[#5C626C] font-sans leading-relaxed pt-0.5">
+                        {config?.giftsMessage ||
+                          "Votre présence à nos côtés pour célébrer notre union est le plus précieux des cadeaux. Si toutefois vous désirez témoigner d'une attention particulière, une boîte à mots doux & urne de voyage sera mise à votre disposition le jour J."}
+                      </p>
+                    </div>
                   </div>
-                  <div className="space-y-0.5">
-                    <h3 className="font-serif text-lg sm:text-xl text-[#121316]">
-                      {config?.giftsMode === "LIST"
-                        ? "Notre Liste de Mariage"
-                        : config?.giftsMode === "BOTH"
-                        ? "Urne de Voyage & Liste en Ligne"
-                        : "Une Urne à Mots Doux sur Place"}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-[#5C626C] font-sans leading-relaxed pt-0.5">
-                      {config?.giftsMessage ||
-                        "Votre présence à nos côtés pour célébrer notre union est le plus précieux des cadeaux. Si toutefois vous désirez témoigner d'une attention particulière, une boîte à mots doux & urne de voyage sera mise à votre disposition le jour J."}
-                    </p>
-                  </div>
-                </div>
 
-                {/* Bouton vers la liste */}
-                {(config?.giftsMode === "LIST" || config?.giftsMode === "BOTH") &&
-                  config?.giftsListUrl && (
-                    <div className="pt-3 border-t border-black/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                      <span className="text-xs text-[#5C626C] font-sans">
-                        Pour consulter nos envies ou participer à distance :
+                  {/* Bouton vers la liste */}
+                  {(config?.giftsMode === "LIST" || config?.giftsMode === "BOTH") &&
+                    config?.giftsListUrl && (
+                      <div className="pt-3 border-t border-black/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <span className="text-xs text-[#5C626C] font-sans">
+                          Pour consulter nos envies ou participer à distance :
+                        </span>
+                        <a
+                          href={config.giftsListUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-5 py-3 rounded-xl convex-dark-btn text-white text-xs uppercase tracking-wider font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all"
+                        >
+                          {config?.giftsListLabel || "Consulter notre liste de mariage"}
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                      </div>
+                    )}
+
+                  {config?.giftsBankIban && (
+                    <div className="pt-3 border-t border-black/[0.06] text-xs text-[#5C626C] font-sans space-y-1">
+                      <span className="text-[10px] uppercase tracking-wider font-semibold block text-[#949BA5]">
+                        Participation par virement (IBAN) :
                       </span>
-                      <a
-                        href={config.giftsListUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-5 py-3 rounded-xl convex-dark-btn text-white text-xs uppercase tracking-wider font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all"
-                      >
-                        {config?.giftsListLabel || "Consulter notre liste de mariage"}
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
+                      <span className="font-mono text-[#121316] text-[11px] block select-all p-2.5 rounded-xl bg-white shadow-sm border border-black/[0.04]">
+                        {config.giftsBankIban}
+                      </span>
                     </div>
                   )}
-
-                {config?.giftsBankIban && (
-                  <div className="pt-3 border-t border-black/[0.06] text-xs text-[#5C626C] font-sans space-y-1">
-                    <span className="text-[10px] uppercase tracking-wider font-semibold block text-[#949BA5]">
-                      Participation par virement (IBAN) :
-                    </span>
-                    <span className="font-mono text-[#121316] text-[11px] block select-all p-2 rounded-lg deboss-input">
-                      {config.giftsBankIban}
-                    </span>
-                  </div>
-                )}
+                </div>
               </div>
             </div>
           </section>
 
-          {/* ----------------------------------------------------
-              CHAPITRE 5 : RSVP
-             ---------------------------------------------------- */}
-          {/* ÉTAPE A (MOBILE) : PLEIN ÉCRAN PHOTO PURE SANS TEXTE */}
-          <div className="lg:hidden mobile-snap-section relative h-[100dvh] w-full overflow-hidden">
-            <Image
-              src={dynamicChapters[4]?.image || dynamicChapters[0].image}
-              alt={dynamicChapters[4]?.imageAlt || "Confirmation"}
-              fill
-              sizes="100vw"
-              className="object-cover object-center"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-            <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white z-10">
-              <div>
-                <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/70 block mb-1">
-                  Chapitre 05 • Lookbook
-                </span>
-                <p className="font-serif italic text-lg text-white/95">
-                  {dynamicChapters[4]?.imageCaption || "Nous avons hâte de vous retrouver."}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => scrollToChapter("rsvp-details", 4)}
-                className="flex flex-col items-center gap-1 text-white/80 animate-bounce cursor-pointer"
-              >
-                <span className="text-[10px] tracking-widest uppercase font-sans">Répondre</span>
-                <ChevronDown className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* ÉTAPE B : FORMULAIRE RSVP (PAR-DESSUS LA PHOTO) */}
-          <section
-            id="rsvp-details"
-            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0 pb-24 lg:pb-0"
-          >
-            {/* Même photo en arrière-plan avec voile protecteur */}
-            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
+          {/* ====================================================
+              CHAPITRE 05 : RSVP & CONFIRMATION
+             ==================================================== */}
+          <section id="rsvp" className="relative w-full lg:min-h-[75vh] pb-24 lg:pb-0">
+            {/* SUR MOBILE : Image calée plein écran sticky en arrière-plan */}
+            <div className="lg:hidden sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
               <Image
                 src={dynamicChapters[4]?.image || dynamicChapters[0].image}
                 alt={dynamicChapters[4]?.imageAlt || "Confirmation"}
@@ -971,250 +871,268 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 sizes="100vw"
                 className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
-            </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
 
-            <div className="relative z-10 space-y-4 mb-20 lg:mb-0 max-h-[82vh] lg:max-h-none overflow-y-auto lg:overflow-visible pr-1 no-scrollbar">
-              <div className="space-y-2 text-white lg:text-[#121316]">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs uppercase tracking-[0.3em] text-white/80 lg:text-[#5C626C] font-semibold font-sans">
-                    Chapitre 05
+              <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
+                <div>
+                  <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/75 block mb-1">
+                    Chapitre 05 • Lookbook
                   </span>
-                  <div className="h-[1px] w-8 bg-white/30 lg:bg-black/15" />
-                  <span className="text-xs uppercase tracking-[0.2em] text-white/70 lg:text-[#949BA5] font-sans">
-                    Confirmation
-                  </span>
-                </div>
-
-                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white lg:text-[#121316] font-normal tracking-tight drop-shadow-sm">
-                  {config?.rsvpTitle || "Confirmer Votre Présence"}
-                </h2>
-                <p className="font-sans text-xs sm:text-sm text-white/90 lg:text-[#5C626C]">
-                  {config?.rsvpText ||
-                    `Merci de nous transmettre votre réponse avant le ${config?.rsvpDeadline || "1er Mai 2027"}.`}
-                </p>
-              </div>
-
-              {rsvpState?.success ? (
-                <div className="emboss-card rounded-2xl p-8 sm:p-10 text-center border border-white/80 bg-white/95 backdrop-blur-xl shadow-2xl">
-                  <div className="w-12 h-12 mx-auto rounded-full bg-[#121316] text-white flex items-center justify-center mb-4">
-                    <Heart className="w-5 h-5 stroke-[1.5]" />
-                  </div>
-                  <h3 className="font-serif text-2xl text-[#121316]">
-                    Réponse enregistrée
-                  </h3>
-                  <p className="mt-2 text-sm text-[#5C626C] font-sans">
-                    {rsvpState.message}
+                  <p className="font-serif italic text-lg text-white/95">
+                    {dynamicChapters[4]?.imageCaption || "Nous avons hâte de vous retrouver."}
                   </p>
                 </div>
-              ) : (
-                <form
-                  action={formAction}
-                  className="emboss-card rounded-2xl p-5 sm:p-8 border border-white/80 space-y-5 bg-white/95 backdrop-blur-xl shadow-2xl"
-                >
-                  {rsvpState?.message && !rsvpState.success && (
-                    <div className="p-3 rounded-xl bg-red-50 text-red-700 text-xs text-center border border-red-200">
+                <div className="flex flex-col items-center gap-1 text-white/80 animate-bounce">
+                  <span className="text-[10px] tracking-widest uppercase font-sans">Répondre</span>
+                  <ChevronDown className="w-4 h-4" />
+                </div>
+              </div>
+            </div>
+
+            {/* CONTENU QUI GLISSE PAR-DESSUS LA PHOTO AU SCROLL */}
+            <div className="relative z-10 -mt-16 lg:mt-0 p-4 sm:p-8 lg:p-0">
+              <div className="emboss-card rounded-3xl p-6 sm:p-8 border border-white/90 bg-white shadow-2xl space-y-6">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                      Chapitre 05
+                    </span>
+                    <div className="h-[1px] w-8 bg-black/15" />
+                    <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                      Confirmation
+                    </span>
+                  </div>
+
+                  <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
+                    {config?.rsvpTitle || "Confirmer Votre Présence"}
+                  </h2>
+                  <p className="font-sans text-xs sm:text-sm text-[#5C626C]">
+                    {config?.rsvpText ||
+                      `Merci de nous transmettre votre réponse avant le ${config?.rsvpDeadline || "1er Mai 2027"}.`}
+                  </p>
+                </div>
+
+                {rsvpState?.success ? (
+                  <div className="p-8 sm:p-10 text-center rounded-2xl deboss-input border border-black/[0.05]">
+                    <div className="w-12 h-12 mx-auto rounded-full bg-[#121316] text-white flex items-center justify-center mb-4">
+                      <Heart className="w-5 h-5 stroke-[1.5]" />
+                    </div>
+                    <h3 className="font-serif text-2xl text-[#121316]">
+                      Réponse enregistrée
+                    </h3>
+                    <p className="mt-2 text-sm text-[#5C626C] font-sans">
                       {rsvpState.message}
-                    </div>
-                  )}
-
-                  {/* Présence */}
-                  <div className="space-y-2">
-                    <label className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]">
-                      Serez-vous présents ?
-                    </label>
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setAttendance("YES")}
-                        className={`py-3.5 px-4 rounded-xl text-xs font-semibold cursor-pointer flex items-center justify-center gap-2 ${
-                          attendance === "YES"
-                            ? "convex-dark-btn text-white"
-                            : "convex-btn text-[#5C626C]"
-                        }`}
-                      >
-                        {attendance === "YES" && <Check className="w-3.5 h-3.5" />}
-                        Avec plaisir
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setAttendance("NO")}
-                        className={`py-3.5 px-4 rounded-xl text-xs font-semibold cursor-pointer flex items-center justify-center gap-2 ${
-                          attendance === "NO"
-                            ? "convex-dark-btn text-white"
-                            : "convex-btn text-[#5C626C]"
-                        }`}
-                      >
-                        {attendance === "NO" && <Check className="w-3.5 h-3.5" />}
-                        À regret
-                      </button>
-                    </div>
-                    <input type="hidden" name="attendance" value={attendance} />
+                    </p>
                   </div>
-
-                  {/* Convives */}
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="fullName"
-                      className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
-                    >
-                      Nom et Prénom *
-                    </label>
-                    <input
-                      id="fullName"
-                      name="fullName"
-                      type="text"
-                      required
-                      placeholder="Ex: Camille Dupont"
-                      className="deboss-input w-full px-4 py-3.5 rounded-xl text-sm font-sans text-[#121316]"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="email"
-                      className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
-                    >
-                      Adresse e-mail (optionnel)
-                    </label>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      placeholder="camille@exemple.com"
-                      className="deboss-input w-full px-4 py-3.5 rounded-xl text-sm font-sans text-[#121316]"
-                    />
-                  </div>
-
-                  {attendance === "YES" && (
-                    <>
-                      {/* Nombre d'invités */}
-                      <div className="space-y-2">
-                        <label className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]">
-                          Nombre d&apos;invités (vous inclus)
-                        </label>
-                        <div className="flex items-center gap-2">
-                          {[1, 2, 3, 4, 5].map((count) => (
-                            <button
-                              key={count}
-                              type="button"
-                              onClick={() => setGuestsCount(count)}
-                              className={`flex-1 py-3 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
-                                guestsCount === count
-                                  ? "convex-dark-btn text-white"
-                                  : "convex-btn text-[#5C626C]"
-                              }`}
-                            >
-                              {count}
-                            </button>
-                          ))}
-                        </div>
-                        <input type="hidden" name="guestsCount" value={guestsCount} />
-                      </div>
-
-                      {/* Événements */}
-                      <div className="space-y-2">
-                        <label className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]">
-                          Présence aux temps forts
-                        </label>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                          {[
-                            { id: "ceremony", label: "Cérémonie" },
-                            { id: "cocktail", label: "Cocktail" },
-                            { id: "brunch", label: "Brunch" },
-                          ].map((evt) => (
-                            <label
-                              key={evt.id}
-                              className="deboss-input flex items-center gap-2 p-3 rounded-xl cursor-pointer"
-                            >
-                              <input
-                                type="checkbox"
-                                name="events"
-                                value={evt.id}
-                                defaultChecked
-                                className="accent-[#121316] w-3.5 h-3.5"
-                              />
-                              <span className="text-xs font-sans text-[#121316]">
-                                {evt.label}
-                              </span>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Régimes */}
-                      <div className="space-y-1.5">
-                        <label
-                          htmlFor="dietaryRestrictions"
-                          className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
-                        >
-                          Régimes ou allergies
-                        </label>
-                        <input
-                          id="dietaryRestrictions"
-                          name="dietaryRestrictions"
-                          type="text"
-                          placeholder="Végétarien, sans gluten..."
-                          className="deboss-input w-full px-4 py-3 rounded-xl text-sm font-sans text-[#121316]"
-                        />
-                      </div>
-
-                      {/* Musique */}
-                      <div className="space-y-1.5">
-                        <label
-                          htmlFor="songSuggestion"
-                          className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
-                        >
-                          Une chanson pour le DJ
-                        </label>
-                        <input
-                          id="songSuggestion"
-                          name="songSuggestion"
-                          type="text"
-                          placeholder="Artiste - Titre"
-                          className="deboss-input w-full px-4 py-3 rounded-xl text-sm font-sans text-[#121316]"
-                        />
-                      </div>
-                    </>
-                  )}
-
-                  {/* Mot doux */}
-                  <div className="space-y-1.5">
-                    <label
-                      htmlFor="loveNote"
-                      className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
-                    >
-                      Un mot pour Anthony & Ophélie
-                    </label>
-                    <textarea
-                      id="loveNote"
-                      name="loveNote"
-                      rows={3}
-                      placeholder="Laissez votre message..."
-                      className="deboss-input w-full px-4 py-3 rounded-xl text-sm font-sans text-[#121316] resize-none"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isPending}
-                    className="w-full py-4 rounded-xl convex-dark-btn text-white font-semibold text-xs uppercase tracking-wider cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
+                ) : (
+                  <form
+                    action={formAction}
+                    className="space-y-5"
                   >
-                    {isPending ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Envoi...
-                      </>
-                    ) : (
-                      "Transmettre ma réponse"
+                    {rsvpState?.message && !rsvpState.success && (
+                      <div className="p-3 rounded-xl bg-red-50 text-red-700 text-xs text-center border border-red-200">
+                        {rsvpState.message}
+                      </div>
                     )}
-                  </button>
-                </form>
-              )}
 
-              {/* Footer discret */}
-              <div className="pt-12 text-center text-xs text-[#949BA5] font-sans border-t border-black/[0.05]">
-                <p>Anthony & Ophélie • 19.06.2027</p>
+                    {/* Présence */}
+                    <div className="space-y-2">
+                      <label className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]">
+                        Serez-vous présents ?
+                      </label>
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setAttendance("YES")}
+                          className={`py-3.5 px-4 rounded-xl text-xs font-semibold cursor-pointer flex items-center justify-center gap-2 ${
+                            attendance === "YES"
+                              ? "convex-dark-btn text-white"
+                              : "convex-btn text-[#5C626C]"
+                          }`}
+                        >
+                          {attendance === "YES" && <Check className="w-3.5 h-3.5" />}
+                          Avec plaisir
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setAttendance("NO")}
+                          className={`py-3.5 px-4 rounded-xl text-xs font-semibold cursor-pointer flex items-center justify-center gap-2 ${
+                            attendance === "NO"
+                              ? "convex-dark-btn text-white"
+                              : "convex-btn text-[#5C626C]"
+                          }`}
+                        >
+                          {attendance === "NO" && <Check className="w-3.5 h-3.5" />}
+                          À regret
+                        </button>
+                      </div>
+                      <input type="hidden" name="attendance" value={attendance} />
+                    </div>
+
+                    {/* Convives */}
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="fullName"
+                        className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
+                      >
+                        Nom et Prénom *
+                      </label>
+                      <input
+                        id="fullName"
+                        name="fullName"
+                        type="text"
+                        required
+                        placeholder="Ex: Camille Dupont"
+                        className="deboss-input w-full px-4 py-3.5 rounded-xl text-sm font-sans text-[#121316]"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="email"
+                        className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
+                      >
+                        Adresse e-mail (optionnel)
+                      </label>
+                      <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="camille@exemple.com"
+                        className="deboss-input w-full px-4 py-3.5 rounded-xl text-sm font-sans text-[#121316]"
+                      />
+                    </div>
+
+                    {attendance === "YES" && (
+                      <>
+                        {/* Nombre d'invités */}
+                        <div className="space-y-2">
+                          <label className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]">
+                            Nombre d&apos;invités (vous inclus)
+                          </label>
+                          <div className="flex items-center gap-2">
+                            {[1, 2, 3, 4, 5].map((count) => (
+                              <button
+                                key={count}
+                                type="button"
+                                onClick={() => setGuestsCount(count)}
+                                className={`flex-1 py-3 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
+                                  guestsCount === count
+                                    ? "convex-dark-btn text-white"
+                                    : "convex-btn text-[#5C626C]"
+                                }`}
+                              >
+                                {count}
+                              </button>
+                            ))}
+                          </div>
+                          <input type="hidden" name="guestsCount" value={guestsCount} />
+                        </div>
+
+                        {/* Événements */}
+                        <div className="space-y-2">
+                          <label className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]">
+                            Présence aux temps forts
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            {[
+                              { id: "ceremony", label: "Cérémonie" },
+                              { id: "cocktail", label: "Cocktail" },
+                              { id: "brunch", label: "Brunch" },
+                            ].map((evt) => (
+                              <label
+                                key={evt.id}
+                                className="deboss-input flex items-center gap-2 p-3 rounded-xl cursor-pointer"
+                              >
+                                <input
+                                  type="checkbox"
+                                  name="events"
+                                  value={evt.id}
+                                  defaultChecked
+                                  className="accent-[#121316] w-3.5 h-3.5"
+                                />
+                                <span className="text-xs font-sans text-[#121316]">
+                                  {evt.label}
+                                </span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Régimes */}
+                        <div className="space-y-1.5">
+                          <label
+                            htmlFor="dietaryRestrictions"
+                            className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
+                          >
+                            Régimes ou allergies
+                          </label>
+                          <input
+                            id="dietaryRestrictions"
+                            name="dietaryRestrictions"
+                            type="text"
+                            placeholder="Végétarien, sans gluten..."
+                            className="deboss-input w-full px-4 py-3 rounded-xl text-sm font-sans text-[#121316]"
+                          />
+                        </div>
+
+                        {/* Musique */}
+                        <div className="space-y-1.5">
+                          <label
+                            htmlFor="songSuggestion"
+                            className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
+                          >
+                            Une chanson pour le DJ
+                          </label>
+                          <input
+                            id="songSuggestion"
+                            name="songSuggestion"
+                            type="text"
+                            placeholder="Artiste - Titre"
+                            className="deboss-input w-full px-4 py-3 rounded-xl text-sm font-sans text-[#121316]"
+                          />
+                        </div>
+                      </>
+                    )}
+
+                    {/* Mot doux */}
+                    <div className="space-y-1.5">
+                      <label
+                        htmlFor="loveNote"
+                        className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
+                      >
+                        Un mot pour Anthony & Ophélie
+                      </label>
+                      <textarea
+                        id="loveNote"
+                        name="loveNote"
+                        rows={3}
+                        placeholder="Laissez votre message..."
+                        className="deboss-input w-full px-4 py-3 rounded-xl text-sm font-sans text-[#121316] resize-none"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={isPending}
+                      className="w-full py-4 rounded-xl convex-dark-btn text-white font-semibold text-xs uppercase tracking-wider cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                      {isPending ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Envoi...
+                        </>
+                      ) : (
+                        "Transmettre ma réponse"
+                      )}
+                    </button>
+                  </form>
+                )}
+
+                {/* Footer discret */}
+                <div className="pt-8 text-center text-xs text-[#949BA5] font-sans border-t border-black/[0.05]">
+                  <p>Anthony & Ophélie • 19.06.2027</p>
+                </div>
               </div>
             </div>
           </section>
