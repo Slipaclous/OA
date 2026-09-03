@@ -1,26 +1,155 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Palette Chic Contemporain Neutre (Blanc pur, gris perle, anthracite & noir profond) */
+  --bg-primary: #F5F6F8;         /* Fond gris perle doux très contemporain */
+  --bg-surface: #FFFFFF;         /* Blanc pur immaculé */
+  --bg-elevated: #ECEEF2;        /* Gris neutre pour creux / inputs */
+  --text-primary: #121316;       /* Noir profond */
+  --text-muted: #5C626C;         /* Anthracite moderne */
+  --text-light: #949BA5;         /* Gris doux */
+  --accent-black: #121316;       /* Noir intense */
+  --accent-subtle: #2C2E35;      /* Gris architectural */
+  --border-neutral: rgba(18, 19, 22, 0.06);
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Neumorphisme épuré : Ombres */
+  --shadow-emboss: 
+    8px 8px 20px rgba(0, 0, 0, 0.04),
+    -8px -8px 20px rgba(255, 255, 255, 1);
+  
+  --shadow-emboss-hover: 
+    12px 12px 28px rgba(0, 0, 0, 0.07),
+    -12px -12px 28px rgba(255, 255, 255, 1);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --shadow-deboss: 
+    inset 2px 2px 5px rgba(0, 0, 0, 0.06),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.95);
+
+  --shadow-convex:
+    6px 6px 16px rgba(0, 0, 0, 0.04),
+    -6px -6px 16px rgba(255, 255, 255, 0.95);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--text-primary);
+  color: #FFFFFF;
+}
+
+/* =========================================================
+   Neumorphisme Contemporain : Plat, Concave, et Convexe (Bombé)
+   ========================================================= */
+
+/* 1. Carte Neumorphique Plate Surélevée */
+.emboss-card {
+  background-color: var(--bg-surface);
+  box-shadow: var(--shadow-emboss);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.emboss-card:hover {
+  box-shadow: var(--shadow-emboss-hover);
+}
+
+/* 2. Boutons & Éléments Convexes (Effet galet / bombé tactile 3D) */
+.convex-btn {
+  background: linear-gradient(145deg, #FFFFFF, #E8EBF0);
+  box-shadow: var(--shadow-convex);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.convex-btn:hover {
+  background: linear-gradient(145deg, #FFFFFF, #E2E6EC);
+  box-shadow: 
+    8px 8px 20px rgba(0, 0, 0, 0.06),
+    -8px -8px 20px rgba(255, 255, 255, 1);
+  transform: translateY(-1px);
+}
+
+.convex-btn:active {
+  background: linear-gradient(145deg, #E2E6EC, #FFFFFF);
+  box-shadow: var(--shadow-deboss);
+  transform: translateY(0);
+}
+
+/* 3. Variante Convexe Sombre (pour les CTA principaux) */
+.convex-dark-btn {
+  background: linear-gradient(145deg, #26282E, #0F1012);
+  box-shadow: 
+    5px 5px 14px rgba(0, 0, 0, 0.18),
+    -3px -3px 10px rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.convex-dark-btn:hover {
+  background: linear-gradient(145deg, #2F323A, #121316);
+  box-shadow: 
+    7px 7px 18px rgba(0, 0, 0, 0.25),
+    -4px -4px 12px rgba(255, 255, 255, 0.55);
+  transform: translateY(-1px);
+}
+
+.convex-dark-btn:active {
+  background: linear-gradient(145deg, #0F1012, #26282E);
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.6);
+  transform: translateY(0);
+}
+
+/* 4. Carte Convexe (Surface bombée douce pour compteurs ou badges) */
+.convex-pill {
+  background: linear-gradient(145deg, #FFFFFF, #EBEEF3);
+  box-shadow: 
+    4px 4px 10px rgba(0, 0, 0, 0.03),
+    -4px -4px 10px rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+/* 5. Concave / Deboss (Creux pour champs de saisie) */
+.deboss-input {
+  background-color: var(--bg-elevated);
+  box-shadow: var(--shadow-deboss);
+  border: 1px solid rgba(18, 19, 22, 0.05);
+  transition: all 0.2s ease;
+}
+
+.deboss-input:focus {
+  outline: none;
+  background-color: #FFFFFF;
+  border-color: var(--accent-black);
+  box-shadow: 
+    0 0 0 1px var(--accent-black),
+    4px 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.letterpress-text {
+  letter-spacing: -0.04em;
+}
+
+.editorial-caps {
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+/* Focus photo contemporain */
+.photo-contemporary {
+  position: relative;
+  overflow: hidden;
+}
+
+.photo-contemporary img {
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.photo-contemporary:hover img {
+  transform: scale(1.03);
 }

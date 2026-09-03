@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+enum AttendanceStatus {
+  YES
+  NO
+}
+
+enum MediaSection {
+  HERO
+  LOOKBOOK
+  COUNTDOWN
+  TIMELINE
+}
+
+model Rsvp {
+  id                  String           @id @default(cuid())
+  fullName            String
+  email               String?
+  status              AttendanceStatus @default(YES)
+  guestsCount         Int              @default(1)
+  events              String[]         @default(["ceremony", "cocktail", "dinner"])
+  dietaryRestrictions String?
+  songSuggestion      String?
+  loveNote            String?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+}
+
+model Media {
+  id          String       @id @default(cuid())
+  url         String
+  caption     String?
+  aspectRatio String?      @default("4/5")
+  section     MediaSection @default(LOOKBOOK)
+  chapter     Int?         @default(1) // 1, 2, 3, 4 ou null pour la galerie générale
+  width       Int?
+  height      Int?
+  sizeBytes   Int?
+  order       Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model WeddingConfig {
+  id              String   @id @default("default")
+  brideName       String   @default("Ophélie")
+  groomName       String   @default("Anthony")
+  weddingDate     DateTime @default("2027-06-19T14:30:00.000Z")
+  venueName       String   @default("Domaine des Vignes Blanches")
+  venueCity       String   @default("Provence, France")
+  venueAddress    String   @default("Route du Château, 84000 Provence")
+  dressCodeTitle  String   @default("Chic Contemporain & Épuré")
+  dressCodeDesc   String   @default("Pour une harmonie visuelle élégante sur les photos de la journée, nous vous invitons à privilégier une tenue chic contemporaine, épurée et intemporelle.")
+  dressCodeColors String   @default("Blanc Pur:#FFFFFF,Sable Minéral:#E9ECEF,Gris Taupe:#CED4DA,Ardoise:#495057,Noir Profond:#121316")
+  dressCodeAdvice String   @default("Le cocktail aura lieu en extérieur dans le parc du domaine, prévoyez des chaussures confortables pour les allées en herbe.")
+  countdownTitle  String   @default("Vers le Jour J")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
