@@ -16,6 +16,7 @@ import {
   Maximize2,
   Gift,
   ExternalLink,
+  ChevronDown,
 } from "lucide-react";
 import { FullscreenGallery, GalleryPhoto } from "@/components/FullscreenGallery";
 import { DressCodeSection } from "@/components/DressCodeSection";
@@ -447,29 +448,51 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
         </div>
 
         {/* ========================================================
-            VOLET DROIT : Déroulé Interactif (Snap plein écran mobile)
+            VOLET DROIT : Déroulé Interactif & Rythme Editorial Photo-Texte
            ======================================================== */}
         <div className="w-full lg:w-1/2 lg:px-12 xl:px-16 lg:py-24 lg:space-y-32">
-          {/* CHAPITRE 1 : INVITATION PLEIN ÉCRAN MOBILE */}
-          <section
-            id="invitation"
-            className="mobile-snap-section relative min-h-[calc(100dvh-3.5rem)] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0"
-          >
-            {/* Arrière-plan photo immersif sur smartphone */}
-            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
-              <Image
-                src={dynamicChapters[0].image}
-                alt={dynamicChapters[0].imageAlt}
-                fill
-                priority
-                sizes="100vw"
-                className="object-cover object-center"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#F8F9FA] via-[#F8F9FA]/80 to-black/30" />
+          {/* ----------------------------------------------------
+              CHAPITRE 1 : INVITATION
+             ---------------------------------------------------- */}
+          {/* ÉTAPE A (MOBILE) : PLEIN ÉCRAN PHOTO PURE SANS TEXTE */}
+          <div className="lg:hidden mobile-snap-section relative h-[100dvh] w-full overflow-hidden">
+            <Image
+              src={dynamicChapters[0].image}
+              alt={dynamicChapters[0].imageAlt}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+            
+            {/* Légende discrète et invitation à glisser */}
+            <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white z-10">
+              <div>
+                <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/70 block mb-1">
+                  Chapitre 01 • Lookbook
+                </span>
+                <p className="font-serif italic text-lg text-white/95">
+                  {dynamicChapters[0].imageCaption}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => scrollToChapter("invitation-details", 0)}
+                className="flex flex-col items-center gap-1 text-white/80 animate-bounce cursor-pointer"
+              >
+                <span className="text-[10px] tracking-widest uppercase font-sans">Découvrir</span>
+                <ChevronDown className="w-4 h-4" />
+              </button>
             </div>
+          </div>
 
-            {/* Carte Feuille Éditoriale Convexe */}
-            <div className="relative z-10 space-y-4 mb-20 lg:mb-0">
+          {/* ÉTAPE B : INFORMATIONS DU CHAPITRE 01 */}
+          <section
+            id="invitation-details"
+            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-center p-6 sm:p-8 lg:p-0"
+          >
+            <div className="space-y-4 mb-16 lg:mb-0">
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
                   <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
@@ -492,7 +515,7 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 </p>
               </div>
 
-              <div className="emboss-card rounded-2xl p-5 sm:p-6 border border-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 backdrop-blur-md bg-white/95">
+              <div className="emboss-card rounded-2xl p-5 sm:p-6 border border-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 backdrop-blur-md bg-white">
                 <div>
                   <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#5C626C] font-semibold block">
                     Date & Lieu
@@ -512,7 +535,7 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 </div>
 
                 <button
-                  onClick={() => scrollToChapter("rsvp", 4)}
+                  onClick={() => scrollToChapter("rsvp-details", 4)}
                   className="w-full sm:w-auto px-6 py-3.5 rounded-xl convex-dark-btn text-white text-xs uppercase tracking-[0.2em] font-semibold cursor-pointer flex items-center justify-center gap-2"
                 >
                   Confirmer
@@ -522,24 +545,45 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
             </div>
           </section>
 
-          {/* CHAPITRE 2 : COMPTE À REBOURS PLEIN ÉCRAN MOBILE */}
-          <section
-            id="countdown"
-            className="mobile-snap-section relative min-h-[calc(100dvh-3.5rem)] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0"
-          >
-            {/* Arrière-plan photo immersif sur smartphone */}
-            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
-              <Image
-                src={dynamicChapters[1].image}
-                alt={dynamicChapters[1].imageAlt}
-                fill
-                sizes="100vw"
-                className="object-cover object-center"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#F8F9FA] via-[#F8F9FA]/85 to-black/35" />
+          {/* ----------------------------------------------------
+              CHAPITRE 2 : COMPTE À REBOURS
+             ---------------------------------------------------- */}
+          {/* ÉTAPE A (MOBILE) : PLEIN ÉCRAN PHOTO PURE SANS TEXTE */}
+          <div className="lg:hidden mobile-snap-section relative h-[100dvh] w-full overflow-hidden">
+            <Image
+              src={dynamicChapters[1].image}
+              alt={dynamicChapters[1].imageAlt}
+              fill
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+            <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white z-10">
+              <div>
+                <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/70 block mb-1">
+                  Chapitre 02 • Lookbook
+                </span>
+                <p className="font-serif italic text-lg text-white/95">
+                  {dynamicChapters[1].imageCaption}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => scrollToChapter("countdown-details", 1)}
+                className="flex flex-col items-center gap-1 text-white/80 animate-bounce cursor-pointer"
+              >
+                <span className="text-[10px] tracking-widest uppercase font-sans">Décompte</span>
+                <ChevronDown className="w-4 h-4" />
+              </button>
             </div>
+          </div>
 
-            <div className="relative z-10 space-y-4 mb-20 lg:mb-0">
+          {/* ÉTAPE B : DÉCOMPTE HORLOGER */}
+          <section
+            id="countdown-details"
+            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-center p-6 sm:p-8 lg:p-0"
+          >
+            <div className="space-y-4 mb-16 lg:mb-0">
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
                   <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
@@ -560,8 +604,7 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 </p>
               </div>
 
-              {/* Décompte Neumorphique Convexe */}
-              <div className="emboss-card rounded-2xl p-5 sm:p-8 border border-white backdrop-blur-md bg-white/95">
+              <div className="emboss-card rounded-2xl p-6 sm:p-8 border border-white bg-white">
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
                   {[
                     { label: "Jours", value: timeLeft.days },
@@ -571,12 +614,12 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                   ].map((unit) => (
                     <div
                       key={unit.label}
-                      className="flex flex-col items-center justify-center p-2 rounded-2xl convex-pill"
+                      className="flex flex-col items-center justify-center p-3 rounded-2xl convex-pill"
                     >
-                      <span className="font-serif text-2xl sm:text-5xl text-[#121316] font-light tracking-tight">
+                      <span className="font-serif text-3xl sm:text-5xl text-[#121316] font-light tracking-tight">
                         {String(unit.value).padStart(2, "0")}
                       </span>
-                      <span className="text-[9px] sm:text-[10px] tracking-[0.25em] uppercase text-[#5C626C] font-sans font-semibold mt-1">
+                      <span className="text-[10px] tracking-[0.25em] uppercase text-[#5C626C] font-sans font-semibold mt-1">
                         {unit.label}
                       </span>
                     </div>
@@ -586,24 +629,45 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
             </div>
           </section>
 
-          {/* CHAPITRE 3 : LE PROGRAMME & DRESS CODE PLEIN ÉCRAN MOBILE */}
-          <section
-            id="programme"
-            className="mobile-snap-section relative min-h-[calc(100dvh-3.5rem)] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0"
-          >
-            {/* Arrière-plan photo immersif sur smartphone */}
-            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
-              <Image
-                src={dynamicChapters[2].image}
-                alt={dynamicChapters[2].imageAlt}
-                fill
-                sizes="100vw"
-                className="object-cover object-center"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#F8F9FA] via-[#F8F9FA]/90 to-black/40" />
+          {/* ----------------------------------------------------
+              CHAPITRE 3 : LE PROGRAMME & DRESS CODE
+             ---------------------------------------------------- */}
+          {/* ÉTAPE A (MOBILE) : PLEIN ÉCRAN PHOTO PURE SANS TEXTE */}
+          <div className="lg:hidden mobile-snap-section relative h-[100dvh] w-full overflow-hidden">
+            <Image
+              src={dynamicChapters[2].image}
+              alt={dynamicChapters[2].imageAlt}
+              fill
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+            <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white z-10">
+              <div>
+                <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/70 block mb-1">
+                  Chapitre 03 • Lookbook
+                </span>
+                <p className="font-serif italic text-lg text-white/95">
+                  {dynamicChapters[2].imageCaption}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => scrollToChapter("programme-details", 2)}
+                className="flex flex-col items-center gap-1 text-white/80 animate-bounce cursor-pointer"
+              >
+                <span className="text-[10px] tracking-widest uppercase font-sans">Programme</span>
+                <ChevronDown className="w-4 h-4" />
+              </button>
             </div>
+          </div>
 
-            <div className="relative z-10 space-y-4 mb-20 lg:mb-0 max-h-[82vh] lg:max-h-none overflow-y-auto lg:overflow-visible pr-1 no-scrollbar">
+          {/* ÉTAPE B : TIMELINE & DRESS CODE */}
+          <section
+            id="programme-details"
+            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-center p-6 sm:p-8 lg:p-0"
+          >
+            <div className="space-y-4 mb-16 lg:mb-0 max-h-[82vh] lg:max-h-none overflow-y-auto lg:overflow-visible pr-1 no-scrollbar">
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
                   <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
@@ -623,7 +687,7 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 </p>
               </div>
 
-              {/* Timeline élégante dynamique */}
+              {/* Timeline dynamique */}
               <div className="space-y-3">
                 {(() => {
                   let dynamicSteps = timelineSteps;
@@ -633,15 +697,13 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                       if (Array.isArray(parsed) && parsed.length > 0) {
                         dynamicSteps = parsed;
                       }
-                    } catch {
-                      // fallback
-                    }
+                    } catch {}
                   }
 
                   return dynamicSteps.map((step, idx) => (
                     <div
                       key={`${step.title}-${idx}`}
-                      className="emboss-card rounded-2xl p-4 sm:p-5 border border-white flex items-start gap-3 sm:gap-5 backdrop-blur-md bg-white/95"
+                      className="emboss-card rounded-2xl p-4 sm:p-5 border border-white flex items-start gap-3 sm:gap-5 bg-white"
                     >
                       <div className="deboss-input rounded-xl px-3 py-1.5 text-center shrink-0 min-w-[65px] sm:min-w-[80px]">
                         <span className="font-serif text-lg sm:text-2xl text-[#121316] font-medium">
@@ -693,7 +755,6 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 </a>
               </div>
 
-              {/* INTÉGRATION DU DRESS CODE DYNAMIQUE */}
               <DressCodeSection
                 title={config?.dressCodeTitle}
                 desc={config?.dressCodeDesc}
@@ -703,24 +764,45 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
             </div>
           </section>
 
-          {/* CHAPITRE 4 : CADEAUX & ATTENTIONS PLEIN ÉCRAN MOBILE */}
-          <section
-            id="cadeaux"
-            className="mobile-snap-section relative min-h-[calc(100dvh-3.5rem)] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0"
-          >
-            {/* Arrière-plan photo immersif sur smartphone */}
-            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
-              <Image
-                src={dynamicChapters[3].image}
-                alt={dynamicChapters[3].imageAlt}
-                fill
-                sizes="100vw"
-                className="object-cover object-center"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#F8F9FA] via-[#F8F9FA]/85 to-black/35" />
+          {/* ----------------------------------------------------
+              CHAPITRE 4 : CADEAUX & ATTENTIONS
+             ---------------------------------------------------- */}
+          {/* ÉTAPE A (MOBILE) : PLEIN ÉCRAN PHOTO PURE SANS TEXTE */}
+          <div className="lg:hidden mobile-snap-section relative h-[100dvh] w-full overflow-hidden">
+            <Image
+              src={dynamicChapters[3].image}
+              alt={dynamicChapters[3].imageAlt}
+              fill
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+            <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white z-10">
+              <div>
+                <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/70 block mb-1">
+                  Chapitre 04 • Lookbook
+                </span>
+                <p className="font-serif italic text-lg text-white/95">
+                  {dynamicChapters[3].imageCaption}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => scrollToChapter("cadeaux-details", 3)}
+                className="flex flex-col items-center gap-1 text-white/80 animate-bounce cursor-pointer"
+              >
+                <span className="text-[10px] tracking-widest uppercase font-sans">Cadeaux</span>
+                <ChevronDown className="w-4 h-4" />
+              </button>
             </div>
+          </div>
 
-            <div className="relative z-10 space-y-4 mb-20 lg:mb-0">
+          {/* ÉTAPE B : URNE & LISTE DE MARIAGE */}
+          <section
+            id="cadeaux-details"
+            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-center p-6 sm:p-8 lg:p-0"
+          >
+            <div className="space-y-4 mb-16 lg:mb-0">
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
                   <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
@@ -740,14 +822,14 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 </p>
               </div>
 
-              {/* Carte Neumorphique Cadeaux */}
-              <div className="emboss-card rounded-2xl p-5 sm:p-8 border border-white space-y-5 backdrop-blur-md bg-white/95">
-                <div className="flex items-start gap-3.5">
-                  <div className="w-11 h-11 rounded-2xl convex-pill flex items-center justify-center shrink-0">
-                    <Gift className="w-5 h-5 text-[#121316]" />
+              {/* Carte Cadeaux */}
+              <div className="emboss-card rounded-2xl p-6 sm:p-8 border border-white space-y-5 bg-white">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-2xl convex-pill flex items-center justify-center shrink-0">
+                    <Gift className="w-6 h-6 text-[#121316]" />
                   </div>
-                  <div className="space-y-0.5">
-                    <h3 className="font-serif text-lg sm:text-xl text-[#121316]">
+                  <div className="space-y-1">
+                    <h3 className="font-serif text-xl text-[#121316]">
                       {config?.giftsMode === "LIST"
                         ? "Notre Liste de Mariage"
                         : config?.giftsMode === "BOTH"
@@ -761,10 +843,10 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                   </div>
                 </div>
 
-                {/* Bouton vers la liste si LIST ou BOTH */}
+                {/* Bouton vers la liste */}
                 {(config?.giftsMode === "LIST" || config?.giftsMode === "BOTH") &&
                   config?.giftsListUrl && (
-                    <div className="pt-2 border-t border-black/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="pt-3 border-t border-black/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <span className="text-xs text-[#5C626C] font-sans">
                         Pour consulter nos envies ou participer à distance :
                       </span>
@@ -780,9 +862,8 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                     </div>
                   )}
 
-                {/* IBAN si renseigné */}
                 {config?.giftsBankIban && (
-                  <div className="pt-2 border-t border-black/[0.06] text-xs text-[#5C626C] font-sans space-y-1">
+                  <div className="pt-3 border-t border-black/[0.06] text-xs text-[#5C626C] font-sans space-y-1">
                     <span className="text-[10px] uppercase tracking-wider font-semibold block text-[#949BA5]">
                       Participation par virement (IBAN) :
                     </span>
@@ -795,24 +876,45 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
             </div>
           </section>
 
-          {/* CHAPITRE 5 : RSVP PLEIN ÉCRAN MOBILE */}
-          <section
-            id="rsvp"
-            className="mobile-snap-section relative min-h-[calc(100dvh-3.5rem)] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0 pb-24 lg:pb-0"
-          >
-            {/* Arrière-plan photo immersif sur smartphone */}
-            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
-              <Image
-                src={dynamicChapters[4]?.image || dynamicChapters[0].image}
-                alt={dynamicChapters[4]?.imageAlt || "Confirmation"}
-                fill
-                sizes="100vw"
-                className="object-cover object-center"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#F8F9FA] via-[#F8F9FA]/90 to-black/40" />
+          {/* ----------------------------------------------------
+              CHAPITRE 5 : RSVP
+             ---------------------------------------------------- */}
+          {/* ÉTAPE A (MOBILE) : PLEIN ÉCRAN PHOTO PURE SANS TEXTE */}
+          <div className="lg:hidden mobile-snap-section relative h-[100dvh] w-full overflow-hidden">
+            <Image
+              src={dynamicChapters[4]?.image || dynamicChapters[0].image}
+              alt={dynamicChapters[4]?.imageAlt || "Confirmation"}
+              fill
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+            <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white z-10">
+              <div>
+                <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/70 block mb-1">
+                  Chapitre 05 • Lookbook
+                </span>
+                <p className="font-serif italic text-lg text-white/95">
+                  {dynamicChapters[4]?.imageCaption || "Nous avons hâte de vous retrouver."}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => scrollToChapter("rsvp-details", 4)}
+                className="flex flex-col items-center gap-1 text-white/80 animate-bounce cursor-pointer"
+              >
+                <span className="text-[10px] tracking-widest uppercase font-sans">Répondre</span>
+                <ChevronDown className="w-4 h-4" />
+              </button>
             </div>
+          </div>
 
-            <div className="relative z-10 space-y-4 mb-16 lg:mb-0 max-h-[82vh] lg:max-h-none overflow-y-auto lg:overflow-visible pr-1 no-scrollbar">
+          {/* ÉTAPE B : FORMULAIRE RSVP */}
+          <section
+            id="rsvp-details"
+            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-center p-6 sm:p-8 lg:p-0 pb-24 lg:pb-0"
+          >
+            <div className="space-y-4 mb-16 lg:mb-0 max-h-[82vh] lg:max-h-none overflow-y-auto lg:overflow-visible pr-1 no-scrollbar">
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
                   <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
@@ -834,7 +936,7 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
               </div>
 
               {rsvpState?.success ? (
-                <div className="emboss-card rounded-2xl p-8 sm:p-10 text-center border border-white backdrop-blur-md bg-white/95">
+                <div className="emboss-card rounded-2xl p-8 sm:p-10 text-center border border-white bg-white">
                   <div className="w-12 h-12 mx-auto rounded-full bg-[#121316] text-white flex items-center justify-center mb-4">
                     <Heart className="w-5 h-5 stroke-[1.5]" />
                   </div>
@@ -848,217 +950,207 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
               ) : (
                 <form
                   action={formAction}
-                  className="emboss-card rounded-2xl p-5 sm:p-8 border border-white space-y-5 backdrop-blur-md bg-white/95"
+                  className="emboss-card rounded-2xl p-6 sm:p-8 border border-white space-y-5 bg-white"
                 >
-                {rsvpState?.message && !rsvpState.success && (
-                  <div className="p-3 rounded-xl bg-red-50 text-red-700 text-xs text-center border border-red-200">
-                    {rsvpState.message}
-                  </div>
-                )}
-
-                {/* Présence */}
-                <div className="space-y-2">
-                  <label className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]">
-                    Serez-vous présents ?
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setAttendance("YES")}
-                      className={`py-3.5 px-4 rounded-xl text-xs font-semibold cursor-pointer flex items-center justify-center gap-2 ${
-                        attendance === "YES"
-                          ? "convex-dark-btn text-white"
-                          : "convex-btn text-[#5C626C]"
-                      }`}
-                    >
-                      {attendance === "YES" && <Check className="w-3.5 h-3.5" />}
-                      Avec plaisir
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setAttendance("NO")}
-                      className={`py-3.5 px-4 rounded-xl text-xs font-semibold cursor-pointer flex items-center justify-center gap-2 ${
-                        attendance === "NO"
-                          ? "convex-dark-btn text-white"
-                          : "convex-btn text-[#5C626C]"
-                      }`}
-                    >
-                      {attendance === "NO" && <Check className="w-3.5 h-3.5" />}
-                      Absent
-                    </button>
-                  </div>
-                  <input type="hidden" name="status" value={attendance} />
-                </div>
-
-                {/* Nom */}
-                <div className="space-y-1.5">
-                  <label
-                    htmlFor="fullName"
-                    className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
-                  >
-                    Nom & Prénom *
-                  </label>
-                  <input
-                    id="fullName"
-                    name="fullName"
-                    type="text"
-                    required
-                    placeholder="Camille & Thomas Mercier"
-                    className="deboss-input w-full px-4 py-3 rounded-xl text-sm font-sans text-[#121316]"
-                  />
-                  {rsvpState?.errors?.fullName && (
-                    <p className="text-xs text-red-600">
-                      {rsvpState.errors.fullName[0]}
-                    </p>
+                  {rsvpState?.message && !rsvpState.success && (
+                    <div className="p-3 rounded-xl bg-red-50 text-red-700 text-xs text-center border border-red-200">
+                      {rsvpState.message}
+                    </div>
                   )}
-                </div>
 
-                {/* Email */}
-                <div className="space-y-1.5">
-                  <label
-                    htmlFor="email"
-                    className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
-                  >
-                    Adresse Email
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="adresse@exemple.com"
-                    className="deboss-input w-full px-4 py-3 rounded-xl text-sm font-sans text-[#121316]"
-                  />
-                </div>
+                  {/* Présence */}
+                  <div className="space-y-2">
+                    <label className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]">
+                      Serez-vous présents ?
+                    </label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setAttendance("YES")}
+                        className={`py-3.5 px-4 rounded-xl text-xs font-semibold cursor-pointer flex items-center justify-center gap-2 ${
+                          attendance === "YES"
+                            ? "convex-dark-btn text-white"
+                            : "convex-btn text-[#5C626C]"
+                        }`}
+                      >
+                        {attendance === "YES" && <Check className="w-3.5 h-3.5" />}
+                        Avec plaisir
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAttendance("NO")}
+                        className={`py-3.5 px-4 rounded-xl text-xs font-semibold cursor-pointer flex items-center justify-center gap-2 ${
+                          attendance === "NO"
+                            ? "convex-dark-btn text-white"
+                            : "convex-btn text-[#5C626C]"
+                        }`}
+                      >
+                        {attendance === "NO" && <Check className="w-3.5 h-3.5" />}
+                        À regret
+                      </button>
+                    </div>
+                    <input type="hidden" name="attendance" value={attendance} />
+                  </div>
 
-                {attendance === "YES" && (
-                  <>
-                    {/* Nombre de personnes */}
-                    <div className="space-y-1.5">
-                      <label className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]">
-                        Nombre de convives
-                      </label>
-                      <div className="flex items-center gap-2">
-                        {[1, 2, 3, 4].map((n) => (
-                          <button
-                            key={n}
-                            type="button"
-                            onClick={() => setGuestsCount(n)}
-                            className={`w-11 h-11 rounded-xl text-xs font-semibold cursor-pointer flex items-center justify-center ${
-                              guestsCount === n
-                                ? "convex-dark-btn text-white"
-                                : "convex-btn text-[#5C626C]"
-                            }`}
-                          >
-                            {n}
-                          </button>
-                        ))}
+                  {/* Convives */}
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="fullName"
+                      className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
+                    >
+                      Nom et Prénom *
+                    </label>
+                    <input
+                      id="fullName"
+                      name="fullName"
+                      type="text"
+                      required
+                      placeholder="Ex: Camille Dupont"
+                      className="deboss-input w-full px-4 py-3.5 rounded-xl text-sm font-sans text-[#121316]"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="email"
+                      className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
+                    >
+                      Adresse e-mail (optionnel)
+                    </label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="camille@exemple.com"
+                      className="deboss-input w-full px-4 py-3.5 rounded-xl text-sm font-sans text-[#121316]"
+                    />
+                  </div>
+
+                  {attendance === "YES" && (
+                    <>
+                      {/* Nombre d'invités */}
+                      <div className="space-y-2">
+                        <label className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]">
+                          Nombre d&apos;invités (vous inclus)
+                        </label>
+                        <div className="flex items-center gap-2">
+                          {[1, 2, 3, 4, 5].map((count) => (
+                            <button
+                              key={count}
+                              type="button"
+                              onClick={() => setGuestsCount(count)}
+                              className={`flex-1 py-3 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
+                                guestsCount === count
+                                  ? "convex-dark-btn text-white"
+                                  : "convex-btn text-[#5C626C]"
+                              }`}
+                            >
+                              {count}
+                            </button>
+                          ))}
+                        </div>
+                        <input type="hidden" name="guestsCount" value={guestsCount} />
+                      </div>
+
+                      {/* Événements */}
+                      <div className="space-y-2">
+                        <label className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]">
+                          Présence aux temps forts
+                        </label>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                          {[
+                            { id: "ceremony", label: "Cérémonie" },
+                            { id: "cocktail", label: "Cocktail" },
+                            { id: "brunch", label: "Brunch" },
+                          ].map((evt) => (
+                            <label
+                              key={evt.id}
+                              className="deboss-input flex items-center gap-2 p-3 rounded-xl cursor-pointer"
+                            >
+                              <input
+                                type="checkbox"
+                                name="events"
+                                value={evt.id}
+                                defaultChecked
+                                className="accent-[#121316] w-3.5 h-3.5"
+                              />
+                              <span className="text-xs font-sans text-[#121316]">
+                                {evt.label}
+                              </span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Régimes */}
+                      <div className="space-y-1.5">
+                        <label
+                          htmlFor="dietaryRestrictions"
+                          className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
+                        >
+                          Régimes ou allergies
+                        </label>
                         <input
-                          type="hidden"
-                          name="guestsCount"
-                          value={guestsCount}
+                          id="dietaryRestrictions"
+                          name="dietaryRestrictions"
+                          type="text"
+                          placeholder="Végétarien, sans gluten..."
+                          className="deboss-input w-full px-4 py-3 rounded-xl text-sm font-sans text-[#121316]"
                         />
                       </div>
-                    </div>
 
-                    {/* Événements */}
-                    <div className="space-y-2">
-                      <label className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]">
-                        Présence aux temps forts
-                      </label>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                        {[
-                          { id: "ceremony", label: "Cérémonie" },
-                          { id: "cocktail", label: "Cocktail" },
-                          { id: "brunch", label: "Brunch" },
-                        ].map((evt) => (
-                          <label
-                            key={evt.id}
-                            className="deboss-input flex items-center gap-2 p-3 rounded-xl cursor-pointer"
-                          >
-                            <input
-                              type="checkbox"
-                              name="events"
-                              value={evt.id}
-                              defaultChecked
-                              className="accent-[#121316] w-3.5 h-3.5"
-                            />
-                            <span className="text-xs font-sans text-[#121316]">
-                              {evt.label}
-                            </span>
-                          </label>
-                        ))}
+                      {/* Musique */}
+                      <div className="space-y-1.5">
+                        <label
+                          htmlFor="songSuggestion"
+                          className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
+                        >
+                          Une chanson pour le DJ
+                        </label>
+                        <input
+                          id="songSuggestion"
+                          name="songSuggestion"
+                          type="text"
+                          placeholder="Artiste - Titre"
+                          className="deboss-input w-full px-4 py-3 rounded-xl text-sm font-sans text-[#121316]"
+                        />
                       </div>
-                    </div>
-
-                    {/* Régimes */}
-                    <div className="space-y-1.5">
-                      <label
-                        htmlFor="dietaryRestrictions"
-                        className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
-                      >
-                        Régimes ou allergies
-                      </label>
-                      <input
-                        id="dietaryRestrictions"
-                        name="dietaryRestrictions"
-                        type="text"
-                        placeholder="Végétarien, sans gluten..."
-                        className="deboss-input w-full px-4 py-3 rounded-xl text-sm font-sans text-[#121316]"
-                      />
-                    </div>
-
-                    {/* Musique */}
-                    <div className="space-y-1.5">
-                      <label
-                        htmlFor="songSuggestion"
-                        className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
-                      >
-                        Une chanson pour le DJ
-                      </label>
-                      <input
-                        id="songSuggestion"
-                        name="songSuggestion"
-                        type="text"
-                        placeholder="Artiste - Titre"
-                        className="deboss-input w-full px-4 py-3 rounded-xl text-sm font-sans text-[#121316]"
-                      />
-                    </div>
-                  </>
-                )}
-
-                {/* Mot doux */}
-                <div className="space-y-1.5">
-                  <label
-                    htmlFor="loveNote"
-                    className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
-                  >
-                    Un mot pour Anthony & Ophélie
-                  </label>
-                  <textarea
-                    id="loveNote"
-                    name="loveNote"
-                    rows={3}
-                    placeholder="Laissez votre message..."
-                    className="deboss-input w-full px-4 py-3 rounded-xl text-sm font-sans text-[#121316] resize-none"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isPending}
-                  className="w-full py-4 rounded-xl convex-dark-btn text-white font-semibold text-xs uppercase tracking-wider cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  {isPending ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Envoi...
                     </>
-                  ) : (
-                    "Transmettre ma réponse"
                   )}
-                </button>
-              </form>
-            )}
+
+                  {/* Mot doux */}
+                  <div className="space-y-1.5">
+                    <label
+                      htmlFor="loveNote"
+                      className="text-[11px] font-semibold tracking-wider uppercase text-[#5C626C]"
+                    >
+                      Un mot pour Anthony & Ophélie
+                    </label>
+                    <textarea
+                      id="loveNote"
+                      name="loveNote"
+                      rows={3}
+                      placeholder="Laissez votre message..."
+                      className="deboss-input w-full px-4 py-3 rounded-xl text-sm font-sans text-[#121316] resize-none"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isPending}
+                    className="w-full py-4 rounded-xl convex-dark-btn text-white font-semibold text-xs uppercase tracking-wider cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    {isPending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Envoi...
+                      </>
+                    ) : (
+                      "Transmettre ma réponse"
+                    )}
+                  </button>
+                </form>
+              )}
 
               {/* Footer discret */}
               <div className="pt-12 text-center text-xs text-[#949BA5] font-sans border-t border-black/[0.05]">
