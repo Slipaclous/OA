@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { Calendar, MapPin, Gift, ExternalLink, ChevronDown, Check, Loader2, Heart } from "lucide-react";
 import { DressCodeSection } from "@/components/DressCodeSection";
@@ -51,6 +52,41 @@ export function MobileAppleScrollytelling({
   guestsCount,
   setGuestsCount,
 }: Props) {
+  const [currentIdx, setCurrentIdx] = useState(0);
+
+  const sec0 = useRef<HTMLElement>(null);
+  const sec1 = useRef<HTMLElement>(null);
+  const sec2 = useRef<HTMLElement>(null);
+  const sec3 = useRef<HTMLElement>(null);
+  const sec4 = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const refs = [sec0, sec1, sec2, sec3, sec4];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const indexStr = entry.target.getAttribute("data-index");
+            if (indexStr !== null) {
+              setCurrentIdx(parseInt(indexStr, 10));
+            }
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: "-40% 0px -40% 0px", // actif quand la section occupe le milieu de l'écran
+        threshold: 0,
+      }
+    );
+
+    refs.forEach((r) => {
+      if (r.current) observer.observe(r.current);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   let dynamicSteps = timelineSteps;
   if (config?.programmeSchedule) {
     try {
@@ -62,26 +98,38 @@ export function MobileAppleScrollytelling({
   }
 
   return (
-    <div className="lg:hidden w-full bg-[#121316]">
+    <div className="lg:hidden relative w-full bg-[#121316]">
+      {/* ========================================================
+          FOND FIXE GLOBAL : Photos qui changent en fondu au scroll
+         ======================================================== */}
+      <div className="fixed inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+        {chapters.map((ch, idx) => (
+          <div
+            key={ch.id}
+            className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out ${
+              currentIdx === idx ? "opacity-100 scale-100" : "opacity-0 scale-105"
+            }`}
+          >
+            <Image
+              src={ch.image}
+              alt={ch.imageAlt}
+              fill
+              priority={idx === 0}
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+            {/* Dégradé sombre cinématique haut de gamme */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/55 to-black/35" />
+          </div>
+        ))}
+      </div>
+
       {/* ====================================================
           CHAPITRE 01 : L'INVITATION
          ==================================================== */}
-      <section className="relative w-full">
-        {/* Photo sticky 100dvh en arrière-plan */}
-        <div className="sticky top-0 h-[100dvh] w-full overflow-hidden -z-10">
-          <Image
-            src={chapters[0].image}
-            alt={chapters[0].imageAlt}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-        </div>
-
-        {/* 1. Écran initial : La photo pure avec légende et indicateur */}
-        <div className="relative -mt-[100dvh] h-[100dvh] w-full flex flex-col justify-end p-6 pb-14 text-white pointer-events-none">
+      <section ref={sec0} data-index="0" className="relative z-10 w-full">
+        {/* Vue 1 : Photo seule avec légende */}
+        <div className="h-[100dvh] w-full flex flex-col justify-end p-6 pb-16 text-white pointer-events-none">
           <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/75 block mb-1">
             Chapitre 01 • Lookbook
           </span>
@@ -94,8 +142,8 @@ export function MobileAppleScrollytelling({
           </div>
         </div>
 
-        {/* 2. Le contenu monte par-dessus la photo dans le scroll naturel */}
-        <div className="relative z-10 px-4 pt-12 pb-28">
+        {/* Vue 2 : Contenu qui monte par-dessus la photo */}
+        <div className="px-4 pt-10 pb-32">
           <div className="space-y-6 text-white max-w-md mx-auto w-full">
             <div className="space-y-3">
               <div className="flex items-center gap-3">
@@ -143,19 +191,9 @@ export function MobileAppleScrollytelling({
       {/* ====================================================
           CHAPITRE 02 : LE DÉCOMPTE
          ==================================================== */}
-      <section className="relative w-full">
-        <div className="sticky top-0 h-[100dvh] w-full overflow-hidden -z-10">
-          <Image
-            src={chapters[1].image}
-            alt={chapters[1].imageAlt}
-            fill
-            sizes="100vw"
-            className="object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-        </div>
-
-        <div className="relative -mt-[100dvh] h-[100dvh] w-full flex flex-col justify-end p-6 pb-14 text-white pointer-events-none">
+      <section ref={sec1} data-index="1" className="relative z-10 w-full">
+        {/* Vue 1 : Photo seule avec légende */}
+        <div className="h-[100dvh] w-full flex flex-col justify-end p-6 pb-16 text-white pointer-events-none">
           <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/75 block mb-1">
             Chapitre 02 • Lookbook
           </span>
@@ -168,7 +206,8 @@ export function MobileAppleScrollytelling({
           </div>
         </div>
 
-        <div className="relative z-10 px-4 pt-12 pb-28">
+        {/* Vue 2 : Décompte */}
+        <div className="px-4 pt-10 pb-32">
           <div className="space-y-6 text-white max-w-md mx-auto w-full">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
@@ -217,19 +256,9 @@ export function MobileAppleScrollytelling({
       {/* ====================================================
           CHAPITRE 03 : LE PROGRAMME DE LA JOURNÉE
          ==================================================== */}
-      <section className="relative w-full">
-        <div className="sticky top-0 h-[100dvh] w-full overflow-hidden -z-10">
-          <Image
-            src={chapters[2].image}
-            alt={chapters[2].imageAlt}
-            fill
-            sizes="100vw"
-            className="object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-        </div>
-
-        <div className="relative -mt-[100dvh] h-[100dvh] w-full flex flex-col justify-end p-6 pb-14 text-white pointer-events-none">
+      <section ref={sec2} data-index="2" className="relative z-10 w-full">
+        {/* Vue 1 : Photo seule avec légende */}
+        <div className="h-[100dvh] w-full flex flex-col justify-end p-6 pb-16 text-white pointer-events-none">
           <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/75 block mb-1">
             Chapitre 03 • Lookbook
           </span>
@@ -242,8 +271,8 @@ export function MobileAppleScrollytelling({
           </div>
         </div>
 
-        {/* Tout le contenu scroll librement sous le pouce sans aucune limite d'écran */}
-        <div className="relative z-10 px-4 pt-12 pb-32">
+        {/* Vue 2 : Programme complet scrollable sans limite */}
+        <div className="px-4 pt-10 pb-36">
           <div className="space-y-5 text-white max-w-md mx-auto w-full">
             <div className="space-y-1">
               <div className="flex items-center gap-3">
@@ -335,19 +364,9 @@ export function MobileAppleScrollytelling({
       {/* ====================================================
           CHAPITRE 04 : CADEAUX & ATTENTIONS
          ==================================================== */}
-      <section className="relative w-full">
-        <div className="sticky top-0 h-[100dvh] w-full overflow-hidden -z-10">
-          <Image
-            src={chapters[3].image}
-            alt={chapters[3].imageAlt}
-            fill
-            sizes="100vw"
-            className="object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-        </div>
-
-        <div className="relative -mt-[100dvh] h-[100dvh] w-full flex flex-col justify-end p-6 pb-14 text-white pointer-events-none">
+      <section ref={sec3} data-index="3" className="relative z-10 w-full">
+        {/* Vue 1 : Photo seule avec légende */}
+        <div className="h-[100dvh] w-full flex flex-col justify-end p-6 pb-16 text-white pointer-events-none">
           <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/75 block mb-1">
             Chapitre 04 • Lookbook
           </span>
@@ -360,7 +379,8 @@ export function MobileAppleScrollytelling({
           </div>
         </div>
 
-        <div className="relative z-10 px-4 pt-12 pb-28">
+        {/* Vue 2 : Cadeaux */}
+        <div className="px-4 pt-10 pb-32">
           <div className="space-y-5 text-white max-w-md mx-auto w-full">
             <div className="space-y-1">
               <div className="flex items-center gap-3">
@@ -431,19 +451,9 @@ export function MobileAppleScrollytelling({
       {/* ====================================================
           CHAPITRE 05 : RSVP & CONFIRMATION
          ==================================================== */}
-      <section className="relative w-full">
-        <div className="sticky top-0 h-[100dvh] w-full overflow-hidden -z-10">
-          <Image
-            src={chapters[4]?.image || chapters[0].image}
-            alt={chapters[4]?.imageAlt || "Confirmation"}
-            fill
-            sizes="100vw"
-            className="object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
-        </div>
-
-        <div className="relative -mt-[100dvh] h-[100dvh] w-full flex flex-col justify-end p-6 pb-14 text-white pointer-events-none">
+      <section ref={sec4} data-index="4" className="relative z-10 w-full">
+        {/* Vue 1 : Photo seule avec légende */}
+        <div className="h-[100dvh] w-full flex flex-col justify-end p-6 pb-16 text-white pointer-events-none">
           <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/75 block mb-1">
             Chapitre 05 • Lookbook
           </span>
@@ -456,7 +466,8 @@ export function MobileAppleScrollytelling({
           </div>
         </div>
 
-        <div className="relative z-10 px-4 pt-12 pb-32">
+        {/* Vue 2 : Formulaire RSVP complet */}
+        <div className="px-4 pt-10 pb-40">
           <div className="space-y-4 text-white max-w-md mx-auto w-full">
             <div className="space-y-1">
               <div className="flex items-center gap-3">
