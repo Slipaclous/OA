@@ -318,21 +318,16 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
           </Link>
         </nav>
 
-        {/* Action rapide mobile dans le header (translucide sombre) */}
-        <div className="flex lg:hidden items-center gap-2">
+        {/* Action rapide mobile dans le header : uniquement une icône discrète pour la galerie */}
+        <div className="flex lg:hidden items-center">
           <button
             onClick={() => openFullscreen(0)}
-            className="px-3 py-1.5 rounded-xl bg-white/15 border border-white/20 text-[11px] font-sans font-semibold text-white flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all"
+            title="Galerie photos"
+            aria-label="Ouvrir la galerie photos"
+            className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/15 transition-all cursor-pointer active:scale-95 flex items-center justify-center"
           >
-            <Maximize2 className="w-3 h-3" />
-            Galerie
+            <Maximize2 className="w-4 h-4" />
           </button>
-          <Link
-            href="/admin"
-            className="p-2 rounded-xl bg-white/15 border border-white/20 text-white/80"
-          >
-            <Lock className="w-3.5 h-3.5" />
-          </Link>
         </div>
       </header>
 
