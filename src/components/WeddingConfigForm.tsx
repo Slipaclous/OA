@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { updateWeddingConfig } from "@/app/actions/config";
-import { Loader2, Palette, CheckCircle2, Plus, Trash2, FileText, Calendar, MapPin } from "lucide-react";
+import { Loader2, Palette, CheckCircle2, Plus, Trash2, FileText, Calendar } from "lucide-react";
 
 interface ColorItem {
   name: string;
@@ -152,371 +152,365 @@ export function WeddingConfigForm({ initialConfig }: ConfigFormProps) {
         </button>
       </div>
 
-      {/* 1. ÉDITION DE TOUS LES TEXTES DU SITE */}
-      {activeSubTab === "texts" && (
-        <div className="space-y-6 animate-in fade-in duration-200">
-          {/* Chapitre 01 : Invitation */}
-          <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
-            <div className="flex items-center gap-2 pb-2 border-b border-black/[0.06]">
-              <span className="text-xs uppercase tracking-wider text-[#949BA5] font-semibold">
-                Chapitre 01
-              </span>
-              <h4 className="font-serif text-lg text-[#121316]">
-                L&apos;Invitation & Message d&apos;accueil
-              </h4>
-            </div>
+      {/* 1. ÉDITION DE TOUS LES TEXTES DU SITE (TOUS LES INPUTS SONT MAINTENUS DANS LE DOM VIA HIDDEN) */}
+      <div className={`space-y-6 ${activeSubTab === "texts" ? "block" : "hidden"}`}>
+        {/* Chapitre 01 : Invitation */}
+        <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b border-black/[0.06]">
+            <span className="text-xs uppercase tracking-wider text-[#949BA5] font-semibold">
+              Chapitre 01
+            </span>
+            <h4 className="font-serif text-lg text-[#121316]">
+              L&apos;Invitation & Message d&apos;accueil
+            </h4>
+          </div>
 
+          <div className="space-y-1.5">
+            <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+              Sous-titre / En-tête
+            </label>
+            <input
+              type="text"
+              name="invitationSubtitle"
+              defaultValue={initialConfig.invitationSubtitle}
+              className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+              Texte d&apos;invitation principal
+            </label>
+            <textarea
+              name="invitationText"
+              rows={3}
+              defaultValue={initialConfig.invitationText}
+              className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316] resize-none"
+            />
+          </div>
+        </div>
+
+        {/* Chapitre 02 : Décompte */}
+        <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b border-black/[0.06]">
+            <span className="text-xs uppercase tracking-wider text-[#949BA5] font-semibold">
+              Chapitre 02
+            </span>
+            <h4 className="font-serif text-lg text-[#121316]">
+              Le Décompte
+            </h4>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                Sous-titre / En-tête
+                Titre
               </label>
               <input
                 type="text"
-                name="invitationSubtitle"
-                defaultValue={initialConfig.invitationSubtitle}
+                name="countdownTitle"
+                defaultValue={initialConfig.countdownTitle}
                 className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
               />
             </div>
 
             <div className="space-y-1.5">
               <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                Texte d&apos;invitation principal
+                Phrase d&apos;introduction
               </label>
-              <textarea
-                name="invitationText"
-                rows={3}
-                defaultValue={initialConfig.invitationText}
-                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316] resize-none"
+              <input
+                type="text"
+                name="countdownText"
+                defaultValue={initialConfig.countdownText}
+                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
               />
             </div>
           </div>
+        </div>
 
-          {/* Chapitre 02 : Décompte */}
-          <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
-            <div className="flex items-center gap-2 pb-2 border-b border-black/[0.06]">
-              <span className="text-xs uppercase tracking-wider text-[#949BA5] font-semibold">
-                Chapitre 02
-              </span>
-              <h4 className="font-serif text-lg text-[#121316]">
-                Le Décompte
-              </h4>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                  Titre
-                </label>
-                <input
-                  type="text"
-                  name="countdownTitle"
-                  defaultValue={initialConfig.countdownTitle}
-                  className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                  Phrase d&apos;introduction
-                </label>
-                <input
-                  type="text"
-                  name="countdownText"
-                  defaultValue={initialConfig.countdownText}
-                  className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
-                />
-              </div>
-            </div>
+        {/* Chapitre 03 : Programme */}
+        <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b border-black/[0.06]">
+            <span className="text-xs uppercase tracking-wider text-[#949BA5] font-semibold">
+              Chapitre 03
+            </span>
+            <h4 className="font-serif text-lg text-[#121316]">
+              Le Programme
+            </h4>
           </div>
 
-          {/* Chapitre 03 : Programme */}
-          <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
-            <div className="flex items-center gap-2 pb-2 border-b border-black/[0.06]">
-              <span className="text-xs uppercase tracking-wider text-[#949BA5] font-semibold">
-                Chapitre 03
-              </span>
-              <h4 className="font-serif text-lg text-[#121316]">
-                Le Programme
-              </h4>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                  Titre du programme
-                </label>
-                <input
-                  type="text"
-                  name="programmeTitle"
-                  defaultValue={initialConfig.programmeTitle}
-                  className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                  Sous-titre
-                </label>
-                <input
-                  type="text"
-                  name="programmeText"
-                  defaultValue={initialConfig.programmeText}
-                  className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Chapitre 04 : RSVP */}
-          <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
-            <div className="flex items-center gap-2 pb-2 border-b border-black/[0.06]">
-              <span className="text-xs uppercase tracking-wider text-[#949BA5] font-semibold">
-                Chapitre 04
-              </span>
-              <h4 className="font-serif text-lg text-[#121316]">
-                Formulaire de Réponse (RSVP)
-              </h4>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                  Titre de la section
-                </label>
-                <input
-                  type="text"
-                  name="rsvpTitle"
-                  defaultValue={initialConfig.rsvpTitle}
-                  className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                  Date limite de réponse souhaitée
-                </label>
-                <input
-                  type="text"
-                  name="rsvpDeadline"
-                  defaultValue={initialConfig.rsvpDeadline}
-                  placeholder="Ex: 1er Mai 2027"
-                  className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
-                />
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+                Titre du programme
+              </label>
+              <input
+                type="text"
+                name="programmeTitle"
+                defaultValue={initialConfig.programmeTitle}
+                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
+              />
             </div>
 
             <div className="space-y-1.5">
               <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                Message explicatif aux invités
+                Sous-titre
               </label>
-              <textarea
-                name="rsvpText"
-                rows={2}
-                defaultValue={initialConfig.rsvpText}
-                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316] resize-none"
+              <input
+                type="text"
+                name="programmeText"
+                defaultValue={initialConfig.programmeText}
+                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
               />
             </div>
           </div>
         </div>
-      )}
 
-      {/* 2. ÉDITION INFORMATIONS GÉNÉRALES & MARIÉS */}
-      {activeSubTab === "general" && (
-        <div className="space-y-6 animate-in fade-in duration-200">
-          <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
-            <h4 className="font-serif text-lg text-[#121316] pb-2 border-b border-black/[0.06]">
-              Prénoms des Mariés
+        {/* Chapitre 04 : RSVP */}
+        <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
+          <div className="flex items-center gap-2 pb-2 border-b border-black/[0.06]">
+            <span className="text-xs uppercase tracking-wider text-[#949BA5] font-semibold">
+              Chapitre 04
+            </span>
+            <h4 className="font-serif text-lg text-[#121316]">
+              Formulaire de Réponse (RSVP)
             </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                  Prénom de la mariée
-                </label>
-                <input
-                  type="text"
-                  name="brideName"
-                  defaultValue={initialConfig.brideName}
-                  className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                  Prénom du marié
-                </label>
-                <input
-                  type="text"
-                  name="groomName"
-                  defaultValue={initialConfig.groomName}
-                  className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
-                />
-              </div>
-            </div>
           </div>
 
-          <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
-            <h4 className="font-serif text-lg text-[#121316] pb-2 border-b border-black/[0.06]">
-              Date & Lieu de la Réception
-            </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                  Date & Heure du Mariage
-                </label>
-                <input
-                  type="datetime-local"
-                  name="weddingDate"
-                  defaultValue={initialConfig.weddingDate}
-                  className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                  Nom du Domaine / Lieu
-                </label>
-                <input
-                  type="text"
-                  name="venueName"
-                  defaultValue={initialConfig.venueName}
-                  className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                  Ville / Région
-                </label>
-                <input
-                  type="text"
-                  name="venueCity"
-                  defaultValue={initialConfig.venueCity}
-                  className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                  Adresse exacte (pour GPS)
-                </label>
-                <input
-                  type="text"
-                  name="venueAddress"
-                  defaultValue={initialConfig.venueAddress}
-                  className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
-                />
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+                Titre de la section
+              </label>
+              <input
+                type="text"
+                name="rsvpTitle"
+                defaultValue={initialConfig.rsvpTitle}
+                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
+              />
             </div>
-          </div>
-        </div>
-      )}
 
-      {/* 3. ÉDITION DRESS CODE */}
-      {activeSubTab === "dresscode" && (
-        <div className="space-y-6 animate-in fade-in duration-200">
-          <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
-            <div>
-              <h4 className="font-serif text-xl text-[#121316]">
-                Palette Visuelle & Nuances Suggérées
-              </h4>
-              <p className="font-sans text-xs text-[#5C626C] mt-0.5">
-                Sélectionnez les couleurs à la souris ou saisissez leur code HEX.
-              </p>
+            <div className="space-y-1.5">
+              <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+                Date limite de réponse souhaitée
+              </label>
+              <input
+                type="text"
+                name="rsvpDeadline"
+                defaultValue={initialConfig.rsvpDeadline}
+                placeholder="Ex: 1er Mai 2027"
+                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
+              />
             </div>
-            <button
-              type="button"
-              onClick={addColor}
-              disabled={colors.length >= 8}
-              className="px-3.5 py-1.5 rounded-xl convex-btn text-xs font-semibold font-sans text-[#121316] flex items-center gap-1.5 cursor-pointer disabled:opacity-40"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              Ajouter une couleur
-            </button>
           </div>
 
           <div className="space-y-1.5">
             <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-              Titre de la recommandation
+              Message explicatif aux invités
             </label>
-            <input
-              type="text"
-              name="dressCodeTitle"
-              defaultValue={initialConfig.dressCodeTitle}
-              className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
+            <textarea
+              name="rsvpText"
+              rows={2}
+              defaultValue={initialConfig.rsvpText}
+              className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316] resize-none"
             />
           </div>
+        </div>
+      </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {colors.map((color, index) => (
-              <div
-                key={index}
-                className="p-3 rounded-2xl emboss-card border border-white flex items-center justify-between gap-3"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="relative w-10 h-10 rounded-xl overflow-hidden shrink-0 shadow-inner border border-black/10 cursor-pointer">
-                    <input
-                      type="color"
-                      value={color.hex}
-                      onChange={(e) => updateColorHex(index, e.target.value)}
-                      className="absolute -top-3 -left-3 w-16 h-16 cursor-pointer border-0 p-0"
-                    />
-                  </div>
-                  <div className="min-w-0">
-                    <input
-                      type="text"
-                      value={color.name}
-                      onChange={(e) => updateColorName(index, e.target.value)}
-                      className="deboss-input px-2.5 py-1 rounded-lg text-xs font-sans font-medium text-[#121316] w-full"
-                      placeholder="Nom"
-                    />
-                    <span className="text-[10px] text-[#949BA5] uppercase font-mono tracking-wider block mt-0.5 px-0.5">
-                      {color.hex.toUpperCase()}
-                    </span>
-                  </div>
-                </div>
-
-                {colors.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeColor(index)}
-                    className="p-1.5 rounded-lg text-[#949BA5] hover:text-red-600 transition-colors cursor-pointer"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-
-          <input type="hidden" name="dressCodeColors" value={serializedColors} />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+      {/* 2. ÉDITION INFORMATIONS GÉNÉRALES & MARIÉS */}
+      <div className={`space-y-6 ${activeSubTab === "general" ? "block" : "hidden"}`}>
+        <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
+          <h4 className="font-serif text-lg text-[#121316] pb-2 border-b border-black/[0.06]">
+            Prénoms des Mariés
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                Description du style
+                Prénom de la mariée
               </label>
-              <textarea
-                name="dressCodeDesc"
-                rows={3}
-                defaultValue={initialConfig.dressCodeDesc}
-                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316] resize-none"
+              <input
+                type="text"
+                name="brideName"
+                defaultValue={initialConfig.brideName}
+                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
               />
             </div>
 
             <div className="space-y-1.5">
               <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                Conseil pratique (chaussures, pelouse...)
+                Prénom du marié
               </label>
-              <textarea
-                name="dressCodeAdvice"
-                rows={3}
-                defaultValue={initialConfig.dressCodeAdvice}
-                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316] resize-none"
+              <input
+                type="text"
+                name="groomName"
+                defaultValue={initialConfig.groomName}
+                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
               />
             </div>
           </div>
         </div>
-      )}
+
+        <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
+          <h4 className="font-serif text-lg text-[#121316] pb-2 border-b border-black/[0.06]">
+            Date & Lieu de la Réception
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+                Date & Heure du Mariage
+              </label>
+              <input
+                type="datetime-local"
+                name="weddingDate"
+                defaultValue={initialConfig.weddingDate}
+                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+                Nom du Domaine / Lieu
+              </label>
+              <input
+                type="text"
+                name="venueName"
+                defaultValue={initialConfig.venueName}
+                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+                Ville / Région
+              </label>
+              <input
+                type="text"
+                name="venueCity"
+                defaultValue={initialConfig.venueCity}
+                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+                Adresse exacte (pour GPS)
+              </label>
+              <input
+                type="text"
+                name="venueAddress"
+                defaultValue={initialConfig.venueAddress}
+                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. ÉDITION DRESS CODE */}
+      <div className={`space-y-6 ${activeSubTab === "dresscode" ? "block" : "hidden"}`}>
+        <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
+          <div>
+            <h4 className="font-serif text-xl text-[#121316]">
+              Palette Visuelle & Nuances Suggérées
+            </h4>
+            <p className="font-sans text-xs text-[#5C626C] mt-0.5">
+              Sélectionnez les couleurs à la souris ou saisissez leur code HEX.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={addColor}
+            disabled={colors.length >= 8}
+            className="px-3.5 py-1.5 rounded-xl convex-btn text-xs font-semibold font-sans text-[#121316] flex items-center gap-1.5 cursor-pointer disabled:opacity-40"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Ajouter une couleur
+          </button>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+            Titre de la recommandation
+          </label>
+          <input
+            type="text"
+            name="dressCodeTitle"
+            defaultValue={initialConfig.dressCodeTitle}
+            className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          {colors.map((color, index) => (
+            <div
+              key={index}
+              className="p-3 rounded-2xl emboss-card border border-white flex items-center justify-between gap-3"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="relative w-10 h-10 rounded-xl overflow-hidden shrink-0 shadow-inner border border-black/10 cursor-pointer">
+                  <input
+                    type="color"
+                    value={color.hex}
+                    onChange={(e) => updateColorHex(index, e.target.value)}
+                    className="absolute -top-3 -left-3 w-16 h-16 cursor-pointer border-0 p-0"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <input
+                    type="text"
+                    value={color.name}
+                    onChange={(e) => updateColorName(index, e.target.value)}
+                    className="deboss-input px-2.5 py-1 rounded-lg text-xs font-sans font-medium text-[#121316] w-full"
+                    placeholder="Nom"
+                  />
+                  <span className="text-[10px] text-[#949BA5] uppercase font-mono tracking-wider block mt-0.5 px-0.5">
+                    {color.hex.toUpperCase()}
+                  </span>
+                </div>
+              </div>
+
+              {colors.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeColor(index)}
+                  className="p-1.5 rounded-lg text-[#949BA5] hover:text-red-600 transition-colors cursor-pointer"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <input type="hidden" name="dressCodeColors" value={serializedColors} />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div className="space-y-1.5">
+            <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+              Description du style
+            </label>
+            <textarea
+              name="dressCodeDesc"
+              rows={3}
+              defaultValue={initialConfig.dressCodeDesc}
+              className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316] resize-none"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+              Conseil pratique (chaussures, pelouse...)
+            </label>
+            <textarea
+              name="dressCodeAdvice"
+              rows={3}
+              defaultValue={initialConfig.dressCodeAdvice}
+              className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316] resize-none"
+            />
+          </div>
+        </div>
+      </div>
 
       {/* BOUTON DE SAUVEGARDE UNIVERSEL */}
       <div className="flex items-center justify-between pt-4 border-t border-black/[0.06]">
