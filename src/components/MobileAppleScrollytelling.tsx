@@ -124,7 +124,7 @@ function ChapterSection({
         {/* 2. ÉTAT AU SCROLL : Contenu qui monte par-dessus la photo (sans halo blanc) */}
         <motion.div
           style={{ opacity: contentOpacity, y: contentY }}
-          className="absolute inset-0 flex flex-col justify-center p-4 sm:p-6 overflow-y-auto no-scrollbar pointer-events-auto"
+          className="absolute inset-0 flex flex-col justify-start sm:justify-center p-4 pt-16 pb-20 sm:p-6 overflow-y-auto overscroll-contain touch-pan-y pointer-events-auto"
         >
           {children}
         </motion.div>
@@ -257,7 +257,7 @@ export function MobileAppleScrollytelling({
           CHAPITRE 03 : LE PROGRAMME DE LA JOURNÉE
          ==================================================== */}
       <ChapterSection chapter={chapters[2]} index={2} total={chapters.length} config={config}>
-        <div className="space-y-4 text-white max-w-md mx-auto w-full max-h-[85dvh] overflow-y-auto no-scrollbar py-4">
+        <div className="space-y-4 text-white max-w-md mx-auto w-full py-2">
           <div className="space-y-1">
             <div className="flex items-center gap-3">
               <span className="text-xs uppercase tracking-[0.3em] text-white/75 font-semibold font-sans">
@@ -338,6 +338,7 @@ export function MobileAppleScrollytelling({
               desc={config?.dressCodeDesc}
               colors={config?.dressCodeColors}
               advice={config?.dressCodeAdvice}
+              isDark={true}
             />
           </div>
         </div>
@@ -417,7 +418,7 @@ export function MobileAppleScrollytelling({
           CHAPITRE 05 : RSVP & CONFIRMATION
          ==================================================== */}
       <ChapterSection chapter={chapters[4]} index={4} total={chapters.length} config={config}>
-        <div className="space-y-4 text-white max-w-md mx-auto w-full max-h-[88dvh] overflow-y-auto no-scrollbar py-4">
+        <div className="space-y-4 text-white max-w-md mx-auto w-full py-2">
           <div className="space-y-1">
             <div className="flex items-center gap-3">
               <span className="text-xs uppercase tracking-[0.3em] text-white/75 font-semibold font-sans">

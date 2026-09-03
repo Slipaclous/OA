@@ -3,6 +3,7 @@ interface DressCodeProps {
   desc?: string;
   colors?: string;
   advice?: string;
+  isDark?: boolean;
 }
 
 export function DressCodeSection({
@@ -10,6 +11,7 @@ export function DressCodeSection({
   desc = "Pour une harmonie visuelle élégante sur les photos de la journée, nous vous invitons à privilégier une tenue chic contemporaine, épurée et intemporelle.",
   colors = "Blanc Pur:#FFFFFF,Sable Minéral:#E9ECEF,Gris Taupe:#CED4DA,Ardoise:#495057,Noir Profond:#121316",
   advice = "Le cocktail aura lieu en extérieur dans le parc du domaine, prévoyez des chaussures confortables pour les allées en herbe.",
+  isDark = false,
 }: DressCodeProps) {
   const parsedColors = colors
     .split(",")
@@ -24,24 +26,28 @@ export function DressCodeSection({
     .filter((c) => c.name && c.hex);
 
   return (
-    <div className="space-y-6 pt-6 border-t border-black/[0.06]">
-      <div className="space-y-2">
-        <span className="text-[11px] font-semibold tracking-[0.3em] uppercase text-[#5C626C] font-sans">
+    <div className={`space-y-4 ${isDark ? "" : "pt-6 border-t border-black/[0.06]"}`}>
+      <div className="space-y-1.5">
+        <span className={`text-[10px] font-semibold tracking-[0.3em] uppercase font-sans ${isDark ? "text-white/70" : "text-[#5C626C]"}`}>
           Atmosphère & Style
         </span>
-        <h3 className="font-serif text-2xl sm:text-3xl text-[#121316] font-normal">
+        <h3 className={`font-serif text-2xl sm:text-3xl font-normal ${isDark ? "text-white" : "text-[#121316]"}`}>
           {title}
         </h3>
         {desc && (
-          <p className="font-sans text-sm text-[#5C626C] leading-relaxed">
+          <p className={`font-sans text-xs sm:text-sm leading-relaxed ${isDark ? "text-white/80" : "text-[#5C626C]"}`}>
             {desc}
           </p>
         )}
       </div>
 
       {/* Nuancier dynamique */}
-      <div className="emboss-card rounded-2xl p-6 border border-white space-y-4">
-        <span className="text-[10px] font-sans uppercase tracking-[0.25em] text-[#5C626C] font-semibold block">
+      <div className={`rounded-2xl p-5 border space-y-3.5 ${
+        isDark
+          ? "bg-white/10 border-white/15 text-white"
+          : "emboss-card border-white text-[#121316]"
+      }`}>
+        <span className={`text-[10px] font-sans uppercase tracking-[0.25em] font-semibold block ${isDark ? "text-white/70" : "text-[#5C626C]"}`}>
           Nuances Suggérées
         </span>
         <div className="flex flex-wrap items-center gap-3">
@@ -62,7 +68,7 @@ export function DressCodeSection({
         </div>
 
         {advice && (
-          <div className="pt-2 text-xs text-[#5C626C] font-sans space-y-1">
+          <div className={`pt-2 text-xs font-sans space-y-1 ${isDark ? "text-white/80" : "text-[#5C626C]"}`}>
             <p>
               • <strong>Conseil pratique :</strong> {advice}
             </p>
