@@ -17,11 +17,25 @@ export default async function Home() {
       config={
         config
           ? {
+              brideName: config.brideName,
+              groomName: config.groomName,
+              weddingDate: config.weddingDate.toISOString(),
+              venueName: config.venueName,
+              venueCity: config.venueCity,
+              venueAddress: config.venueAddress,
+              invitationSubtitle: config.invitationSubtitle,
+              invitationText: config.invitationText,
+              countdownTitle: config.countdownTitle,
+              countdownText: config.countdownText,
+              programmeTitle: config.programmeTitle,
+              programmeText: config.programmeText,
+              rsvpTitle: config.rsvpTitle,
+              rsvpText: config.rsvpText,
+              rsvpDeadline: config.rsvpDeadline,
               dressCodeTitle: config.dressCodeTitle,
               dressCodeDesc: config.dressCodeDesc,
               dressCodeColors: config.dressCodeColors,
               dressCodeAdvice: config.dressCodeAdvice,
-              weddingDate: config.weddingDate.toISOString(),
             }
           : undefined
       }

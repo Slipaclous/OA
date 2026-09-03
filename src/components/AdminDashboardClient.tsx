@@ -51,15 +51,25 @@ interface AdminDashboardClientProps {
   rsvps: RsvpItem[];
   mediaList: MediaItem[];
   config: {
-    dressCodeTitle: string;
-    dressCodeDesc: string;
-    dressCodeColors: string;
-    dressCodeAdvice: string;
     brideName: string;
     groomName: string;
     weddingDate: string;
     venueName: string;
     venueCity: string;
+    venueAddress: string;
+    invitationSubtitle: string;
+    invitationText: string;
+    countdownTitle: string;
+    countdownText: string;
+    programmeTitle: string;
+    programmeText: string;
+    rsvpTitle: string;
+    rsvpText: string;
+    rsvpDeadline: string;
+    dressCodeTitle: string;
+    dressCodeDesc: string;
+    dressCodeColors: string;
+    dressCodeAdvice: string;
   };
 }
 

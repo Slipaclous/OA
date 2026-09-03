@@ -57,11 +57,30 @@ model WeddingConfig {
   venueName       String   @default("Domaine des Vignes Blanches")
   venueCity       String   @default("Provence, France")
   venueAddress    String   @default("Route du Château, 84000 Provence")
+  
+  // Textes Chapitre 01 (Invitation)
+  invitationSubtitle String @default("Mariage Civil & Célébration")
+  invitationText     String @default("Deux regards complices, des projets partagés et l'envie de sceller notre histoire entourés de ceux qui comptent le plus. Nous serions infiniment touchés de vous compter parmi nous.")
+  
+  // Textes Chapitre 02 (Décompte)
+  countdownTitle     String @default("Le Décompte")
+  countdownText      String @default("Les mois, les jours et les secondes qui nous séparent du moment où nous nous dirons « oui ».")
+
+  // Textes Chapitre 03 (Programme)
+  programmeTitle     String @default("Le Programme de la Journée")
+  programmeText      String @default("Une partition rythmée pour savourer chaque instant ensemble.")
+
+  // Textes Chapitre 04 (RSVP)
+  rsvpTitle          String @default("Confirmer Votre Présence")
+  rsvpText           String @default("Merci de nous transmettre votre réponse avant le 1er Mai 2027 afin de nous aider dans l'organisation.")
+  rsvpDeadline       String @default("1er Mai 2027")
+
+  // Dress Code
   dressCodeTitle  String   @default("Chic Contemporain & Épuré")
   dressCodeDesc   String   @default("Pour une harmonie visuelle élégante sur les photos de la journée, nous vous invitons à privilégier une tenue chic contemporaine, épurée et intemporelle.")
   dressCodeColors String   @default("Blanc Pur:#FFFFFF,Sable Minéral:#E9ECEF,Gris Taupe:#CED4DA,Ardoise:#495057,Noir Profond:#121316")
   dressCodeAdvice String   @default("Le cocktail aura lieu en extérieur dans le parc du domaine, prévoyez des chaussures confortables pour les allées en herbe.")
-  countdownTitle  String   @default("Vers le Jour J")
+
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }

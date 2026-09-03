@@ -117,11 +117,25 @@ const timelineSteps = [
 
 interface SplitScreenProps {
   config?: {
+    brideName?: string;
+    groomName?: string;
+    weddingDate?: string;
+    venueName?: string;
+    venueCity?: string;
+    venueAddress?: string;
+    invitationSubtitle?: string;
+    invitationText?: string;
+    countdownTitle?: string;
+    countdownText?: string;
+    programmeTitle?: string;
+    programmeText?: string;
+    rsvpTitle?: string;
+    rsvpText?: string;
+    rsvpDeadline?: string;
     dressCodeTitle?: string;
     dressCodeDesc?: string;
     dressCodeColors?: string;
     dressCodeAdvice?: string;
-    weddingDate?: string;
   };
   mediaList?: Array<{
     id: string;
@@ -390,17 +404,18 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 </span>
                 <div className="h-[1px] w-8 bg-black/15" />
                 <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
-                  Invitation
+                  {config?.invitationSubtitle || "Invitation"}
                 </span>
               </div>
 
               <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl tracking-tight text-[#121316] leading-[0.98] font-light">
-                Anthony <br />
-                <span className="font-serif italic text-[#5C626C]">&</span> Ophélie
+                {config?.groomName || "Anthony"} <br />
+                <span className="font-serif italic text-[#5C626C]">&</span> {config?.brideName || "Ophélie"}
               </h1>
 
               <p className="font-sans text-sm sm:text-base md:text-lg text-[#5C626C] leading-relaxed pt-1 max-w-lg">
-                Deux regards complices, des projets partagés et l&apos;envie de sceller notre histoire entourés de ceux qui comptent le plus. Nous serions infiniment touchés de vous compter parmi nous.
+                {config?.invitationText ||
+                  "Deux regards complices, des projets partagés et l'envie de sceller notre histoire entourés de ceux qui comptent le plus. Nous serions infiniment touchés de vous compter parmi nous."}
               </p>
             </div>
 
@@ -410,10 +425,16 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                   Date & Lieu
                 </span>
                 <p className="font-serif text-xl sm:text-2xl text-[#121316] mt-0.5">
-                  19 Juin 2027
+                  {config?.weddingDate
+                    ? new Date(config.weddingDate).toLocaleDateString("fr-FR", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })
+                    : "19 Juin 2027"}
                 </p>
                 <p className="text-xs text-[#5C626C] font-sans">
-                  Domaine des Vignes Blanches, Provence
+                  {config?.venueName || "Domaine des Vignes Blanches"}, {config?.venueCity || "Provence"}
                 </p>
               </div>
 
@@ -470,10 +491,11 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
               </div>
 
               <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
-                Le Décompte
+                {config?.countdownTitle || "Le Décompte"}
               </h2>
               <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C] max-w-md">
-                Les mois, les jours et les secondes qui nous séparent du moment où nous nous dirons « oui ».
+                {config?.countdownText ||
+                  "Les mois, les jours et les secondes qui nous séparent du moment où nous nous dirons « oui »."}
               </p>
             </div>
 
@@ -549,10 +571,10 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
               </div>
 
               <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
-                Le Programme de la Journée
+                {config?.programmeTitle || "Le Programme de la Journée"}
               </h2>
               <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C]">
-                Une partition rythmée pour savourer chaque instant ensemble.
+                {config?.programmeText || "Une partition rythmée pour savourer chaque instant ensemble."}
               </p>
             </div>
 
@@ -662,10 +684,11 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
               </div>
 
               <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
-                Confirmer Votre Présence
+                {config?.rsvpTitle || "Confirmer Votre Présence"}
               </h2>
               <p className="font-sans text-xs sm:text-sm text-[#5C626C]">
-                Merci de nous transmettre votre réponse avant le 1er Mai 2027.
+                {config?.rsvpText ||
+                  `Merci de nous transmettre votre réponse avant le ${config?.rsvpDeadline || "1er Mai 2027"}.`}
               </p>
             </div>
 
