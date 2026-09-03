@@ -487,35 +487,47 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
             </div>
           </div>
 
-          {/* ÉTAPE B : INFORMATIONS DU CHAPITRE 01 */}
+          {/* ÉTAPE B : INFORMATIONS DU CHAPITRE 01 (PAR-DESSUS LA PHOTO) */}
           <section
             id="invitation-details"
-            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-center p-6 sm:p-8 lg:p-0"
+            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0"
           >
-            <div className="space-y-4 mb-16 lg:mb-0">
-              <div className="space-y-3">
+            {/* Même photo en arrière-plan avec voile protecteur pour superposition */}
+            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
+              <Image
+                src={dynamicChapters[0].image}
+                alt={dynamicChapters[0].imageAlt}
+                fill
+                sizes="100vw"
+                className="object-cover object-center"
+              />
+              <div className="absolute inset-0 bg-black/45 backdrop-blur-[2px]" />
+            </div>
+
+            <div className="relative z-10 space-y-4 mb-20 lg:mb-0">
+              <div className="space-y-3 text-white lg:text-[#121316]">
                 <div className="flex items-center gap-3">
-                  <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                  <span className="text-xs uppercase tracking-[0.3em] text-white/80 lg:text-[#5C626C] font-semibold font-sans">
                     Chapitre 01
                   </span>
-                  <div className="h-[1px] w-8 bg-black/15" />
-                  <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                  <div className="h-[1px] w-8 bg-white/30 lg:bg-black/15" />
+                  <span className="text-xs uppercase tracking-[0.2em] text-white/70 lg:text-[#949BA5] font-sans">
                     {config?.invitationSubtitle || "Invitation"}
                   </span>
                 </div>
 
-                <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl tracking-tight text-[#121316] leading-[0.98] font-light">
+                <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl tracking-tight text-white lg:text-[#121316] leading-[0.98] font-light drop-shadow-sm">
                   {config?.groomName || "Anthony"} <br />
-                  <span className="font-serif italic text-[#5C626C]">&</span> {config?.brideName || "Ophélie"}
+                  <span className="font-serif italic text-white/80 lg:text-[#5C626C]">&</span> {config?.brideName || "Ophélie"}
                 </h1>
 
-                <p className="font-sans text-sm sm:text-base md:text-lg text-[#5C626C] leading-relaxed pt-1 max-w-lg">
+                <p className="font-sans text-sm sm:text-base md:text-lg text-white/90 lg:text-[#5C626C] leading-relaxed pt-1 max-w-lg">
                   {config?.invitationText ||
                     "Deux regards complices, des projets partagés et l'envie de sceller notre histoire entourés de ceux qui comptent le plus. Nous serions infiniment touchés de vous compter parmi nous."}
                 </p>
               </div>
 
-              <div className="emboss-card rounded-2xl p-5 sm:p-6 border border-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 backdrop-blur-md bg-white">
+              <div className="emboss-card rounded-2xl p-5 sm:p-6 border border-white/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 backdrop-blur-xl bg-white/95 shadow-2xl">
                 <div>
                   <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#5C626C] font-semibold block">
                     Date & Lieu
@@ -578,33 +590,45 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
             </div>
           </div>
 
-          {/* ÉTAPE B : DÉCOMPTE HORLOGER */}
+          {/* ÉTAPE B : DÉCOMPTE HORLOGER (PAR-DESSUS LA PHOTO) */}
           <section
             id="countdown-details"
-            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-center p-6 sm:p-8 lg:p-0"
+            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0"
           >
-            <div className="space-y-4 mb-16 lg:mb-0">
-              <div className="space-y-2">
+            {/* Même photo en arrière-plan avec voile protecteur */}
+            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
+              <Image
+                src={dynamicChapters[1].image}
+                alt={dynamicChapters[1].imageAlt}
+                fill
+                sizes="100vw"
+                className="object-cover object-center"
+              />
+              <div className="absolute inset-0 bg-black/45 backdrop-blur-[2px]" />
+            </div>
+
+            <div className="relative z-10 space-y-4 mb-20 lg:mb-0">
+              <div className="space-y-2 text-white lg:text-[#121316]">
                 <div className="flex items-center gap-3">
-                  <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                  <span className="text-xs uppercase tracking-[0.3em] text-white/80 lg:text-[#5C626C] font-semibold font-sans">
                     Chapitre 02
                   </span>
-                  <div className="h-[1px] w-8 bg-black/15" />
-                  <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                  <div className="h-[1px] w-8 bg-white/30 lg:bg-black/15" />
+                  <span className="text-xs uppercase tracking-[0.2em] text-white/70 lg:text-[#949BA5] font-sans">
                     L&apos;Horizon
                   </span>
                 </div>
 
-                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
+                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white lg:text-[#121316] font-normal tracking-tight drop-shadow-sm">
                   {config?.countdownTitle || "Le Décompte"}
                 </h2>
-                <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C] max-w-md">
+                <p className="font-sans text-xs sm:text-sm md:text-base text-white/90 lg:text-[#5C626C] max-w-md">
                   {config?.countdownText ||
                     "Les mois, les jours et les secondes qui nous séparent du moment où nous nous dirons « oui »."}
                 </p>
               </div>
 
-              <div className="emboss-card rounded-2xl p-6 sm:p-8 border border-white bg-white">
+              <div className="emboss-card rounded-2xl p-5 sm:p-8 border border-white/80 bg-white/95 backdrop-blur-xl shadow-2xl">
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
                   {[
                     { label: "Jours", value: timeLeft.days },
@@ -662,27 +686,39 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
             </div>
           </div>
 
-          {/* ÉTAPE B : TIMELINE & DRESS CODE */}
+          {/* ÉTAPE B : TIMELINE & DRESS CODE (PAR-DESSUS LA PHOTO) */}
           <section
             id="programme-details"
-            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-center p-6 sm:p-8 lg:p-0"
+            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0"
           >
-            <div className="space-y-4 mb-16 lg:mb-0 max-h-[82vh] lg:max-h-none overflow-y-auto lg:overflow-visible pr-1 no-scrollbar">
-              <div className="space-y-2">
+            {/* Même photo en arrière-plan avec voile protecteur */}
+            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
+              <Image
+                src={dynamicChapters[2].image}
+                alt={dynamicChapters[2].imageAlt}
+                fill
+                sizes="100vw"
+                className="object-cover object-center"
+              />
+              <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
+            </div>
+
+            <div className="relative z-10 space-y-4 mb-20 lg:mb-0 max-h-[82vh] lg:max-h-none overflow-y-auto lg:overflow-visible pr-1 no-scrollbar">
+              <div className="space-y-2 text-white lg:text-[#121316]">
                 <div className="flex items-center gap-3">
-                  <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                  <span className="text-xs uppercase tracking-[0.3em] text-white/80 lg:text-[#5C626C] font-semibold font-sans">
                     Chapitre 03
                   </span>
-                  <div className="h-[1px] w-8 bg-black/15" />
-                  <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                  <div className="h-[1px] w-8 bg-white/30 lg:bg-black/15" />
+                  <span className="text-xs uppercase tracking-[0.2em] text-white/70 lg:text-[#949BA5] font-sans">
                     Déroulé
                   </span>
                 </div>
 
-                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
+                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white lg:text-[#121316] font-normal tracking-tight drop-shadow-sm">
                   {config?.programmeTitle || "Le Programme de la Journée"}
                 </h2>
-                <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C]">
+                <p className="font-sans text-xs sm:text-sm md:text-base text-white/90 lg:text-[#5C626C]">
                   {config?.programmeText || "Une partition rythmée pour savourer chaque instant ensemble."}
                 </p>
               </div>
@@ -703,7 +739,7 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                   return dynamicSteps.map((step, idx) => (
                     <div
                       key={`${step.title}-${idx}`}
-                      className="emboss-card rounded-2xl p-4 sm:p-5 border border-white flex items-start gap-3 sm:gap-5 bg-white"
+                      className="emboss-card rounded-2xl p-4 sm:p-5 border border-white/80 flex items-start gap-3 sm:gap-5 bg-white/95 backdrop-blur-xl shadow-lg"
                     >
                       <div className="deboss-input rounded-xl px-3 py-1.5 text-center shrink-0 min-w-[65px] sm:min-w-[80px]">
                         <span className="font-serif text-lg sm:text-2xl text-[#121316] font-medium">
@@ -739,7 +775,7 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                   href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mariage+Anthony+%26+Oph%C3%A9lie&dates=20270619T123000Z/20270620T040000Z&details=Mariage+au+Domaine+des+Vignes+Blanches&location=Domaine+des+Vignes+Blanches,+Provence"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2.5 rounded-xl deboss-input text-[#121316] hover:bg-white flex items-center gap-1.5 transition-all text-[11px]"
+                  className="px-4 py-2.5 rounded-xl deboss-input text-[#121316] hover:bg-white flex items-center gap-1.5 transition-all text-[11px] bg-white/90 shadow-sm"
                 >
                   <Calendar className="w-3.5 h-3.5 text-[#5C626C]" />
                   Google Calendar
@@ -748,7 +784,7 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                   href="https://maps.google.com/?q=Domaine+des+Vignes+Blanches+Provence"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2.5 rounded-xl deboss-input text-[#121316] hover:bg-white flex items-center gap-1.5 transition-all text-[11px]"
+                  className="px-4 py-2.5 rounded-xl deboss-input text-[#121316] hover:bg-white flex items-center gap-1.5 transition-all text-[11px] bg-white/90 shadow-sm"
                 >
                   <MapPin className="w-3.5 h-3.5 text-[#5C626C]" />
                   Localiser
@@ -797,39 +833,51 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
             </div>
           </div>
 
-          {/* ÉTAPE B : URNE & LISTE DE MARIAGE */}
+          {/* ÉTAPE B : URNE & LISTE DE MARIAGE (PAR-DESSUS LA PHOTO) */}
           <section
             id="cadeaux-details"
-            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-center p-6 sm:p-8 lg:p-0"
+            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0"
           >
-            <div className="space-y-4 mb-16 lg:mb-0">
-              <div className="space-y-2">
+            {/* Même photo en arrière-plan avec voile protecteur */}
+            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
+              <Image
+                src={dynamicChapters[3].image}
+                alt={dynamicChapters[3].imageAlt}
+                fill
+                sizes="100vw"
+                className="object-cover object-center"
+              />
+              <div className="absolute inset-0 bg-black/45 backdrop-blur-[2px]" />
+            </div>
+
+            <div className="relative z-10 space-y-4 mb-20 lg:mb-0">
+              <div className="space-y-2 text-white lg:text-[#121316]">
                 <div className="flex items-center gap-3">
-                  <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                  <span className="text-xs uppercase tracking-[0.3em] text-white/80 lg:text-[#5C626C] font-semibold font-sans">
                     Chapitre 04
                   </span>
-                  <div className="h-[1px] w-8 bg-black/15" />
-                  <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                  <div className="h-[1px] w-8 bg-white/30 lg:bg-black/15" />
+                  <span className="text-xs uppercase tracking-[0.2em] text-white/70 lg:text-[#949BA5] font-sans">
                     Attentions
                   </span>
                 </div>
 
-                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
+                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white lg:text-[#121316] font-normal tracking-tight drop-shadow-sm">
                   {config?.giftsTitle || "Cadeaux & Attentions"}
                 </h2>
-                <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C]">
+                <p className="font-sans text-xs sm:text-sm md:text-base text-white/90 lg:text-[#5C626C]">
                   {config?.giftsSubtitle || "Votre présence est notre plus beau présent"}
                 </p>
               </div>
 
               {/* Carte Cadeaux */}
-              <div className="emboss-card rounded-2xl p-6 sm:p-8 border border-white space-y-5 bg-white">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-2xl convex-pill flex items-center justify-center shrink-0">
-                    <Gift className="w-6 h-6 text-[#121316]" />
+              <div className="emboss-card rounded-2xl p-5 sm:p-8 border border-white/80 space-y-5 bg-white/95 backdrop-blur-xl shadow-2xl">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-11 h-11 rounded-2xl convex-pill flex items-center justify-center shrink-0">
+                    <Gift className="w-5 h-5 text-[#121316]" />
                   </div>
-                  <div className="space-y-1">
-                    <h3 className="font-serif text-xl text-[#121316]">
+                  <div className="space-y-0.5">
+                    <h3 className="font-serif text-lg sm:text-xl text-[#121316]">
                       {config?.giftsMode === "LIST"
                         ? "Notre Liste de Mariage"
                         : config?.giftsMode === "BOTH"
@@ -909,34 +957,46 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
             </div>
           </div>
 
-          {/* ÉTAPE B : FORMULAIRE RSVP */}
+          {/* ÉTAPE B : FORMULAIRE RSVP (PAR-DESSUS LA PHOTO) */}
           <section
             id="rsvp-details"
-            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-center p-6 sm:p-8 lg:p-0 pb-24 lg:pb-0"
+            className="mobile-snap-section relative min-h-[100dvh] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0 pb-24 lg:pb-0"
           >
-            <div className="space-y-4 mb-16 lg:mb-0 max-h-[82vh] lg:max-h-none overflow-y-auto lg:overflow-visible pr-1 no-scrollbar">
-              <div className="space-y-2">
+            {/* Même photo en arrière-plan avec voile protecteur */}
+            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
+              <Image
+                src={dynamicChapters[4]?.image || dynamicChapters[0].image}
+                alt={dynamicChapters[4]?.imageAlt || "Confirmation"}
+                fill
+                sizes="100vw"
+                className="object-cover object-center"
+              />
+              <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
+            </div>
+
+            <div className="relative z-10 space-y-4 mb-20 lg:mb-0 max-h-[82vh] lg:max-h-none overflow-y-auto lg:overflow-visible pr-1 no-scrollbar">
+              <div className="space-y-2 text-white lg:text-[#121316]">
                 <div className="flex items-center gap-3">
-                  <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                  <span className="text-xs uppercase tracking-[0.3em] text-white/80 lg:text-[#5C626C] font-semibold font-sans">
                     Chapitre 05
                   </span>
-                  <div className="h-[1px] w-8 bg-black/15" />
-                  <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                  <div className="h-[1px] w-8 bg-white/30 lg:bg-black/15" />
+                  <span className="text-xs uppercase tracking-[0.2em] text-white/70 lg:text-[#949BA5] font-sans">
                     Confirmation
                   </span>
                 </div>
 
-                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
+                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white lg:text-[#121316] font-normal tracking-tight drop-shadow-sm">
                   {config?.rsvpTitle || "Confirmer Votre Présence"}
                 </h2>
-                <p className="font-sans text-xs sm:text-sm text-[#5C626C]">
+                <p className="font-sans text-xs sm:text-sm text-white/90 lg:text-[#5C626C]">
                   {config?.rsvpText ||
                     `Merci de nous transmettre votre réponse avant le ${config?.rsvpDeadline || "1er Mai 2027"}.`}
                 </p>
               </div>
 
               {rsvpState?.success ? (
-                <div className="emboss-card rounded-2xl p-8 sm:p-10 text-center border border-white bg-white">
+                <div className="emboss-card rounded-2xl p-8 sm:p-10 text-center border border-white/80 bg-white/95 backdrop-blur-xl shadow-2xl">
                   <div className="w-12 h-12 mx-auto rounded-full bg-[#121316] text-white flex items-center justify-center mb-4">
                     <Heart className="w-5 h-5 stroke-[1.5]" />
                   </div>
@@ -950,7 +1010,7 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
               ) : (
                 <form
                   action={formAction}
-                  className="emboss-card rounded-2xl p-6 sm:p-8 border border-white space-y-5 bg-white"
+                  className="emboss-card rounded-2xl p-5 sm:p-8 border border-white/80 space-y-5 bg-white/95 backdrop-blur-xl shadow-2xl"
                 >
                   {rsvpState?.message && !rsvpState.success && (
                     <div className="p-3 rounded-xl bg-red-50 text-red-700 text-xs text-center border border-red-200">
