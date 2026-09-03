@@ -220,25 +220,52 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
     return () => clearInterval(timer);
   }, []);
 
-  // Détection du scroll synchronisé
+  // Détection du scroll synchronisé pour desktop et mobile snap
   useEffect(() => {
     const handleScroll = () => {
+      const isMobile = window.innerWidth < 1024;
+      const snapContainer = document.querySelector(".mobile-snap-container");
+
       const chapterElements = chapters.map((c) =>
         document.getElementById(c.id)
       );
-      const scrollPosition = window.scrollY + window.innerHeight / 3;
 
-      for (let i = chapterElements.length - 1; i >= 0; i--) {
-        const el = chapterElements[i];
-        if (el && el.offsetTop <= scrollPosition) {
-          setActiveChapter(i);
-          break;
+      if (isMobile && snapContainer) {
+        const containerTop = snapContainer.scrollTop;
+        const containerHeight = snapContainer.clientHeight;
+        const scrollCenter = containerTop + containerHeight / 2;
+
+        for (let i = chapterElements.length - 1; i >= 0; i--) {
+          const el = chapterElements[i];
+          if (el && el.offsetTop <= scrollCenter) {
+            setActiveChapter(i);
+            break;
+          }
+        }
+      } else {
+        const scrollPosition = window.scrollY + window.innerHeight / 3;
+        for (let i = chapterElements.length - 1; i >= 0; i--) {
+          const el = chapterElements[i];
+          if (el && el.offsetTop <= scrollPosition) {
+            setActiveChapter(i);
+            break;
+          }
         }
       }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const snapContainer = document.querySelector(".mobile-snap-container");
+    if (snapContainer) {
+      snapContainer.addEventListener("scroll", handleScroll, { passive: true });
+    }
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (snapContainer) {
+        snapContainer.removeEventListener("scroll", handleScroll);
+      }
+    };
   }, []);
 
   // Formulaire RSVP
@@ -348,8 +375,8 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
         </div>
       </div>
 
-      {/* DISPOSITION SPLIT-SCREEN */}
-      <div className="pt-20 lg:pt-0 lg:flex min-h-screen">
+      {/* DISPOSITION HYBRIDE : Plein écran Scroll Snap immersif sur mobile, Split-Screen interactif sur Desktop */}
+      <div className="pt-14 lg:pt-0 lg:flex min-h-screen mobile-snap-container h-[100dvh] lg:h-auto overflow-x-hidden">
         {/* ========================================================
             VOLET GAUCHE (DESKTOP) : Le Lookbook Photo Fixe & Immersif
            ======================================================== */}
@@ -420,474 +447,409 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
         </div>
 
         {/* ========================================================
-            VOLET DROIT : Le Déroulé Éditorial Interactif
+            VOLET DROIT : Déroulé Interactif (Snap plein écran mobile)
            ======================================================== */}
-        <div className="w-full lg:w-1/2 px-4 sm:px-8 md:px-16 py-8 sm:py-12 lg:py-24 space-y-20 sm:space-y-28 lg:space-y-32">
-          {/* CHAPITRE 1 : INVITATION */}
-          <section id="invitation" className="min-h-[70vh] flex flex-col justify-center space-y-6 sm:space-y-8">
-            {/* Version mobile : Grande photo éditoriale tactile */}
-            <div className="lg:hidden relative aspect-[4/5] w-full rounded-2xl overflow-hidden shadow-xl border border-white group">
+        <div className="w-full lg:w-1/2 lg:px-12 xl:px-16 lg:py-24 lg:space-y-32">
+          {/* CHAPITRE 1 : INVITATION PLEIN ÉCRAN MOBILE */}
+          <section
+            id="invitation"
+            className="mobile-snap-section relative min-h-[calc(100dvh-3.5rem)] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0"
+          >
+            {/* Arrière-plan photo immersif sur smartphone */}
+            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
               <Image
                 src={dynamicChapters[0].image}
                 alt={dynamicChapters[0].imageAlt}
                 fill
                 priority
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
+                sizes="100vw"
+                className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-white">
-                <div>
-                  <span className="text-[10px] font-sans uppercase tracking-[0.25em] text-white/70 block">
-                    Chapitre 01 • Cliché
+              <div className="absolute inset-0 bg-gradient-to-t from-[#F8F9FA] via-[#F8F9FA]/80 to-black/30" />
+            </div>
+
+            {/* Carte Feuille Éditoriale Convexe */}
+            <div className="relative z-10 space-y-4 mb-20 lg:mb-0">
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                    Chapitre 01
                   </span>
-                  <p className="font-serif italic text-base text-white/95">
-                    {dynamicChapters[0].imageCaption}
+                  <div className="h-[1px] w-8 bg-black/15" />
+                  <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                    {config?.invitationSubtitle || "Invitation"}
+                  </span>
+                </div>
+
+                <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl tracking-tight text-[#121316] leading-[0.98] font-light">
+                  {config?.groomName || "Anthony"} <br />
+                  <span className="font-serif italic text-[#5C626C]">&</span> {config?.brideName || "Ophélie"}
+                </h1>
+
+                <p className="font-sans text-sm sm:text-base md:text-lg text-[#5C626C] leading-relaxed pt-1 max-w-lg">
+                  {config?.invitationText ||
+                    "Deux regards complices, des projets partagés et l'envie de sceller notre histoire entourés de ceux qui comptent le plus. Nous serions infiniment touchés de vous compter parmi nous."}
+                </p>
+              </div>
+
+              <div className="emboss-card rounded-2xl p-5 sm:p-6 border border-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 backdrop-blur-md bg-white/95">
+                <div>
+                  <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#5C626C] font-semibold block">
+                    Date & Lieu
+                  </span>
+                  <p className="font-serif text-xl sm:text-2xl text-[#121316] mt-0.5">
+                    {config?.weddingDate
+                      ? new Date(config.weddingDate).toLocaleDateString("fr-FR", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })
+                      : "19 Juin 2027"}
+                  </p>
+                  <p className="text-xs text-[#5C626C] font-sans">
+                    {config?.venueName || "Domaine des Vignes Blanches"}, {config?.venueCity || "Provence"}
                   </p>
                 </div>
+
                 <button
-                  type="button"
-                  onClick={() => openFullscreen(0)}
-                  className="p-2 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white cursor-pointer"
-                  title="Plein écran"
+                  onClick={() => scrollToChapter("rsvp", 4)}
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-xl convex-dark-btn text-white text-xs uppercase tracking-[0.2em] font-semibold cursor-pointer flex items-center justify-center gap-2"
                 >
-                  <Maximize2 className="w-3.5 h-3.5" />
+                  Confirmer
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
-
-            <div className="space-y-3 sm:space-y-4">
-              <div className="flex items-center gap-3">
-                <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
-                  Chapitre 01
-                </span>
-                <div className="h-[1px] w-8 bg-black/15" />
-                <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
-                  {config?.invitationSubtitle || "Invitation"}
-                </span>
-              </div>
-
-              <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl tracking-tight text-[#121316] leading-[0.98] font-light">
-                {config?.groomName || "Anthony"} <br />
-                <span className="font-serif italic text-[#5C626C]">&</span> {config?.brideName || "Ophélie"}
-              </h1>
-
-              <p className="font-sans text-sm sm:text-base md:text-lg text-[#5C626C] leading-relaxed pt-1 max-w-lg">
-                {config?.invitationText ||
-                  "Deux regards complices, des projets partagés et l'envie de sceller notre histoire entourés de ceux qui comptent le plus. Nous serions infiniment touchés de vous compter parmi nous."}
-              </p>
-            </div>
-
-            <div className="emboss-card rounded-2xl p-5 sm:p-6 border border-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#5C626C] font-semibold block">
-                  Date & Lieu
-                </span>
-                <p className="font-serif text-xl sm:text-2xl text-[#121316] mt-0.5">
-                  {config?.weddingDate
-                    ? new Date(config.weddingDate).toLocaleDateString("fr-FR", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })
-                    : "19 Juin 2027"}
-                </p>
-                <p className="text-xs text-[#5C626C] font-sans">
-                  {config?.venueName || "Domaine des Vignes Blanches"}, {config?.venueCity || "Provence"}
-                </p>
-              </div>
-
-              <button
-                onClick={() => scrollToChapter("rsvp", 4)}
-                className="w-full sm:w-auto px-6 py-3.5 rounded-xl convex-dark-btn text-white text-xs uppercase tracking-[0.2em] font-semibold cursor-pointer flex items-center justify-center gap-2"
-              >
-                Confirmer
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
           </section>
 
-          {/* CHAPITRE 2 : COMPTE À REBOURS */}
-          <section id="countdown" className="min-h-[70vh] flex flex-col justify-center space-y-6 sm:space-y-8">
-            <div className="lg:hidden relative aspect-[4/3] w-full rounded-2xl overflow-hidden shadow-xl border border-white group">
+          {/* CHAPITRE 2 : COMPTE À REBOURS PLEIN ÉCRAN MOBILE */}
+          <section
+            id="countdown"
+            className="mobile-snap-section relative min-h-[calc(100dvh-3.5rem)] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0"
+          >
+            {/* Arrière-plan photo immersif sur smartphone */}
+            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
               <Image
                 src={dynamicChapters[1].image}
                 alt={dynamicChapters[1].imageAlt}
                 fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
+                sizes="100vw"
+                className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-white">
-                <div>
-                  <span className="text-[10px] font-sans uppercase tracking-[0.25em] text-white/70 block">
-                    Chapitre 02 • Cliché
+              <div className="absolute inset-0 bg-gradient-to-t from-[#F8F9FA] via-[#F8F9FA]/85 to-black/35" />
+            </div>
+
+            <div className="relative z-10 space-y-4 mb-20 lg:mb-0">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                    Chapitre 02
                   </span>
-                  <p className="font-serif italic text-base text-white/95">
-                    {dynamicChapters[1].imageCaption}
-                  </p>
+                  <div className="h-[1px] w-8 bg-black/15" />
+                  <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                    L&apos;Horizon
+                  </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => openFullscreen(1)}
-                  className="p-2 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white cursor-pointer"
-                  title="Plein écran"
-                >
-                  <Maximize2 className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
 
-            <div className="space-y-2 sm:space-y-3">
-              <div className="flex items-center gap-3">
-                <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
-                  Chapitre 02
-                </span>
-                <div className="h-[1px] w-8 bg-black/15" />
-                <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
-                  L&apos;Horizon
-                </span>
+                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
+                  {config?.countdownTitle || "Le Décompte"}
+                </h2>
+                <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C] max-w-md">
+                  {config?.countdownText ||
+                    "Les mois, les jours et les secondes qui nous séparent du moment où nous nous dirons « oui »."}
+                </p>
               </div>
 
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
-                {config?.countdownTitle || "Le Décompte"}
-              </h2>
-              <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C] max-w-md">
-                {config?.countdownText ||
-                  "Les mois, les jours et les secondes qui nous séparent du moment où nous nous dirons « oui »."}
-              </p>
-            </div>
-
-            {/* Décompte Neumorphique Convexe Mobile */}
-            <div className="emboss-card rounded-2xl p-5 sm:p-8 border border-white">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 divide-y sm:divide-y-0 sm:divide-x divide-black/[0.06]">
-                {[
-                  { label: "Jours", value: timeLeft.days },
-                  { label: "Heures", value: timeLeft.hours },
-                  { label: "Minutes", value: timeLeft.minutes },
-                  { label: "Secondes", value: timeLeft.seconds },
-                ].map((unit, idx) => (
-                  <div
-                    key={unit.label}
-                    className={`flex flex-col items-center justify-center ${
-                      idx > 0 && idx % 2 === 0 ? "pt-3 sm:pt-0" : ""
-                    }`}
-                  >
-                    <div className="convex-pill px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl flex items-center justify-center mb-1 w-full max-w-[110px]">
-                      <span className="font-serif text-3xl sm:text-5xl text-[#121316] font-light tracking-tight">
+              {/* Décompte Neumorphique Convexe */}
+              <div className="emboss-card rounded-2xl p-5 sm:p-8 border border-white backdrop-blur-md bg-white/95">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
+                  {[
+                    { label: "Jours", value: timeLeft.days },
+                    { label: "Heures", value: timeLeft.hours },
+                    { label: "Minutes", value: timeLeft.minutes },
+                    { label: "Secondes", value: timeLeft.seconds },
+                  ].map((unit) => (
+                    <div
+                      key={unit.label}
+                      className="flex flex-col items-center justify-center p-2 rounded-2xl convex-pill"
+                    >
+                      <span className="font-serif text-2xl sm:text-5xl text-[#121316] font-light tracking-tight">
                         {String(unit.value).padStart(2, "0")}
                       </span>
+                      <span className="text-[9px] sm:text-[10px] tracking-[0.25em] uppercase text-[#5C626C] font-sans font-semibold mt-1">
+                        {unit.label}
+                      </span>
                     </div>
-                    <span className="text-[10px] tracking-[0.25em] uppercase text-[#5C626C] font-sans font-semibold mt-1.5">
-                      {unit.label}
-                    </span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </section>
 
-          {/* CHAPITRE 3 : LE PROGRAMME & DRESS CODE */}
-          <section id="programme" className="min-h-[70vh] flex flex-col justify-center space-y-8 sm:space-y-12">
-            <div className="lg:hidden relative aspect-[4/3] w-full rounded-2xl overflow-hidden shadow-xl border border-white group">
+          {/* CHAPITRE 3 : LE PROGRAMME & DRESS CODE PLEIN ÉCRAN MOBILE */}
+          <section
+            id="programme"
+            className="mobile-snap-section relative min-h-[calc(100dvh-3.5rem)] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0"
+          >
+            {/* Arrière-plan photo immersif sur smartphone */}
+            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
               <Image
                 src={dynamicChapters[2].image}
                 alt={dynamicChapters[2].imageAlt}
                 fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
+                sizes="100vw"
+                className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-white">
-                <div>
-                  <span className="text-[10px] font-sans uppercase tracking-[0.25em] text-white/70 block">
-                    Chapitre 03 • Cliché
+              <div className="absolute inset-0 bg-gradient-to-t from-[#F8F9FA] via-[#F8F9FA]/90 to-black/40" />
+            </div>
+
+            <div className="relative z-10 space-y-4 mb-20 lg:mb-0 max-h-[82vh] lg:max-h-none overflow-y-auto lg:overflow-visible pr-1 no-scrollbar">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                    Chapitre 03
                   </span>
-                  <p className="font-serif italic text-base text-white/95">
-                    {dynamicChapters[2].imageCaption}
-                  </p>
+                  <div className="h-[1px] w-8 bg-black/15" />
+                  <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                    Déroulé
+                  </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => openFullscreen(2)}
-                  className="p-2 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white cursor-pointer"
-                  title="Plein écran"
-                >
-                  <Maximize2 className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
 
-            <div className="space-y-2 sm:space-y-3">
-              <div className="flex items-center gap-3">
-                <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
-                  Chapitre 03
-                </span>
-                <div className="h-[1px] w-8 bg-black/15" />
-                <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
-                  Déroulé
-                </span>
+                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
+                  {config?.programmeTitle || "Le Programme de la Journée"}
+                </h2>
+                <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C]">
+                  {config?.programmeText || "Une partition rythmée pour savourer chaque instant ensemble."}
+                </p>
               </div>
 
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
-                {config?.programmeTitle || "Le Programme de la Journée"}
-              </h2>
-              <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C]">
-                {config?.programmeText || "Une partition rythmée pour savourer chaque instant ensemble."}
-              </p>
-            </div>
-
-            {/* Timeline élégante dynamique */}
-            <div className="space-y-4">
-              {(() => {
-                let dynamicSteps = timelineSteps;
-                if (config?.programmeSchedule) {
-                  try {
-                    const parsed = JSON.parse(config.programmeSchedule);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                      dynamicSteps = parsed;
+              {/* Timeline élégante dynamique */}
+              <div className="space-y-3">
+                {(() => {
+                  let dynamicSteps = timelineSteps;
+                  if (config?.programmeSchedule) {
+                    try {
+                      const parsed = JSON.parse(config.programmeSchedule);
+                      if (Array.isArray(parsed) && parsed.length > 0) {
+                        dynamicSteps = parsed;
+                      }
+                    } catch {
+                      // fallback
                     }
-                  } catch {
-                    // fallback
                   }
-                }
 
-                return dynamicSteps.map((step, idx) => (
-                  <div
-                    key={`${step.title}-${idx}`}
-                    className="emboss-card rounded-2xl p-5 sm:p-6 border border-white flex items-start gap-4 sm:gap-5"
-                  >
-                    <div className="deboss-input rounded-xl px-3 sm:px-4 py-2 text-center shrink-0 min-w-[75px] sm:min-w-[85px]">
-                      <span className="font-serif text-xl sm:text-2xl text-[#121316] font-medium">
-                        {step.time}
-                      </span>
-                    </div>
-                    <div className="space-y-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-serif text-lg sm:text-xl text-[#121316]">
-                          {step.title}
-                        </h3>
-                        <span className="text-[10px] uppercase tracking-wider text-[#949BA5] font-sans shrink-0">
-                          0{idx + 1}
+                  return dynamicSteps.map((step, idx) => (
+                    <div
+                      key={`${step.title}-${idx}`}
+                      className="emboss-card rounded-2xl p-4 sm:p-5 border border-white flex items-start gap-3 sm:gap-5 backdrop-blur-md bg-white/95"
+                    >
+                      <div className="deboss-input rounded-xl px-3 py-1.5 text-center shrink-0 min-w-[65px] sm:min-w-[80px]">
+                        <span className="font-serif text-lg sm:text-2xl text-[#121316] font-medium">
+                          {step.time}
                         </span>
                       </div>
-                      <p className="text-xs text-[#5C626C] font-sans leading-relaxed">
-                        {step.desc}
-                      </p>
-                      {step.location && (
-                        <p className="text-[11px] text-[#121316] font-sans font-medium flex items-center gap-1 pt-0.5">
-                          <MapPin className="w-3 h-3 text-[#5C626C] shrink-0" />
-                          {step.location}
+                      <div className="space-y-0.5 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-serif text-base sm:text-xl text-[#121316]">
+                            {step.title}
+                          </h3>
+                          <span className="text-[10px] uppercase tracking-wider text-[#949BA5] font-sans shrink-0">
+                            0{idx + 1}
+                          </span>
+                        </div>
+                        <p className="text-xs text-[#5C626C] font-sans leading-relaxed">
+                          {step.desc}
                         </p>
-                      )}
+                        {step.location && (
+                          <p className="text-[11px] text-[#121316] font-sans font-medium flex items-center gap-1 pt-0.5">
+                            <MapPin className="w-3 h-3 text-[#5C626C] shrink-0" />
+                            {step.location}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ));
-              })()}
-            </div>
+                  ));
+                })()}
+              </div>
 
-            <div className="flex flex-wrap gap-4 pt-2 text-xs uppercase tracking-wider font-sans font-semibold">
-              <a
-                href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mariage+Anthony+%26+Oph%C3%A9lie&dates=20270619T123000Z/20270620T040000Z&details=Mariage+au+Domaine+des+Vignes+Blanches&location=Domaine+des+Vignes+Blanches,+Provence"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-5 py-3 rounded-xl deboss-input text-[#121316] hover:bg-white flex items-center gap-2 transition-all"
-              >
-                <Calendar className="w-3.5 h-3.5 text-[#5C626C]" />
-                Google Calendar
-              </a>
-              <a
-                href="https://maps.google.com/?q=Domaine+des+Vignes+Blanches+Provence"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-5 py-3 rounded-xl deboss-input text-[#121316] hover:bg-white flex items-center gap-2 transition-all"
-              >
-                <MapPin className="w-3.5 h-3.5 text-[#5C626C]" />
-                Localiser le domaine
-              </a>
-            </div>
+              <div className="flex flex-wrap gap-2.5 pt-1 text-xs uppercase tracking-wider font-sans font-semibold">
+                <a
+                  href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mariage+Anthony+%26+Oph%C3%A9lie&dates=20270619T123000Z/20270620T040000Z&details=Mariage+au+Domaine+des+Vignes+Blanches&location=Domaine+des+Vignes+Blanches,+Provence"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2.5 rounded-xl deboss-input text-[#121316] hover:bg-white flex items-center gap-1.5 transition-all text-[11px]"
+                >
+                  <Calendar className="w-3.5 h-3.5 text-[#5C626C]" />
+                  Google Calendar
+                </a>
+                <a
+                  href="https://maps.google.com/?q=Domaine+des+Vignes+Blanches+Provence"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2.5 rounded-xl deboss-input text-[#121316] hover:bg-white flex items-center gap-1.5 transition-all text-[11px]"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-[#5C626C]" />
+                  Localiser
+                </a>
+              </div>
 
-            {/* INTÉGRATION DU DRESS CODE DYNAMIQUE */}
-            <DressCodeSection
-              title={config?.dressCodeTitle}
-              desc={config?.dressCodeDesc}
-              colors={config?.dressCodeColors}
-              advice={config?.dressCodeAdvice}
-            />
+              {/* INTÉGRATION DU DRESS CODE DYNAMIQUE */}
+              <DressCodeSection
+                title={config?.dressCodeTitle}
+                desc={config?.dressCodeDesc}
+                colors={config?.dressCodeColors}
+                advice={config?.dressCodeAdvice}
+              />
+            </div>
           </section>
 
-          {/* CHAPITRE 4 : CADEAUX & ATTENTIONS */}
-          <section id="cadeaux" className="min-h-[70vh] flex flex-col justify-center space-y-6 sm:space-y-8">
-            <div className="lg:hidden relative aspect-[4/3] w-full rounded-2xl overflow-hidden shadow-xl border border-white group">
+          {/* CHAPITRE 4 : CADEAUX & ATTENTIONS PLEIN ÉCRAN MOBILE */}
+          <section
+            id="cadeaux"
+            className="mobile-snap-section relative min-h-[calc(100dvh-3.5rem)] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0"
+          >
+            {/* Arrière-plan photo immersif sur smartphone */}
+            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
               <Image
                 src={dynamicChapters[3].image}
                 alt={dynamicChapters[3].imageAlt}
                 fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
+                sizes="100vw"
+                className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-white">
-                <div>
-                  <span className="text-[10px] font-sans uppercase tracking-[0.25em] text-white/70 block">
-                    Chapitre 04 • Cliché
+              <div className="absolute inset-0 bg-gradient-to-t from-[#F8F9FA] via-[#F8F9FA]/85 to-black/35" />
+            </div>
+
+            <div className="relative z-10 space-y-4 mb-20 lg:mb-0">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                    Chapitre 04
                   </span>
-                  <p className="font-serif italic text-base text-white/95">
-                    {dynamicChapters[3].imageCaption}
-                  </p>
+                  <div className="h-[1px] w-8 bg-black/15" />
+                  <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                    Attentions
+                  </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => openFullscreen(3)}
-                  className="p-2 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white cursor-pointer"
-                  title="Plein écran"
-                >
-                  <Maximize2 className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
 
-            <div className="space-y-2 sm:space-y-3">
-              <div className="flex items-center gap-3">
-                <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
-                  Chapitre 04
-                </span>
-                <div className="h-[1px] w-8 bg-black/15" />
-                <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
-                  Attentions
-                </span>
+                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
+                  {config?.giftsTitle || "Cadeaux & Attentions"}
+                </h2>
+                <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C]">
+                  {config?.giftsSubtitle || "Votre présence est notre plus beau présent"}
+                </p>
               </div>
 
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
-                {config?.giftsTitle || "Cadeaux & Attentions"}
-              </h2>
-              <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C]">
-                {config?.giftsSubtitle || "Votre présence est notre plus beau présent"}
-              </p>
-            </div>
-
-            {/* Carte Neumorphique Cadeaux */}
-            <div className="emboss-card rounded-2xl p-6 sm:p-8 border border-white space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-2xl convex-pill flex items-center justify-center shrink-0">
-                  <Gift className="w-6 h-6 text-[#121316]" />
+              {/* Carte Neumorphique Cadeaux */}
+              <div className="emboss-card rounded-2xl p-5 sm:p-8 border border-white space-y-5 backdrop-blur-md bg-white/95">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-11 h-11 rounded-2xl convex-pill flex items-center justify-center shrink-0">
+                    <Gift className="w-5 h-5 text-[#121316]" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <h3 className="font-serif text-lg sm:text-xl text-[#121316]">
+                      {config?.giftsMode === "LIST"
+                        ? "Notre Liste de Mariage"
+                        : config?.giftsMode === "BOTH"
+                        ? "Urne de Voyage & Liste en Ligne"
+                        : "Une Urne à Mots Doux sur Place"}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-[#5C626C] font-sans leading-relaxed pt-0.5">
+                      {config?.giftsMessage ||
+                        "Votre présence à nos côtés pour célébrer notre union est le plus précieux des cadeaux. Si toutefois vous désirez témoigner d'une attention particulière, une boîte à mots doux & urne de voyage sera mise à votre disposition le jour J."}
+                    </p>
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  <h3 className="font-serif text-xl text-[#121316]">
-                    {config?.giftsMode === "LIST"
-                      ? "Notre Liste de Mariage"
-                      : config?.giftsMode === "BOTH"
-                      ? "Urne de Voyage & Liste en Ligne"
-                      : "Une Urne à Mots Doux sur Place"}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[#5C626C] font-sans leading-relaxed pt-1">
-                    {config?.giftsMessage ||
-                      "Votre présence à nos côtés pour célébrer notre union est le plus précieux des cadeaux. Si toutefois vous désirez témoigner d'une attention particulière, une boîte à mots doux & urne de voyage sera mise à votre disposition le jour J."}
-                  </p>
-                </div>
-              </div>
 
-              {/* Bouton vers la liste si LIST ou BOTH */}
-              {(config?.giftsMode === "LIST" || config?.giftsMode === "BOTH") &&
-                config?.giftsListUrl && (
-                  <div className="pt-2 border-t border-black/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <span className="text-xs text-[#5C626C] font-sans">
-                      Pour consulter nos envies ou participer à distance :
+                {/* Bouton vers la liste si LIST ou BOTH */}
+                {(config?.giftsMode === "LIST" || config?.giftsMode === "BOTH") &&
+                  config?.giftsListUrl && (
+                    <div className="pt-2 border-t border-black/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <span className="text-xs text-[#5C626C] font-sans">
+                        Pour consulter nos envies ou participer à distance :
+                      </span>
+                      <a
+                        href={config.giftsListUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-5 py-3 rounded-xl convex-dark-btn text-white text-xs uppercase tracking-wider font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all"
+                      >
+                        {config?.giftsListLabel || "Consulter notre liste de mariage"}
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                  )}
+
+                {/* IBAN si renseigné */}
+                {config?.giftsBankIban && (
+                  <div className="pt-2 border-t border-black/[0.06] text-xs text-[#5C626C] font-sans space-y-1">
+                    <span className="text-[10px] uppercase tracking-wider font-semibold block text-[#949BA5]">
+                      Participation par virement (IBAN) :
                     </span>
-                    <a
-                      href={config.giftsListUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-6 py-3 rounded-xl convex-dark-btn text-white text-xs uppercase tracking-wider font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all"
-                    >
-                      {config?.giftsListLabel || "Consulter notre liste de mariage"}
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
+                    <span className="font-mono text-[#121316] text-[11px] block select-all p-2 rounded-lg deboss-input">
+                      {config.giftsBankIban}
+                    </span>
                   </div>
                 )}
-
-              {/* IBAN si renseigné */}
-              {config?.giftsBankIban && (
-                <div className="pt-3 border-t border-black/[0.06] text-xs text-[#5C626C] font-sans space-y-1">
-                  <span className="text-[10px] uppercase tracking-wider font-semibold block text-[#949BA5]">
-                    Participation par virement (IBAN) :
-                  </span>
-                  <span className="font-mono text-[#121316] text-[11px] block select-all p-2 rounded-lg deboss-input">
-                    {config.giftsBankIban}
-                  </span>
-                </div>
-              )}
+              </div>
             </div>
           </section>
 
-          {/* CHAPITRE 5 : RSVP */}
-          <section id="rsvp" className="min-h-[70vh] flex flex-col justify-center space-y-6 sm:space-y-8 pb-16">
-            <div className="lg:hidden relative aspect-[4/3] w-full rounded-2xl overflow-hidden shadow-xl border border-white group">
+          {/* CHAPITRE 5 : RSVP PLEIN ÉCRAN MOBILE */}
+          <section
+            id="rsvp"
+            className="mobile-snap-section relative min-h-[calc(100dvh-3.5rem)] lg:min-h-[75vh] flex flex-col justify-end lg:justify-center p-4 sm:p-8 lg:p-0 pb-24 lg:pb-0"
+          >
+            {/* Arrière-plan photo immersif sur smartphone */}
+            <div className="lg:hidden absolute inset-0 z-0 overflow-hidden">
               <Image
                 src={dynamicChapters[4]?.image || dynamicChapters[0].image}
                 alt={dynamicChapters[4]?.imageAlt || "Confirmation"}
                 fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
+                sizes="100vw"
+                className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-white">
-                <div>
-                  <span className="text-[10px] font-sans uppercase tracking-[0.25em] text-white/70 block">
-                    Chapitre 05 • Cliché
+              <div className="absolute inset-0 bg-gradient-to-t from-[#F8F9FA] via-[#F8F9FA]/90 to-black/40" />
+            </div>
+
+            <div className="relative z-10 space-y-4 mb-16 lg:mb-0 max-h-[82vh] lg:max-h-none overflow-y-auto lg:overflow-visible pr-1 no-scrollbar">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                    Chapitre 05
                   </span>
-                  <p className="font-serif italic text-base text-white/95">
-                    {dynamicChapters[4]?.imageCaption || "Nous avons hâte de vous retrouver."}
-                  </p>
+                  <div className="h-[1px] w-8 bg-black/15" />
+                  <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                    Confirmation
+                  </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => openFullscreen(4)}
-                  className="p-2 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white cursor-pointer"
-                  title="Plein écran"
-                >
-                  <Maximize2 className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
 
-            <div className="space-y-2 sm:space-y-3">
-              <div className="flex items-center gap-3">
-                <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
-                  Chapitre 05
-                </span>
-                <div className="h-[1px] w-8 bg-black/15" />
-                <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
-                  Confirmation
-                </span>
-              </div>
-
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
-                {config?.rsvpTitle || "Confirmer Votre Présence"}
-              </h2>
-              <p className="font-sans text-xs sm:text-sm text-[#5C626C]">
-                {config?.rsvpText ||
-                  `Merci de nous transmettre votre réponse avant le ${config?.rsvpDeadline || "1er Mai 2027"}.`}
-              </p>
-            </div>
-
-            {rsvpState?.success ? (
-              <div className="emboss-card rounded-2xl p-8 sm:p-10 text-center border border-white">
-                <div className="w-12 h-12 mx-auto rounded-full bg-[#121316] text-white flex items-center justify-center mb-4">
-                  <Heart className="w-5 h-5 stroke-[1.5]" />
-                </div>
-                <h3 className="font-serif text-2xl text-[#121316]">
-                  Réponse enregistrée
-                </h3>
-                <p className="mt-2 text-sm text-[#5C626C] font-sans">
-                  {rsvpState.message}
+                <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
+                  {config?.rsvpTitle || "Confirmer Votre Présence"}
+                </h2>
+                <p className="font-sans text-xs sm:text-sm text-[#5C626C]">
+                  {config?.rsvpText ||
+                    `Merci de nous transmettre votre réponse avant le ${config?.rsvpDeadline || "1er Mai 2027"}.`}
                 </p>
               </div>
-            ) : (
-              <form
-                action={formAction}
-                className="emboss-card rounded-2xl p-6 sm:p-8 border border-white space-y-6"
-              >
+
+              {rsvpState?.success ? (
+                <div className="emboss-card rounded-2xl p-8 sm:p-10 text-center border border-white backdrop-blur-md bg-white/95">
+                  <div className="w-12 h-12 mx-auto rounded-full bg-[#121316] text-white flex items-center justify-center mb-4">
+                    <Heart className="w-5 h-5 stroke-[1.5]" />
+                  </div>
+                  <h3 className="font-serif text-2xl text-[#121316]">
+                    Réponse enregistrée
+                  </h3>
+                  <p className="mt-2 text-sm text-[#5C626C] font-sans">
+                    {rsvpState.message}
+                  </p>
+                </div>
+              ) : (
+                <form
+                  action={formAction}
+                  className="emboss-card rounded-2xl p-5 sm:p-8 border border-white space-y-5 backdrop-blur-md bg-white/95"
+                >
                 {rsvpState?.message && !rsvpState.success && (
                   <div className="p-3 rounded-xl bg-red-50 text-red-700 text-xs text-center border border-red-200">
                     {rsvpState.message}
@@ -1098,9 +1060,10 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
               </form>
             )}
 
-            {/* Footer discret */}
-            <div className="pt-12 text-center text-xs text-[#949BA5] font-sans border-t border-black/[0.05]">
-              <p>Anthony & Ophélie • 19.06.2027</p>
+              {/* Footer discret */}
+              <div className="pt-12 text-center text-xs text-[#949BA5] font-sans border-t border-black/[0.05]">
+                <p>Anthony & Ophélie • 19.06.2027</p>
+              </div>
             </div>
           </section>
         </div>

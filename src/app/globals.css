@@ -151,3 +151,16 @@ input, textarea, select, button {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Scroll Snap vertical ultra-fluide pour le mode magazine mobile */
+.mobile-snap-container {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.mobile-snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
