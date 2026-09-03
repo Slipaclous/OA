@@ -417,14 +417,10 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
              ==================================================== */}
           <section
             id="invitation"
-            className={`relative w-full lg:min-h-[75vh] transition-opacity duration-700 ease-in-out ${
-              activeChapter === 0
-                ? "block opacity-100"
-                : "hidden lg:block lg:opacity-100"
-            }`}
+            className="relative w-full lg:min-h-[75vh]"
           >
-            {/* SUR MOBILE : Image calée plein écran sticky en arrière-plan */}
-            <div className="lg:hidden sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
+            {/* SUR MOBILE : Photo plein écran immersive sans masque */}
+            <div className="lg:hidden relative h-[100dvh] w-full overflow-hidden">
               <Image
                 src={dynamicChapters[0].image}
                 alt={dynamicChapters[0].imageAlt}
@@ -433,10 +429,10 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 sizes="100vw"
                 className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-              {/* Indicateur élégant invitant au scroll */}
-              <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
+              {/* Légende et invitation au scroll */}
+              <div className="absolute bottom-12 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
                 <div>
                   <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/75 block mb-1">
                     Chapitre 01 • Lookbook
@@ -452,37 +448,37 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
               </div>
             </div>
 
-            {/* CONTENU QUI GLISSE PAR-DESSUS LA PHOTO AU SCROLL */}
-            <div className="relative z-10 -mt-16 lg:mt-0 p-4 sm:p-8 lg:p-0">
-              <div className="emboss-card rounded-3xl p-6 sm:p-8 border border-white/90 bg-white shadow-2xl space-y-6">
+            {/* CONTENU QUI MONTE AU SCROLL : Carte élégante transparente sur mobile (zéro halo blanc), emboss-card sur desktop */}
+            <div className="relative z-10 p-4 sm:p-8 lg:p-0">
+              <div className="rounded-3xl p-6 sm:p-8 bg-black/50 backdrop-blur-xl border border-white/20 text-white lg:bg-white lg:text-[#121316] lg:border-white/90 lg:emboss-card lg:shadow-2xl space-y-6">
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                    <span className="text-xs uppercase tracking-[0.3em] text-white/75 lg:text-[#5C626C] font-semibold font-sans">
                       Chapitre 01
                     </span>
-                    <div className="h-[1px] w-8 bg-black/15" />
-                    <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                    <div className="h-[1px] w-8 bg-white/30 lg:bg-black/15" />
+                    <span className="text-xs uppercase tracking-[0.2em] text-white/60 lg:text-[#949BA5] font-sans">
                       {config?.invitationSubtitle || "Invitation"}
                     </span>
                   </div>
 
-                  <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl tracking-tight text-[#121316] leading-[0.98] font-light">
+                  <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl tracking-tight leading-[0.98] font-light">
                     {config?.groomName || "Anthony"} <br />
-                    <span className="font-serif italic text-[#5C626C]">&</span> {config?.brideName || "Ophélie"}
+                    <span className="font-serif italic text-white/75 lg:text-[#5C626C]">&</span> {config?.brideName || "Ophélie"}
                   </h1>
 
-                  <p className="font-sans text-sm sm:text-base md:text-lg text-[#5C626C] leading-relaxed pt-1 max-w-lg">
+                  <p className="font-sans text-sm sm:text-base md:text-lg text-white/85 lg:text-[#5C626C] leading-relaxed pt-1 max-w-lg">
                     {config?.invitationText ||
                       "Deux regards complices, des projets partagés et l'envie de sceller notre histoire entourés de ceux qui comptent le plus. Nous serions infiniment touchés de vous compter parmi nous."}
                   </p>
                 </div>
 
-                <div className="p-5 sm:p-6 rounded-2xl deboss-input border border-black/[0.05] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="p-5 sm:p-6 rounded-2xl bg-white/10 border border-white/20 lg:bg-white lg:deboss-input lg:border-black/[0.05] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#5C626C] font-semibold block">
+                    <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-white/70 lg:text-[#5C626C] font-semibold block">
                       Date & Lieu
                     </span>
-                    <p className="font-serif text-xl sm:text-2xl text-[#121316] mt-0.5">
+                    <p className="font-serif text-xl sm:text-2xl mt-0.5">
                       {config?.weddingDate
                         ? new Date(config.weddingDate).toLocaleDateString("fr-FR", {
                             day: "numeric",
@@ -491,22 +487,10 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                           })
                         : "19 Juin 2027"}
                     </p>
-                    <p className="text-xs text-[#5C626C] font-sans">
+                    <p className="text-xs text-white/75 lg:text-[#5C626C] font-sans">
                       {config?.venueName || "Domaine des Vignes Blanches"}, {config?.venueCity || "Provence"}
                     </p>
                   </div>
-
-                </div>
-
-                {/* Bouton de passage au chapitre suivant sur mobile */}
-                <div className="pt-2 lg:hidden">
-                  <button
-                    onClick={() => scrollToChapter("countdown", 1)}
-                    className="w-full py-3.5 rounded-2xl convex-btn text-[#121316] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <span>Découvrir le Décompte</span>
-                    <ArrowRight className="w-4 h-4 text-[#5C626C]" />
-                  </button>
                 </div>
               </div>
             </div>
@@ -517,14 +501,10 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
              ==================================================== */}
           <section
             id="countdown"
-            className={`relative w-full lg:min-h-[75vh] transition-opacity duration-700 ease-in-out ${
-              activeChapter === 1
-                ? "block opacity-100"
-                : "hidden lg:block lg:opacity-100"
-            }`}
+            className="relative w-full lg:min-h-[75vh]"
           >
-            {/* SUR MOBILE : Image calée plein écran sticky en arrière-plan */}
-            <div className="lg:hidden sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
+            {/* SUR MOBILE : Image calée plein écran en flux continu */}
+            <div className="lg:hidden relative h-[100dvh] w-full overflow-hidden">
               <Image
                 src={dynamicChapters[1].image}
                 alt={dynamicChapters[1].imageAlt}
@@ -532,9 +512,9 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 sizes="100vw"
                 className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-              <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
+              <div className="absolute bottom-12 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
                 <div>
                   <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/75 block mb-1">
                     Chapitre 02 • Lookbook
@@ -550,24 +530,24 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
               </div>
             </div>
 
-            {/* CONTENU QUI GLISSE PAR-DESSUS LA PHOTO AU SCROLL */}
-            <div className="relative z-10 -mt-16 lg:mt-0 p-4 sm:p-8 lg:p-0">
-              <div className="emboss-card rounded-3xl p-6 sm:p-8 border border-white/90 bg-white shadow-2xl space-y-6">
+            {/* CONTENU QUI MONTE AU SCROLL : Sans halo blanc opaque sur mobile */}
+            <div className="relative z-10 p-4 sm:p-8 lg:p-0">
+              <div className="rounded-3xl p-6 sm:p-8 bg-black/50 backdrop-blur-xl border border-white/20 text-white lg:bg-white lg:text-[#121316] lg:border-white/90 lg:emboss-card lg:shadow-2xl space-y-6">
                 <div className="space-y-2">
                   <div className="flex items-center gap-3">
-                    <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                    <span className="text-xs uppercase tracking-[0.3em] text-white/75 lg:text-[#5C626C] font-semibold font-sans">
                       Chapitre 02
                     </span>
-                    <div className="h-[1px] w-8 bg-black/15" />
-                    <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                    <div className="h-[1px] w-8 bg-white/30 lg:bg-black/15" />
+                    <span className="text-xs uppercase tracking-[0.2em] text-white/60 lg:text-[#949BA5] font-sans">
                       L&apos;Horizon
                     </span>
                   </div>
 
-                  <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
+                  <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight">
                     {config?.countdownTitle || "Le Décompte"}
                   </h2>
-                  <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C] max-w-md">
+                  <p className="font-sans text-xs sm:text-sm md:text-base text-white/85 lg:text-[#5C626C] max-w-md">
                     {config?.countdownText ||
                       "Les mois, les jours et les secondes qui nous séparent du moment où nous nous dirons « oui »."}
                   </p>
@@ -582,34 +562,16 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                   ].map((unit) => (
                     <div
                       key={unit.label}
-                      className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl convex-pill"
+                      className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white/10 border border-white/15 lg:bg-transparent lg:border-0 lg:convex-pill"
                     >
-                      <span className="font-serif text-3xl sm:text-5xl text-[#121316] font-light tracking-tight">
+                      <span className="font-serif text-3xl sm:text-5xl font-light tracking-tight">
                         {String(unit.value).padStart(2, "0")}
                       </span>
-                      <span className="text-[10px] tracking-[0.25em] uppercase text-[#5C626C] font-sans font-semibold mt-1">
+                      <span className="text-[10px] tracking-[0.25em] uppercase text-white/70 lg:text-[#5C626C] font-sans font-semibold mt-1">
                         {unit.label}
                       </span>
                     </div>
                   ))}
-                </div>
-
-                {/* Navigation mobile en bas de section */}
-                <div className="pt-4 lg:hidden flex items-center justify-between gap-3">
-                  <button
-                    onClick={() => scrollToChapter("invitation", 0)}
-                    className="flex-1 py-3.5 rounded-2xl convex-btn text-[#5C626C] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                    <span>Précédent</span>
-                  </button>
-                  <button
-                    onClick={() => scrollToChapter("programme", 2)}
-                    className="flex-1 py-3.5 rounded-2xl convex-dark-btn text-white text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <span>Programme</span>
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
                 </div>
               </div>
             </div>
@@ -620,14 +582,10 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
              ==================================================== */}
           <section
             id="programme"
-            className={`relative w-full lg:min-h-[75vh] transition-opacity duration-700 ease-in-out ${
-              activeChapter === 2
-                ? "block opacity-100"
-                : "hidden lg:block lg:opacity-100"
-            }`}
+            className="relative w-full lg:min-h-[75vh]"
           >
-            {/* SUR MOBILE : Image calée plein écran sticky en arrière-plan */}
-            <div className="lg:hidden sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
+            {/* SUR MOBILE : Image calée plein écran en flux continu */}
+            <div className="lg:hidden relative h-[100dvh] w-full overflow-hidden">
               <Image
                 src={dynamicChapters[2].image}
                 alt={dynamicChapters[2].imageAlt}
@@ -635,9 +593,9 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 sizes="100vw"
                 className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-              <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
+              <div className="absolute bottom-12 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
                 <div>
                   <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/75 block mb-1">
                     Chapitre 03 • Lookbook
@@ -653,24 +611,24 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
               </div>
             </div>
 
-            {/* CONTENU QUI GLISSE PAR-DESSUS LA PHOTO AU SCROLL */}
-            <div className="relative z-10 -mt-16 lg:mt-0 p-4 sm:p-8 lg:p-0">
-              <div className="emboss-card rounded-3xl p-6 sm:p-8 border border-white/90 bg-white shadow-2xl space-y-6">
+            {/* CONTENU QUI MONTE AU SCROLL : Sans halo blanc opaque sur mobile */}
+            <div className="relative z-10 p-4 sm:p-8 lg:p-0">
+              <div className="rounded-3xl p-6 sm:p-8 bg-black/50 backdrop-blur-xl border border-white/20 text-white lg:bg-white lg:text-[#121316] lg:border-white/90 lg:emboss-card lg:shadow-2xl space-y-6">
                 <div className="space-y-2">
                   <div className="flex items-center gap-3">
-                    <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                    <span className="text-xs uppercase tracking-[0.3em] text-white/75 lg:text-[#5C626C] font-semibold font-sans">
                       Chapitre 03
                     </span>
-                    <div className="h-[1px] w-8 bg-black/15" />
-                    <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                    <div className="h-[1px] w-8 bg-white/30 lg:bg-black/15" />
+                    <span className="text-xs uppercase tracking-[0.2em] text-white/60 lg:text-[#949BA5] font-sans">
                       Déroulé
                     </span>
                   </div>
 
-                  <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
+                  <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight">
                     {config?.programmeTitle || "Le Programme de la Journée"}
                   </h2>
-                  <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C]">
+                  <p className="font-sans text-xs sm:text-sm md:text-base text-white/85 lg:text-[#5C626C]">
                     {config?.programmeText || "Une partition rythmée pour savourer chaque instant ensemble."}
                   </p>
                 </div>
@@ -691,28 +649,28 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                     return dynamicSteps.map((step, idx) => (
                       <div
                         key={`${step.title}-${idx}`}
-                        className="p-4 sm:p-5 rounded-2xl deboss-input border border-black/[0.05] flex items-start gap-3 sm:gap-5"
+                        className="p-4 sm:p-5 rounded-2xl bg-white/10 border border-white/15 lg:bg-white lg:deboss-input lg:border-black/[0.05] flex items-start gap-3 sm:gap-5"
                       >
-                        <div className="rounded-xl px-3 py-1.5 text-center shrink-0 min-w-[65px] sm:min-w-[80px] bg-white shadow-sm border border-black/[0.04]">
-                          <span className="font-serif text-lg sm:text-2xl text-[#121316] font-medium">
+                        <div className="rounded-xl px-3 py-1.5 text-center shrink-0 min-w-[65px] sm:min-w-[80px] bg-white/20 border border-white/20 lg:bg-white lg:shadow-sm lg:border-black/[0.04]">
+                          <span className="font-serif text-lg sm:text-2xl font-medium">
                             {step.time}
                           </span>
                         </div>
                         <div className="space-y-0.5 min-w-0">
                           <div className="flex items-center gap-2">
-                            <h3 className="font-serif text-base sm:text-xl text-[#121316]">
+                            <h3 className="font-serif text-base sm:text-xl">
                               {step.title}
                             </h3>
-                            <span className="text-[10px] uppercase tracking-wider text-[#949BA5] font-sans shrink-0">
+                            <span className="text-[10px] uppercase tracking-wider text-white/60 lg:text-[#949BA5] font-sans shrink-0">
                               0{idx + 1}
                             </span>
                           </div>
-                          <p className="text-xs text-[#5C626C] font-sans leading-relaxed">
+                          <p className="text-xs text-white/80 lg:text-[#5C626C] font-sans leading-relaxed">
                             {step.desc}
                           </p>
                           {step.location && (
-                            <p className="text-[11px] text-[#121316] font-sans font-medium flex items-center gap-1 pt-0.5">
-                              <MapPin className="w-3 h-3 text-[#5C626C] shrink-0" />
+                            <p className="text-[11px] text-white/90 lg:text-[#121316] font-sans font-medium flex items-center gap-1 pt-0.5">
+                              <MapPin className="w-3 h-3 text-white/70 lg:text-[#5C626C] shrink-0" />
                               {step.location}
                             </p>
                           )}
@@ -727,18 +685,18 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                     href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Mariage+Anthony+%26+Oph%C3%A9lie&dates=20270619T123000Z/20270620T040000Z&details=Mariage+au+Domaine+des+Vignes+Blanches&location=Domaine+des+Vignes+Blanches,+Provence"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2.5 rounded-xl deboss-input text-[#121316] hover:bg-white flex items-center gap-1.5 transition-all text-[11px] bg-white shadow-sm border border-black/[0.05]"
+                    className="px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 lg:bg-white lg:deboss-input lg:border-black/[0.05] flex items-center gap-1.5 transition-all text-[11px]"
                   >
-                    <Calendar className="w-3.5 h-3.5 text-[#5C626C]" />
+                    <Calendar className="w-3.5 h-3.5 text-white/70 lg:text-[#5C626C]" />
                     Google Calendar
                   </a>
                   <a
                     href="https://maps.google.com/?q=Domaine+des+Vignes+Blanches+Provence"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2.5 rounded-xl deboss-input text-[#121316] hover:bg-white flex items-center gap-1.5 transition-all text-[11px] bg-white shadow-sm border border-black/[0.05]"
+                    className="px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 lg:bg-white lg:deboss-input lg:border-black/[0.05] flex items-center gap-1.5 transition-all text-[11px]"
                   >
-                    <MapPin className="w-3.5 h-3.5 text-[#5C626C]" />
+                    <MapPin className="w-3.5 h-3.5 text-white/70 lg:text-[#5C626C]" />
                     Localiser
                   </a>
                 </div>
@@ -749,24 +707,6 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                   colors={config?.dressCodeColors}
                   advice={config?.dressCodeAdvice}
                 />
-
-                {/* Navigation mobile en bas de section */}
-                <div className="pt-4 lg:hidden flex items-center justify-between gap-3">
-                  <button
-                    onClick={() => scrollToChapter("countdown", 1)}
-                    className="flex-1 py-3.5 rounded-2xl convex-btn text-[#5C626C] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                    <span>Décompte</span>
-                  </button>
-                  <button
-                    onClick={() => scrollToChapter("cadeaux", 3)}
-                    className="flex-1 py-3.5 rounded-2xl convex-dark-btn text-white text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <span>Cadeaux</span>
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
               </div>
             </div>
           </section>
@@ -776,14 +716,10 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
              ==================================================== */}
           <section
             id="cadeaux"
-            className={`relative w-full lg:min-h-[75vh] transition-opacity duration-700 ease-in-out ${
-              activeChapter === 3
-                ? "block opacity-100"
-                : "hidden lg:block lg:opacity-100"
-            }`}
+            className="relative w-full lg:min-h-[75vh]"
           >
-            {/* SUR MOBILE : Image calée plein écran sticky en arrière-plan */}
-            <div className="lg:hidden sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
+            {/* SUR MOBILE : Image calée plein écran en flux continu */}
+            <div className="lg:hidden relative h-[100dvh] w-full overflow-hidden">
               <Image
                 src={dynamicChapters[3].image}
                 alt={dynamicChapters[3].imageAlt}
@@ -791,9 +727,9 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 sizes="100vw"
                 className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-              <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
+              <div className="absolute bottom-12 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
                 <div>
                   <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/75 block mb-1">
                     Chapitre 04 • Lookbook
@@ -809,42 +745,42 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
               </div>
             </div>
 
-            {/* CONTENU QUI GLISSE PAR-DESSUS LA PHOTO AU SCROLL */}
-            <div className="relative z-10 -mt-16 lg:mt-0 p-4 sm:p-8 lg:p-0">
-              <div className="emboss-card rounded-3xl p-6 sm:p-8 border border-white/90 bg-white shadow-2xl space-y-6">
+            {/* CONTENU QUI MONTE AU SCROLL : Sans halo blanc opaque sur mobile */}
+            <div className="relative z-10 p-4 sm:p-8 lg:p-0">
+              <div className="rounded-3xl p-6 sm:p-8 bg-black/50 backdrop-blur-xl border border-white/20 text-white lg:bg-white lg:text-[#121316] lg:border-white/90 lg:emboss-card lg:shadow-2xl space-y-6">
                 <div className="space-y-2">
                   <div className="flex items-center gap-3">
-                    <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                    <span className="text-xs uppercase tracking-[0.3em] text-white/75 lg:text-[#5C626C] font-semibold font-sans">
                       Chapitre 04
                     </span>
-                    <div className="h-[1px] w-8 bg-black/15" />
-                    <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                    <div className="h-[1px] w-8 bg-white/30 lg:bg-black/15" />
+                    <span className="text-xs uppercase tracking-[0.2em] text-white/60 lg:text-[#949BA5] font-sans">
                       Attentions
                     </span>
                   </div>
 
-                  <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
+                  <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight">
                     {config?.giftsTitle || "Cadeaux & Attentions"}
                   </h2>
-                  <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C]">
+                  <p className="font-sans text-xs sm:text-sm md:text-base text-white/85 lg:text-[#5C626C]">
                     {config?.giftsSubtitle || "Votre présence est notre plus beau présent"}
                   </p>
                 </div>
 
-                <div className="p-5 sm:p-6 rounded-2xl deboss-input border border-black/[0.05] space-y-5">
+                <div className="p-5 sm:p-6 rounded-2xl bg-white/10 border border-white/15 lg:bg-white lg:deboss-input lg:border-black/[0.05] space-y-5">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-black/[0.04] flex items-center justify-center shrink-0">
-                      <Gift className="w-6 h-6 text-[#121316]" />
+                    <div className="w-12 h-12 rounded-2xl bg-white/20 border border-white/20 lg:bg-white lg:shadow-sm lg:border-black/[0.04] flex items-center justify-center shrink-0">
+                      <Gift className="w-6 h-6 text-white lg:text-[#121316]" />
                     </div>
                     <div className="space-y-1">
-                      <h3 className="font-serif text-xl text-[#121316]">
+                      <h3 className="font-serif text-xl">
                         {config?.giftsMode === "LIST"
                           ? "Notre Liste de Mariage"
                           : config?.giftsMode === "BOTH"
                           ? "Urne de Voyage & Liste en Ligne"
                           : "Une Urne à Mots Doux sur Place"}
                       </h3>
-                      <p className="text-xs sm:text-sm text-[#5C626C] font-sans leading-relaxed pt-0.5">
+                      <p className="text-xs sm:text-sm text-white/80 lg:text-[#5C626C] font-sans leading-relaxed pt-0.5">
                         {config?.giftsMessage ||
                           "Votre présence à nos côtés pour célébrer notre union est le plus précieux des cadeaux. Si toutefois vous désirez témoigner d'une attention particulière, une boîte à mots doux & urne de voyage sera mise à votre disposition le jour J."}
                       </p>
@@ -854,15 +790,15 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                   {/* Bouton vers la liste */}
                   {(config?.giftsMode === "LIST" || config?.giftsMode === "BOTH") &&
                     config?.giftsListUrl && (
-                      <div className="pt-3 border-t border-black/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <span className="text-xs text-[#5C626C] font-sans">
+                      <div className="pt-3 border-t border-white/10 lg:border-black/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <span className="text-xs text-white/75 lg:text-[#5C626C] font-sans">
                           Pour consulter nos envies ou participer à distance :
                         </span>
                         <a
                           href={config.giftsListUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-5 py-3 rounded-xl convex-dark-btn text-white text-xs uppercase tracking-wider font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all"
+                          className="px-5 py-3 rounded-xl bg-white text-[#121316] text-xs uppercase tracking-wider font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all"
                         >
                           {config?.giftsListLabel || "Consulter notre liste de mariage"}
                           <ExternalLink className="w-3.5 h-3.5" />
@@ -871,33 +807,15 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                     )}
 
                   {config?.giftsBankIban && (
-                    <div className="pt-3 border-t border-black/[0.06] text-xs text-[#5C626C] font-sans space-y-1">
-                      <span className="text-[10px] uppercase tracking-wider font-semibold block text-[#949BA5]">
+                    <div className="pt-3 border-t border-white/10 lg:border-black/[0.06] text-xs text-white/80 lg:text-[#5C626C] font-sans space-y-1">
+                      <span className="text-[10px] uppercase tracking-wider font-semibold block text-white/60 lg:text-[#949BA5]">
                         Participation par virement (IBAN) :
                       </span>
-                      <span className="font-mono text-[#121316] text-[11px] block select-all p-2.5 rounded-xl bg-white shadow-sm border border-black/[0.04]">
+                      <span className="font-mono text-white lg:text-[#121316] text-[11px] block select-all p-2.5 rounded-xl bg-white/10 lg:bg-white shadow-sm border border-white/15 lg:border-black/[0.04]">
                         {config.giftsBankIban}
                       </span>
                     </div>
                   )}
-                </div>
-
-                {/* Navigation mobile en bas de section */}
-                <div className="pt-4 lg:hidden flex items-center justify-between gap-3">
-                  <button
-                    onClick={() => scrollToChapter("programme", 2)}
-                    className="flex-1 py-3.5 rounded-2xl convex-btn text-[#5C626C] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                    <span>Programme</span>
-                  </button>
-                  <button
-                    onClick={() => scrollToChapter("rsvp", 4)}
-                    className="flex-1 py-3.5 rounded-2xl convex-dark-btn text-white text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <span>RSVP</span>
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
                 </div>
               </div>
             </div>
@@ -908,14 +826,10 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
              ==================================================== */}
           <section
             id="rsvp"
-            className={`relative w-full lg:min-h-[75vh] pb-24 lg:pb-0 transition-opacity duration-700 ease-in-out ${
-              activeChapter === 4
-                ? "block opacity-100"
-                : "hidden lg:block lg:opacity-100"
-            }`}
+            className="relative w-full lg:min-h-[75vh] pb-24 lg:pb-0"
           >
-            {/* SUR MOBILE : Image calée plein écran sticky en arrière-plan */}
-            <div className="lg:hidden sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
+            {/* SUR MOBILE : Image calée plein écran en flux continu */}
+            <div className="lg:hidden relative h-[100dvh] w-full overflow-hidden">
               <Image
                 src={dynamicChapters[4]?.image || dynamicChapters[0].image}
                 alt={dynamicChapters[4]?.imageAlt || "Confirmation"}
@@ -923,9 +837,9 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 sizes="100vw"
                 className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-              <div className="absolute bottom-20 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
+              <div className="absolute bottom-12 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
                 <div>
                   <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/75 block mb-1">
                     Chapitre 05 • Lookbook
@@ -941,16 +855,16 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
               </div>
             </div>
 
-            {/* CONTENU QUI GLISSE PAR-DESSUS LA PHOTO AU SCROLL */}
-            <div className="relative z-10 -mt-16 lg:mt-0 p-4 sm:p-8 lg:p-0">
-              <div className="emboss-card rounded-3xl p-6 sm:p-8 border border-white/90 bg-white shadow-2xl space-y-6">
+            {/* CONTENU QUI MONTE AU SCROLL : Sans halo blanc opaque sur mobile */}
+            <div className="relative z-10 p-4 sm:p-8 lg:p-0">
+              <div className="rounded-3xl p-6 sm:p-8 bg-black/50 backdrop-blur-xl border border-white/20 text-white lg:bg-white lg:text-[#121316] lg:border-white/90 lg:emboss-card lg:shadow-2xl space-y-6">
                 <div className="space-y-2">
                   <div className="flex items-center gap-3">
-                    <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                    <span className="text-xs uppercase tracking-[0.3em] text-white/75 lg:text-[#5C626C] font-semibold font-sans">
                       Chapitre 05
                     </span>
-                    <div className="h-[1px] w-8 bg-black/15" />
-                    <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                    <div className="h-[1px] w-8 bg-white/30 lg:bg-black/15" />
+                    <span className="text-xs uppercase tracking-[0.2em] text-white/60 lg:text-[#949BA5] font-sans">
                       Confirmation
                     </span>
                   </div>
