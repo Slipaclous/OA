@@ -261,19 +261,19 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
 
   return (
     <div className="relative min-h-screen bg-[#F8F9FA] text-[#121316]">
-      {/* HEADER FLOTTANT CONTEMPORAIN */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-4 bg-[#F8F9FA]/85 backdrop-blur-md border-b border-black/[0.05] flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <span className="font-serif text-lg md:text-xl font-medium tracking-tight text-[#121316]">
-            Anthony & Ophélie
+      {/* HEADER ÉPURÉ FIXE */}
+      <header className="fixed top-0 left-0 right-0 z-40 px-5 sm:px-8 md:px-12 py-3.5 bg-[#F8F9FA]/90 backdrop-blur-md border-b border-black/[0.04] flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span className="font-serif text-lg sm:text-xl font-medium tracking-tight text-[#121316]">
+            {config?.groomName || "Anthony"} <span className="font-serif italic text-[#5C626C]">&</span> {config?.brideName || "Ophélie"}
           </span>
-          <span className="hidden sm:inline-block text-[11px] uppercase tracking-[0.25em] text-[#949BA5] font-sans">
+          <span className="hidden sm:inline-block text-[10px] uppercase tracking-[0.25em] text-[#949BA5] font-sans">
             19.06.2027
           </span>
         </div>
 
-        {/* Navigation rapide par chapitre */}
-        <nav className="flex items-center gap-1 md:gap-2">
+        {/* Navigation Desktop */}
+        <nav className="hidden lg:flex items-center gap-1.5">
           {chapters.map((ch, idx) => (
             <button
               key={ch.id}
@@ -284,18 +284,16 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                   : "text-[#5C626C] hover:text-[#121316] hover:bg-black/[0.03]"
               }`}
             >
-              <span className="hidden md:inline">{ch.title}</span>
-              <span className="md:hidden">{ch.number}</span>
+              <span>{ch.title}</span>
             </button>
           ))}
 
-          {/* Bouton Galerie Plein Écran */}
           <button
             onClick={() => openFullscreen(0)}
             className="px-3 py-1.5 rounded-lg border border-black/10 text-[#121316] text-xs font-sans font-semibold hover:bg-white transition-all flex items-center gap-1.5 cursor-pointer ml-1"
           >
             <Maximize2 className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Galerie</span>
+            <span>Galerie</span>
           </button>
 
           <Link
@@ -306,7 +304,49 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
             <Lock className="w-4 h-4" />
           </Link>
         </nav>
+
+        {/* Action rapide mobile dans le header */}
+        <div className="flex lg:hidden items-center gap-2">
+          <button
+            onClick={() => openFullscreen(0)}
+            className="px-3 py-1.5 rounded-xl convex-btn text-[11px] font-sans font-semibold text-[#121316] flex items-center gap-1.5 cursor-pointer"
+          >
+            <Maximize2 className="w-3 h-3" />
+            Galerie
+          </button>
+          <Link
+            href="/admin"
+            className="p-2 rounded-xl convex-btn text-[#5C626C]"
+          >
+            <Lock className="w-3.5 h-3.5" />
+          </Link>
+        </div>
       </header>
+
+      {/* DOCK FLOTTANT MOBILE (PILL BAR TACTILE EN BAS D'ÉCRAN) */}
+      <div className="lg:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-sm">
+        <div className="convex-btn rounded-2xl p-1.5 shadow-2xl border border-white/90 backdrop-blur-xl flex items-center justify-between">
+          {chapters.map((ch, idx) => (
+            <button
+              key={ch.id}
+              onClick={() => scrollToChapter(ch.id, idx)}
+              className={`flex-1 py-2 rounded-xl text-[11px] font-sans font-semibold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center cursor-pointer ${
+                activeChapter === idx
+                  ? "convex-dark-btn text-white shadow-md"
+                  : "text-[#5C626C] hover:text-[#121316]"
+              }`}
+            >
+              <span>0{idx + 1}</span>
+            </button>
+          ))}
+          <button
+            onClick={() => scrollToChapter("rsvp", 4)}
+            className="px-4 py-2 rounded-xl bg-[#121316] text-white text-[11px] font-sans font-semibold uppercase tracking-wider ml-1 cursor-pointer shrink-0"
+          >
+            RSVP
+          </button>
+        </div>
+      </div>
 
       {/* DISPOSITION SPLIT-SCREEN */}
       <div className="pt-20 lg:pt-0 lg:flex min-h-screen">
