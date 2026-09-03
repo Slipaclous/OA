@@ -223,51 +223,29 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
     return () => clearInterval(timer);
   }, []);
 
-  // Détection du scroll synchronisé pour desktop et mobile snap
+  // Détection du scroll synchronisé UNIQUEMENT sur Desktop (pour animer le Lookbook à gauche)
   useEffect(() => {
     const handleScroll = () => {
-      const isMobile = window.innerWidth < 1024;
-      const snapContainer = document.querySelector(".mobile-snap-container");
+      // Sur mobile, chaque chapitre est affiché individuellement en fondu : pas d'interférence avec le scroll
+      if (window.innerWidth < 1024) return;
 
+      const scrollPosition = window.scrollY + window.innerHeight / 3;
       const chapterElements = chapters.map((c) =>
         document.getElementById(c.id)
       );
 
-      if (isMobile && snapContainer) {
-        const containerTop = snapContainer.scrollTop;
-        const containerHeight = snapContainer.clientHeight;
-        const scrollCenter = containerTop + containerHeight / 2;
-
-        for (let i = chapterElements.length - 1; i >= 0; i--) {
-          const el = chapterElements[i];
-          if (el && el.offsetTop <= scrollCenter) {
-            setActiveChapter(i);
-            break;
-          }
-        }
-      } else {
-        const scrollPosition = window.scrollY + window.innerHeight / 3;
-        for (let i = chapterElements.length - 1; i >= 0; i--) {
-          const el = chapterElements[i];
-          if (el && el.offsetTop <= scrollPosition) {
-            setActiveChapter(i);
-            break;
-          }
+      for (let i = chapterElements.length - 1; i >= 0; i--) {
+        const el = chapterElements[i];
+        if (el && el.offsetTop <= scrollPosition) {
+          setActiveChapter(i);
+          break;
         }
       }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    const snapContainer = document.querySelector(".mobile-snap-container");
-    if (snapContainer) {
-      snapContainer.addEventListener("scroll", handleScroll, { passive: true });
-    }
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      if (snapContainer) {
-        snapContainer.removeEventListener("scroll", handleScroll);
-      }
     };
   }, []);
 
@@ -278,11 +256,7 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
 
   const scrollToChapter = (id: string, index: number) => {
     setActiveChapter(index);
-    const snapContainer = document.querySelector(".mobile-snap-container");
     if (window.innerWidth < 1024) {
-      if (snapContainer) {
-        snapContainer.scrollTo({ top: 0, behavior: "smooth" });
-      }
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       const el = document.getElementById(id);
@@ -361,8 +335,8 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
         </div>
       </header>
 
-      {/* DISPOSITION HYBRIDE : Plein écran Scroll Snap immersif sur mobile, Split-Screen interactif sur Desktop */}
-      <div className="pt-14 lg:pt-0 lg:flex min-h-screen mobile-snap-container h-[100dvh] lg:h-auto overflow-x-hidden">
+      {/* DISPOSITION : Plein écran poétique sur mobile, Split-Screen interactif sur Desktop */}
+      <div className="pt-14 lg:pt-0 lg:flex min-h-screen overflow-x-hidden">
         {/* ========================================================
             VOLET GAUCHE (DESKTOP) : Le Lookbook Photo Fixe & Immersif
            ======================================================== */}
