@@ -67,7 +67,8 @@ export function UploadMediaForm() {
             <option value="1">Chapitre 01 • L&apos;Invitation (Volet)</option>
             <option value="2">Chapitre 02 • Le Décompte (Volet)</option>
             <option value="3">Chapitre 03 • Le Programme (Volet)</option>
-            <option value="4">Chapitre 04 • La Réponse (Volet)</option>
+            <option value="4">Chapitre 04 • Cadeaux & Attentions (Volet)</option>
+            <option value="5">Chapitre 05 • La Réponse RSVP (Volet)</option>
           </select>
         </div>
 
