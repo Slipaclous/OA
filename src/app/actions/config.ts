@@ -20,6 +20,16 @@ export async function updateWeddingConfig(formData: FormData) {
     const programmeTitle = (formData.get("programmeTitle") as string) || "Le Programme de la Journée";
     const programmeText = (formData.get("programmeText") as string) || "";
     const programmeSchedule = (formData.get("programmeSchedule") as string) || "";
+
+    // Cadeaux & Attentions
+    const giftsTitle = (formData.get("giftsTitle") as string) || "Cadeaux & Attentions";
+    const giftsSubtitle = (formData.get("giftsSubtitle") as string) || "Votre présence est notre plus beau présent";
+    const giftsMode = (formData.get("giftsMode") as string) || "URNE";
+    const giftsMessage = (formData.get("giftsMessage") as string) || "";
+    const giftsListUrl = (formData.get("giftsListUrl") as string) || "";
+    const giftsListLabel = (formData.get("giftsListLabel") as string) || "Consulter notre liste de mariage";
+    const giftsBankIban = (formData.get("giftsBankIban") as string) || "";
+
     const rsvpTitle = (formData.get("rsvpTitle") as string) || "Confirmer Votre Présence";
     const rsvpText = (formData.get("rsvpText") as string) || "";
     const rsvpDeadline = (formData.get("rsvpDeadline") as string) || "1er Mai 2027";
@@ -46,6 +56,13 @@ export async function updateWeddingConfig(formData: FormData) {
         programmeTitle,
         programmeText,
         programmeSchedule: programmeSchedule || undefined,
+        giftsTitle,
+        giftsSubtitle,
+        giftsMode,
+        giftsMessage,
+        giftsListUrl,
+        giftsListLabel,
+        giftsBankIban,
         rsvpTitle,
         rsvpText,
         rsvpDeadline,
@@ -69,6 +86,13 @@ export async function updateWeddingConfig(formData: FormData) {
         programmeTitle,
         programmeText,
         programmeSchedule: programmeSchedule || undefined,
+        giftsTitle,
+        giftsSubtitle,
+        giftsMode,
+        giftsMessage,
+        giftsListUrl,
+        giftsListLabel,
+        giftsBankIban,
         rsvpTitle,
         rsvpText,
         rsvpDeadline,
@@ -82,7 +106,7 @@ export async function updateWeddingConfig(formData: FormData) {
     revalidatePath("/admin");
     revalidatePath("/");
 
-    return { success: true, message: "Programme et paramètres enregistrés avec succès !" };
+    return { success: true, message: "Modifications et paramètres enregistrés avec succès !" };
   } catch (error) {
     console.error("Erreur mise à jour config:", error);
     return { success: false, message: "Erreur lors de la sauvegarde" };

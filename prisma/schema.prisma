@@ -40,7 +40,7 @@ model Media {
   caption     String?
   aspectRatio String?      @default("4/5")
   section     MediaSection @default(LOOKBOOK)
-  chapter     Int?         @default(1) // 1, 2, 3, 4 ou null pour la galerie générale
+  chapter     Int?         @default(1) // 1, 2, 3, 4, 5 ou null pour la galerie générale
   width       Int?
   height      Int?
   sizeBytes   Int?
@@ -71,7 +71,16 @@ model WeddingConfig {
   programmeText      String @default("Une partition rythmée pour savourer chaque instant ensemble.")
   programmeSchedule  String @default("[{\"time\":\"14:30\",\"title\":\"La Cérémonie Laïque\",\"location\":\"L'Oliveraie du Domaine\",\"desc\":\"Échange des vœux sous les arbres centenaires. Accueil dès 14h00.\"},{\"time\":\"17:00\",\"title\":\"Le Cocktail\",\"location\":\"La Cour d'Honneur\",\"desc\":\"Rafraîchissements, mets fins et séance photo avec les mariés.\"},{\"time\":\"20:00\",\"title\":\"Le Dîner\",\"location\":\"La Grande Verrière\",\"desc\":\"Dîner de fête, discours chaleureux et ouverture du bal.\"},{\"time\":\"23:30\",\"title\":\"La Soirée Dansante\",\"location\":\"Le Salon Festif\",\"desc\":\"DJ set et célébration jusqu'au bout de la nuit.\"}]")
 
-  // Textes Chapitre 04 (RSVP)
+  // Chapitre Cadeaux & Attentions
+  giftsTitle         String @default("Cadeaux & Attentions")
+  giftsSubtitle      String @default("Votre présence est notre plus beau présent")
+  giftsMode          String @default("URNE") // "URNE", "LIST", ou "BOTH"
+  giftsMessage       String @default("Votre présence à nos côtés pour célébrer notre union est le plus précieux des cadeaux. Si toutefois vous désirez témoigner d'une attention particulière, une boîte à mots doux & urne de voyage sera mise à votre disposition le jour J.")
+  giftsListUrl       String @default("")
+  giftsListLabel     String @default("Consulter notre liste de mariage")
+  giftsBankIban      String @default("")
+
+  // Textes Chapitre RSVP
   rsvpTitle          String @default("Confirmer Votre Présence")
   rsvpText           String @default("Merci de nous transmettre votre réponse avant le 1er Mai 2027 afin de nous aider dans l'organisation.")
   rsvpDeadline       String @default("1er Mai 2027")

@@ -13,6 +13,7 @@ import {
   Clock,
   MapPin,
   ListOrdered,
+  Gift,
 } from "lucide-react";
 
 interface ColorItem {
@@ -41,6 +42,13 @@ interface WeddingConfigData {
   programmeTitle: string;
   programmeText: string;
   programmeSchedule?: string;
+  giftsTitle?: string;
+  giftsSubtitle?: string;
+  giftsMode?: string;
+  giftsMessage?: string;
+  giftsListUrl?: string;
+  giftsListLabel?: string;
+  giftsBankIban?: string;
   rsvpTitle: string;
   rsvpText: string;
   rsvpDeadline: string;
@@ -90,8 +98,12 @@ export function WeddingConfigForm({ initialConfig }: ConfigFormProps) {
   );
 
   const [activeSubTab, setActiveSubTab] = useState<
-    "texts" | "programme" | "general" | "dresscode"
+    "programme" | "gifts" | "texts" | "general" | "dresscode"
   >("programme");
+
+  const [giftsMode, setGiftsMode] = useState<"URNE" | "LIST" | "BOTH">(
+    (initialConfig.giftsMode as "URNE" | "LIST" | "BOTH") || "URNE"
+  );
 
   // Parsing des étapes du programme
   const parseSchedule = (): TimelineItem[] => {
@@ -212,6 +224,19 @@ export function WeddingConfigForm({ initialConfig }: ConfigFormProps) {
         >
           <Clock className="w-3.5 h-3.5" />
           Programme ({schedule.length} étapes)
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveSubTab("gifts")}
+          className={`px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all flex items-center gap-1.5 ${
+            activeSubTab === "gifts"
+              ? "bg-[#121316] text-white"
+              : "text-[#5C626C] hover:text-[#121316]"
+          }`}
+        >
+          <Gift className="w-3.5 h-3.5" />
+          Cadeaux & Urne
         </button>
 
         <button
@@ -370,6 +395,172 @@ export function WeddingConfigForm({ initialConfig }: ConfigFormProps) {
 
         {/* Champ JSON sérialisé */}
         <input type="hidden" name="programmeSchedule" value={serializedSchedule} />
+      </div>
+
+      {/* ========================================================
+          1.5 ÉDITION DES CADEAUX, LISTE & URNE DE MARIAGE
+         ======================================================== */}
+      <div className={`space-y-6 ${activeSubTab === "gifts" ? "block" : "hidden"}`}>
+        <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
+          <div>
+            <h4 className="font-serif text-xl text-[#121316] flex items-center gap-2">
+              <Gift className="w-4 h-4" />
+              Cadeaux, Attentions & Urne de Mariage
+            </h4>
+            <p className="font-sans text-xs text-[#5C626C] mt-0.5">
+              Précisez à vos invités la présence d&apos;une urne sur place, d&apos;une liste de mariage en ligne ou les deux.
+            </p>
+          </div>
+        </div>
+
+        {/* Choix du mode */}
+        <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
+          <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold block">
+            Formule retenue pour les cadeaux
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {[
+              {
+                id: "URNE",
+                label: "Urne sur place uniquement",
+                desc: "Boîte à enveloppes & mots doux le jour J",
+              },
+              {
+                id: "LIST",
+                label: "Liste de mariage en ligne",
+                desc: "Lien externe (ex: Millemercis, Zankyou...)",
+              },
+              {
+                id: "BOTH",
+                label: "Urne sur place + Liste en ligne",
+                desc: "Les deux options proposées aux invités",
+              },
+            ].map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setGiftsMode(opt.id as "URNE" | "LIST" | "BOTH")}
+                className={`p-4 rounded-xl text-left transition-all cursor-pointer border ${
+                  giftsMode === opt.id
+                    ? "convex-dark-btn text-white border-transparent"
+                    : "convex-btn text-[#5C626C] border-white/60"
+                }`}
+              >
+                <span className="block text-xs font-semibold uppercase tracking-wider">
+                  {opt.label}
+                </span>
+                <span
+                  className={`block text-[11px] font-sans mt-1 ${
+                    giftsMode === opt.id ? "text-white/80" : "text-[#949BA5]"
+                  }`}
+                >
+                  {opt.desc}
+                </span>
+              </button>
+            ))}
+          </div>
+          <input type="hidden" name="giftsMode" value={giftsMode} />
+        </div>
+
+        {/* Textes de la section */}
+        <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+                Titre de la section
+              </label>
+              <input
+                type="text"
+                name="giftsTitle"
+                defaultValue={initialConfig.giftsTitle || "Cadeaux & Attentions"}
+                placeholder="Cadeaux & Attentions"
+                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+                Sous-titre chaleureux
+              </label>
+              <input
+                type="text"
+                name="giftsSubtitle"
+                defaultValue={initialConfig.giftsSubtitle || "Votre présence est notre plus beau présent"}
+                placeholder="Votre présence est notre plus beau présent"
+                className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+              Message d&apos;explication pour vos proches
+            </label>
+            <textarea
+              name="giftsMessage"
+              rows={3}
+              defaultValue={
+                initialConfig.giftsMessage ||
+                "Votre présence à nos côtés pour célébrer notre union est le plus précieux des cadeaux. Si toutefois vous désirez témoigner d'une attention particulière, une boîte à mots doux & urne de voyage sera mise à votre disposition le jour J."
+              }
+              className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316] resize-none"
+            />
+          </div>
+        </div>
+
+        {/* Détails liste de mariage (si LIST ou BOTH) */}
+        {(giftsMode === "LIST" || giftsMode === "BOTH") && (
+          <div className="p-6 rounded-2xl emboss-card border border-white space-y-4 animate-in fade-in duration-200">
+            <h5 className="font-serif text-lg text-[#121316] pb-2 border-b border-black/[0.06]">
+              Lien de la Liste de Mariage en Ligne
+            </h5>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+                  URL / Lien vers votre liste (https://...)
+                </label>
+                <input
+                  type="url"
+                  name="giftsListUrl"
+                  defaultValue={initialConfig.giftsListUrl}
+                  placeholder="https://www.millemercismariage.com/..."
+                  className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
+                  Texte du bouton
+                </label>
+                <input
+                  type="text"
+                  name="giftsListLabel"
+                  defaultValue={initialConfig.giftsListLabel || "Consulter notre liste de mariage"}
+                  placeholder="Consulter notre liste de mariage"
+                  className="deboss-input w-full p-3.5 rounded-xl text-xs font-sans text-[#121316]"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Option IBAN / Virement */}
+        <div className="p-6 rounded-2xl emboss-card border border-white space-y-3">
+          <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold block">
+            IBAN / Coordonnées bancaires (Optionnel)
+          </label>
+          <p className="text-[11px] text-[#949BA5] font-sans">
+            Pour les invités qui ne peuvent se déplacer et souhaitent participer à distance.
+          </p>
+          <input
+            type="text"
+            name="giftsBankIban"
+            defaultValue={initialConfig.giftsBankIban}
+            placeholder="FR76 1234 5678 9012 3456 7890 123"
+            className="deboss-input w-full p-3.5 rounded-xl text-xs font-mono text-[#121316]"
+          />
+        </div>
       </div>
 
       {/* ========================================================

@@ -14,6 +14,8 @@ import {
   Lock,
   ArrowRight,
   Maximize2,
+  Gift,
+  ExternalLink,
 } from "lucide-react";
 import { FullscreenGallery, GalleryPhoto } from "@/components/FullscreenGallery";
 import { DressCodeSection } from "@/components/DressCodeSection";
@@ -57,8 +59,17 @@ const chapters: LookbookChapter[] = [
     imageCaption: "Les préparatifs et l'art des détails.",
   },
   {
-    id: "rsvp",
+    id: "cadeaux",
     number: "04",
+    title: "Cadeaux",
+    subtitle: "Attentions & Urne",
+    image: "/photos/lookbook.jpg",
+    imageAlt: "Boîte à souvenirs et cadeaux",
+    imageCaption: "Votre présence est notre plus précieux présent.",
+  },
+  {
+    id: "rsvp",
+    number: "05",
     title: "Votre Réponse",
     subtitle: "Confirmer votre présence",
     image: "/photos/hero.jpg",
@@ -130,6 +141,13 @@ interface SplitScreenProps {
     programmeTitle?: string;
     programmeText?: string;
     programmeSchedule?: string;
+    giftsTitle?: string;
+    giftsSubtitle?: string;
+    giftsMode?: string;
+    giftsMessage?: string;
+    giftsListUrl?: string;
+    giftsListLabel?: string;
+    giftsBankIban?: string;
     rsvpTitle?: string;
     rsvpText?: string;
     rsvpDeadline?: string;
@@ -440,7 +458,7 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
               </div>
 
               <button
-                onClick={() => scrollToChapter("rsvp", 3)}
+                onClick={() => scrollToChapter("rsvp", 4)}
                 className="w-full sm:w-auto px-6 py-3.5 rounded-xl convex-dark-btn text-white text-xs uppercase tracking-[0.2em] font-semibold cursor-pointer flex items-center justify-center gap-2"
               >
                 Confirmer
@@ -658,8 +676,8 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
             />
           </section>
 
-          {/* CHAPITRE 4 : RSVP */}
-          <section id="rsvp" className="min-h-[70vh] flex flex-col justify-center space-y-6 sm:space-y-8 pb-16">
+          {/* CHAPITRE 4 : CADEAUX & ATTENTIONS */}
+          <section id="cadeaux" className="min-h-[70vh] flex flex-col justify-center space-y-6 sm:space-y-8">
             <div className="lg:hidden relative aspect-[4/3] w-full rounded-2xl overflow-hidden shadow-xl border border-white group">
               <Image
                 src={dynamicChapters[3].image}
@@ -693,6 +711,110 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
               <div className="flex items-center gap-3">
                 <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
                   Chapitre 04
+                </span>
+                <div className="h-[1px] w-8 bg-black/15" />
+                <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">
+                  Attentions
+                </span>
+              </div>
+
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#121316] font-normal tracking-tight">
+                {config?.giftsTitle || "Cadeaux & Attentions"}
+              </h2>
+              <p className="font-sans text-xs sm:text-sm md:text-base text-[#5C626C]">
+                {config?.giftsSubtitle || "Votre présence est notre plus beau présent"}
+              </p>
+            </div>
+
+            {/* Carte Neumorphique Cadeaux */}
+            <div className="emboss-card rounded-2xl p-6 sm:p-8 border border-white space-y-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl convex-pill flex items-center justify-center shrink-0">
+                  <Gift className="w-6 h-6 text-[#121316]" />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="font-serif text-xl text-[#121316]">
+                    {config?.giftsMode === "LIST"
+                      ? "Notre Liste de Mariage"
+                      : config?.giftsMode === "BOTH"
+                      ? "Urne de Voyage & Liste en Ligne"
+                      : "Une Urne à Mots Doux sur Place"}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-[#5C626C] font-sans leading-relaxed pt-1">
+                    {config?.giftsMessage ||
+                      "Votre présence à nos côtés pour célébrer notre union est le plus précieux des cadeaux. Si toutefois vous désirez témoigner d'une attention particulière, une boîte à mots doux & urne de voyage sera mise à votre disposition le jour J."}
+                  </p>
+                </div>
+              </div>
+
+              {/* Bouton vers la liste si LIST ou BOTH */}
+              {(config?.giftsMode === "LIST" || config?.giftsMode === "BOTH") &&
+                config?.giftsListUrl && (
+                  <div className="pt-2 border-t border-black/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <span className="text-xs text-[#5C626C] font-sans">
+                      Pour consulter nos envies ou participer à distance :
+                    </span>
+                    <a
+                      href={config.giftsListUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-6 py-3 rounded-xl convex-dark-btn text-white text-xs uppercase tracking-wider font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all"
+                    >
+                      {config?.giftsListLabel || "Consulter notre liste de mariage"}
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                )}
+
+              {/* IBAN si renseigné */}
+              {config?.giftsBankIban && (
+                <div className="pt-3 border-t border-black/[0.06] text-xs text-[#5C626C] font-sans space-y-1">
+                  <span className="text-[10px] uppercase tracking-wider font-semibold block text-[#949BA5]">
+                    Participation par virement (IBAN) :
+                  </span>
+                  <span className="font-mono text-[#121316] text-[11px] block select-all p-2 rounded-lg deboss-input">
+                    {config.giftsBankIban}
+                  </span>
+                </div>
+              )}
+            </div>
+          </section>
+
+          {/* CHAPITRE 5 : RSVP */}
+          <section id="rsvp" className="min-h-[70vh] flex flex-col justify-center space-y-6 sm:space-y-8 pb-16">
+            <div className="lg:hidden relative aspect-[4/3] w-full rounded-2xl overflow-hidden shadow-xl border border-white group">
+              <Image
+                src={dynamicChapters[4]?.image || dynamicChapters[0].image}
+                alt={dynamicChapters[4]?.imageAlt || "Confirmation"}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-white">
+                <div>
+                  <span className="text-[10px] font-sans uppercase tracking-[0.25em] text-white/70 block">
+                    Chapitre 05 • Cliché
+                  </span>
+                  <p className="font-serif italic text-base text-white/95">
+                    {dynamicChapters[4]?.imageCaption || "Nous avons hâte de vous retrouver."}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => openFullscreen(4)}
+                  className="p-2 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white cursor-pointer"
+                  title="Plein écran"
+                >
+                  <Maximize2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-2 sm:space-y-3">
+              <div className="flex items-center gap-3">
+                <span className="text-xs uppercase tracking-[0.3em] text-[#5C626C] font-semibold font-sans">
+                  Chapitre 05
                 </span>
                 <div className="h-[1px] w-8 bg-black/15" />
                 <span className="text-xs uppercase tracking-[0.2em] text-[#949BA5] font-sans">

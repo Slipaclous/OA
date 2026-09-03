@@ -64,6 +64,13 @@ interface AdminDashboardClientProps {
     programmeTitle: string;
     programmeText: string;
     programmeSchedule?: string;
+    giftsTitle?: string;
+    giftsSubtitle?: string;
+    giftsMode?: string;
+    giftsMessage?: string;
+    giftsListUrl?: string;
+    giftsListLabel?: string;
+    giftsBankIban?: string;
     rsvpTitle: string;
     rsvpText: string;
     rsvpDeadline: string;
