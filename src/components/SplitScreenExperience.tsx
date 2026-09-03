@@ -17,6 +17,8 @@ import {
   Gift,
   ExternalLink,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { FullscreenGallery, GalleryPhoto } from "@/components/FullscreenGallery";
 import { DressCodeSection } from "@/components/DressCodeSection";
@@ -275,10 +277,18 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
   const [guestsCount, setGuestsCount] = useState(1);
 
   const scrollToChapter = (id: string, index: number) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-      setActiveChapter(index);
+    setActiveChapter(index);
+    const snapContainer = document.querySelector(".mobile-snap-container");
+    if (window.innerWidth < 1024) {
+      if (snapContainer) {
+        snapContainer.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
@@ -351,27 +361,50 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
         </div>
       </header>
 
-      {/* DOCK FLOTTANT MOBILE (PILL BAR TACTILE EN BAS D'ÉCRAN) */}
-      <div className="lg:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-sm">
-        <div className="convex-btn rounded-2xl p-1.5 shadow-2xl border border-white/90 backdrop-blur-xl flex items-center justify-between">
-          {chapters.map((ch, idx) => (
-            <button
-              key={ch.id}
-              onClick={() => scrollToChapter(ch.id, idx)}
-              className={`flex-1 py-2 rounded-xl text-[11px] font-sans font-semibold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center cursor-pointer ${
-                activeChapter === idx
-                  ? "convex-dark-btn text-white shadow-md"
-                  : "text-[#5C626C] hover:text-[#121316]"
-              }`}
-            >
-              <span>0{idx + 1}</span>
-            </button>
-          ))}
+      {/* DOCK FLOTTANT MOBILE (NAVIGATION POÉTIQUE EN BAS D'ÉCRAN) */}
+      <div className="lg:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-md">
+        <div className="convex-btn rounded-2xl p-1.5 shadow-2xl border border-white/90 backdrop-blur-xl flex items-center justify-between gap-1">
+          {/* Bouton Précédent */}
           <button
-            onClick={() => scrollToChapter("rsvp", 4)}
-            className="px-4 py-2 rounded-xl bg-[#121316] text-white text-[11px] font-sans font-semibold uppercase tracking-wider ml-1 cursor-pointer shrink-0"
+            onClick={() => {
+              const prev = Math.max(0, activeChapter - 1);
+              scrollToChapter(chapters[prev].id, prev);
+            }}
+            disabled={activeChapter === 0}
+            className="p-2.5 rounded-xl text-[#5C626C] hover:text-[#121316] disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer shrink-0"
+            aria-label="Chapitre précédent"
           >
-            RSVP
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          {/* Numéros de chapitres avec transition active */}
+          <div className="flex items-center gap-1 flex-1">
+            {chapters.map((ch, idx) => (
+              <button
+                key={ch.id}
+                onClick={() => scrollToChapter(ch.id, idx)}
+                className={`flex-1 py-2 rounded-xl text-[11px] font-sans font-semibold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center cursor-pointer ${
+                  activeChapter === idx
+                    ? "convex-dark-btn text-white shadow-md scale-105"
+                    : "text-[#5C626C] hover:text-[#121316]"
+                }`}
+              >
+                <span>0{idx + 1}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Bouton Suivant */}
+          <button
+            onClick={() => {
+              const next = Math.min(chapters.length - 1, activeChapter + 1);
+              scrollToChapter(chapters[next].id, next);
+            }}
+            disabled={activeChapter === chapters.length - 1}
+            className="p-2.5 rounded-xl text-[#5C626C] hover:text-[#121316] disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer shrink-0"
+            aria-label="Chapitre suivant"
+          >
+            <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       </div>
@@ -456,7 +489,14 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
           {/* ====================================================
               CHAPITRE 01 : L'INVITATION
              ==================================================== */}
-          <section id="invitation" className="relative w-full lg:min-h-[75vh]">
+          <section
+            id="invitation"
+            className={`relative w-full lg:min-h-[75vh] transition-opacity duration-700 ease-in-out ${
+              activeChapter === 0
+                ? "block opacity-100"
+                : "hidden lg:block lg:opacity-100"
+            }`}
+          >
             {/* SUR MOBILE : Image calée plein écran sticky en arrière-plan */}
             <div className="lg:hidden sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
               <Image
@@ -545,7 +585,14 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
           {/* ====================================================
               CHAPITRE 02 : LE DÉCOMPTE
              ==================================================== */}
-          <section id="countdown" className="relative w-full lg:min-h-[75vh]">
+          <section
+            id="countdown"
+            className={`relative w-full lg:min-h-[75vh] transition-opacity duration-700 ease-in-out ${
+              activeChapter === 1
+                ? "block opacity-100"
+                : "hidden lg:block lg:opacity-100"
+            }`}
+          >
             {/* SUR MOBILE : Image calée plein écran sticky en arrière-plan */}
             <div className="lg:hidden sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
               <Image
@@ -623,7 +670,14 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
           {/* ====================================================
               CHAPITRE 03 : LE PROGRAMME DE LA JOURNÉE
              ==================================================== */}
-          <section id="programme" className="relative w-full lg:min-h-[75vh]">
+          <section
+            id="programme"
+            className={`relative w-full lg:min-h-[75vh] transition-opacity duration-700 ease-in-out ${
+              activeChapter === 2
+                ? "block opacity-100"
+                : "hidden lg:block lg:opacity-100"
+            }`}
+          >
             {/* SUR MOBILE : Image calée plein écran sticky en arrière-plan */}
             <div className="lg:hidden sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
               <Image
@@ -754,7 +808,14 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
           {/* ====================================================
               CHAPITRE 04 : CADEAUX & ATTENTIONS
              ==================================================== */}
-          <section id="cadeaux" className="relative w-full lg:min-h-[75vh]">
+          <section
+            id="cadeaux"
+            className={`relative w-full lg:min-h-[75vh] transition-opacity duration-700 ease-in-out ${
+              activeChapter === 3
+                ? "block opacity-100"
+                : "hidden lg:block lg:opacity-100"
+            }`}
+          >
             {/* SUR MOBILE : Image calée plein écran sticky en arrière-plan */}
             <div className="lg:hidden sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
               <Image
@@ -861,7 +922,14 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
           {/* ====================================================
               CHAPITRE 05 : RSVP & CONFIRMATION
              ==================================================== */}
-          <section id="rsvp" className="relative w-full lg:min-h-[75vh] pb-24 lg:pb-0">
+          <section
+            id="rsvp"
+            className={`relative w-full lg:min-h-[75vh] pb-24 lg:pb-0 transition-opacity duration-700 ease-in-out ${
+              activeChapter === 4
+                ? "block opacity-100"
+                : "hidden lg:block lg:opacity-100"
+            }`}
+          >
             {/* SUR MOBILE : Image calée plein écran sticky en arrière-plan */}
             <div className="lg:hidden sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
               <Image
