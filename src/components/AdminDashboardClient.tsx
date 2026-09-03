@@ -63,6 +63,7 @@ interface AdminDashboardClientProps {
     countdownText: string;
     programmeTitle: string;
     programmeText: string;
+    programmeSchedule?: string;
     rsvpTitle: string;
     rsvpText: string;
     rsvpDeadline: string;

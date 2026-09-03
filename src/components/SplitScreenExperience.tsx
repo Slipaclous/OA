@@ -129,6 +129,7 @@ interface SplitScreenProps {
     countdownText?: string;
     programmeTitle?: string;
     programmeText?: string;
+    programmeSchedule?: string;
     rsvpTitle?: string;
     rsvpText?: string;
     rsvpDeadline?: string;
@@ -578,37 +579,53 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
               </p>
             </div>
 
-            {/* Timeline élégante */}
+            {/* Timeline élégante dynamique */}
             <div className="space-y-4">
-              {timelineSteps.map((step, idx) => (
-                <div
-                  key={step.title}
-                  className="emboss-card rounded-2xl p-5 sm:p-6 border border-white flex items-start gap-5"
-                >
-                  <div className="deboss-input rounded-xl px-4 py-2 text-center shrink-0">
-                    <span className="font-serif text-xl sm:text-2xl text-[#121316] font-medium">
-                      {step.time}
-                    </span>
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-serif text-lg sm:text-xl text-[#121316]">
-                        {step.title}
-                      </h3>
-                      <span className="text-[10px] uppercase tracking-wider text-[#949BA5] font-sans">
-                        0{idx + 1}
+              {(() => {
+                let dynamicSteps = timelineSteps;
+                if (config?.programmeSchedule) {
+                  try {
+                    const parsed = JSON.parse(config.programmeSchedule);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                      dynamicSteps = parsed;
+                    }
+                  } catch {
+                    // fallback
+                  }
+                }
+
+                return dynamicSteps.map((step, idx) => (
+                  <div
+                    key={`${step.title}-${idx}`}
+                    className="emboss-card rounded-2xl p-5 sm:p-6 border border-white flex items-start gap-4 sm:gap-5"
+                  >
+                    <div className="deboss-input rounded-xl px-3 sm:px-4 py-2 text-center shrink-0 min-w-[75px] sm:min-w-[85px]">
+                      <span className="font-serif text-xl sm:text-2xl text-[#121316] font-medium">
+                        {step.time}
                       </span>
                     </div>
-                    <p className="text-xs text-[#5C626C] font-sans leading-relaxed">
-                      {step.desc}
-                    </p>
-                    <p className="text-[11px] text-[#121316] font-sans font-medium flex items-center gap-1 pt-0.5">
-                      <MapPin className="w-3 h-3 text-[#5C626C]" />
-                      {step.location}
-                    </p>
+                    <div className="space-y-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-serif text-lg sm:text-xl text-[#121316]">
+                          {step.title}
+                        </h3>
+                        <span className="text-[10px] uppercase tracking-wider text-[#949BA5] font-sans shrink-0">
+                          0{idx + 1}
+                        </span>
+                      </div>
+                      <p className="text-xs text-[#5C626C] font-sans leading-relaxed">
+                        {step.desc}
+                      </p>
+                      {step.location && (
+                        <p className="text-[11px] text-[#121316] font-sans font-medium flex items-center gap-1 pt-0.5">
+                          <MapPin className="w-3 h-3 text-[#5C626C] shrink-0" />
+                          {step.location}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ));
+              })()}
             </div>
 
             <div className="flex flex-wrap gap-4 pt-2 text-xs uppercase tracking-wider font-sans font-semibold">

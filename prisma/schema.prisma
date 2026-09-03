@@ -69,6 +69,7 @@ model WeddingConfig {
   // Textes Chapitre 03 (Programme)
   programmeTitle     String @default("Le Programme de la Journée")
   programmeText      String @default("Une partition rythmée pour savourer chaque instant ensemble.")
+  programmeSchedule  String @default("[{\"time\":\"14:30\",\"title\":\"La Cérémonie Laïque\",\"location\":\"L'Oliveraie du Domaine\",\"desc\":\"Échange des vœux sous les arbres centenaires. Accueil dès 14h00.\"},{\"time\":\"17:00\",\"title\":\"Le Cocktail\",\"location\":\"La Cour d'Honneur\",\"desc\":\"Rafraîchissements, mets fins et séance photo avec les mariés.\"},{\"time\":\"20:00\",\"title\":\"Le Dîner\",\"location\":\"La Grande Verrière\",\"desc\":\"Dîner de fête, discours chaleureux et ouverture du bal.\"},{\"time\":\"23:30\",\"title\":\"La Soirée Dansante\",\"location\":\"Le Salon Festif\",\"desc\":\"DJ set et célébration jusqu'au bout de la nuit.\"}]")
 
   // Textes Chapitre 04 (RSVP)
   rsvpTitle          String @default("Confirmer Votre Présence")

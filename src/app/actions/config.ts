@@ -19,6 +19,7 @@ export async function updateWeddingConfig(formData: FormData) {
     const countdownText = (formData.get("countdownText") as string) || "";
     const programmeTitle = (formData.get("programmeTitle") as string) || "Le Programme de la Journée";
     const programmeText = (formData.get("programmeText") as string) || "";
+    const programmeSchedule = (formData.get("programmeSchedule") as string) || "";
     const rsvpTitle = (formData.get("rsvpTitle") as string) || "Confirmer Votre Présence";
     const rsvpText = (formData.get("rsvpText") as string) || "";
     const rsvpDeadline = (formData.get("rsvpDeadline") as string) || "1er Mai 2027";
@@ -44,6 +45,7 @@ export async function updateWeddingConfig(formData: FormData) {
         countdownText,
         programmeTitle,
         programmeText,
+        programmeSchedule: programmeSchedule || undefined,
         rsvpTitle,
         rsvpText,
         rsvpDeadline,
@@ -66,6 +68,7 @@ export async function updateWeddingConfig(formData: FormData) {
         countdownText,
         programmeTitle,
         programmeText,
+        programmeSchedule: programmeSchedule || undefined,
         rsvpTitle,
         rsvpText,
         rsvpDeadline,
@@ -79,7 +82,7 @@ export async function updateWeddingConfig(formData: FormData) {
     revalidatePath("/admin");
     revalidatePath("/");
 
-    return { success: true, message: "Textes et paramètres mis à jour avec succès !" };
+    return { success: true, message: "Programme et paramètres enregistrés avec succès !" };
   } catch (error) {
     console.error("Erreur mise à jour config:", error);
     return { success: false, message: "Erreur lors de la sauvegarde" };

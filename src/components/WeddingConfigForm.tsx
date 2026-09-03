@@ -2,11 +2,29 @@
 
 import { useActionState, useState } from "react";
 import { updateWeddingConfig } from "@/app/actions/config";
-import { Loader2, Palette, CheckCircle2, Plus, Trash2, FileText, Calendar } from "lucide-react";
+import {
+  Loader2,
+  Palette,
+  CheckCircle2,
+  Plus,
+  Trash2,
+  FileText,
+  Calendar,
+  Clock,
+  MapPin,
+  ListOrdered,
+} from "lucide-react";
 
 interface ColorItem {
   name: string;
   hex: string;
+}
+
+interface TimelineItem {
+  time: string;
+  title: string;
+  location: string;
+  desc: string;
 }
 
 interface WeddingConfigData {
@@ -22,6 +40,7 @@ interface WeddingConfigData {
   countdownText: string;
   programmeTitle: string;
   programmeText: string;
+  programmeSchedule?: string;
   rsvpTitle: string;
   rsvpText: string;
   rsvpDeadline: string;
@@ -35,6 +54,33 @@ interface ConfigFormProps {
   initialConfig: WeddingConfigData;
 }
 
+const defaultSchedule: TimelineItem[] = [
+  {
+    time: "14:30",
+    title: "La Cérémonie Laïque",
+    location: "L'Oliveraie du Domaine",
+    desc: "Échange des vœux sous les arbres centenaires. Accueil dès 14h00.",
+  },
+  {
+    time: "17:00",
+    title: "Le Cocktail",
+    location: "La Cour d'Honneur",
+    desc: "Rafraîchissements, mets fins et séance photo avec les mariés.",
+  },
+  {
+    time: "20:00",
+    title: "Le Dîner",
+    location: "La Grande Verrière",
+    desc: "Dîner de fête, discours chaleureux et ouverture du bal.",
+  },
+  {
+    time: "23:30",
+    title: "La Soirée Dansante",
+    location: "Le Salon Festif",
+    desc: "DJ set et célébration jusqu'au bout de la nuit.",
+  },
+];
+
 export function WeddingConfigForm({ initialConfig }: ConfigFormProps) {
   const [state, formAction, isPending] = useActionState(
     async (_prev: { success: boolean; message: string } | null, formData: FormData) => {
@@ -43,7 +89,49 @@ export function WeddingConfigForm({ initialConfig }: ConfigFormProps) {
     null
   );
 
-  const [activeSubTab, setActiveSubTab] = useState<"general" | "texts" | "dresscode">("texts");
+  const [activeSubTab, setActiveSubTab] = useState<
+    "texts" | "programme" | "general" | "dresscode"
+  >("programme");
+
+  // Parsing des étapes du programme
+  const parseSchedule = (): TimelineItem[] => {
+    if (!initialConfig.programmeSchedule) return defaultSchedule;
+    try {
+      const parsed = JSON.parse(initialConfig.programmeSchedule);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    } catch {
+      // fallback
+    }
+    return defaultSchedule;
+  };
+
+  const [schedule, setSchedule] = useState<TimelineItem[]>(parseSchedule());
+
+  const addScheduleStep = () => {
+    setSchedule([
+      ...schedule,
+      {
+        time: "18:00",
+        title: "Nouvelle Étape",
+        location: "Domaine des Vignes Blanches",
+        desc: "Détail du moment partagé avec les convives.",
+      },
+    ]);
+  };
+
+  const removeScheduleStep = (index: number) => {
+    setSchedule(schedule.filter((_, i) => i !== index));
+  };
+
+  const updateScheduleStep = (
+    index: number,
+    field: keyof TimelineItem,
+    value: string
+  ) => {
+    const next = [...schedule];
+    next[index] = { ...next[index], [field]: value };
+    setSchedule(next);
+  };
 
   // Parsing des couleurs existantes
   const parseInitialColors = (): ColorItem[] => {
@@ -94,6 +182,7 @@ export function WeddingConfigForm({ initialConfig }: ConfigFormProps) {
   };
 
   const serializedColors = colors.map((c) => `${c.name}:${c.hex}`).join(",");
+  const serializedSchedule = JSON.stringify(schedule);
 
   return (
     <form action={formAction} className="space-y-8">
@@ -111,24 +200,37 @@ export function WeddingConfigForm({ initialConfig }: ConfigFormProps) {
       )}
 
       {/* SOUS-NAVIGATION DES PARAMÈTRES */}
-      <div className="flex items-center gap-2 p-1 rounded-xl deboss-input w-fit">
+      <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl deboss-input w-fit max-w-full">
+        <button
+          type="button"
+          onClick={() => setActiveSubTab("programme")}
+          className={`px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all flex items-center gap-1.5 ${
+            activeSubTab === "programme"
+              ? "bg-[#121316] text-white"
+              : "text-[#5C626C] hover:text-[#121316]"
+          }`}
+        >
+          <Clock className="w-3.5 h-3.5" />
+          Programme ({schedule.length} étapes)
+        </button>
+
         <button
           type="button"
           onClick={() => setActiveSubTab("texts")}
-          className={`px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-all flex items-center gap-1.5 ${
+          className={`px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all flex items-center gap-1.5 ${
             activeSubTab === "texts"
               ? "bg-[#121316] text-white"
               : "text-[#5C626C] hover:text-[#121316]"
           }`}
         >
           <FileText className="w-3.5 h-3.5" />
-          Textes du Site
+          Textes des Chapitres
         </button>
 
         <button
           type="button"
           onClick={() => setActiveSubTab("general")}
-          className={`px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-all flex items-center gap-1.5 ${
+          className={`px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all flex items-center gap-1.5 ${
             activeSubTab === "general"
               ? "bg-[#121316] text-white"
               : "text-[#5C626C] hover:text-[#121316]"
@@ -141,7 +243,7 @@ export function WeddingConfigForm({ initialConfig }: ConfigFormProps) {
         <button
           type="button"
           onClick={() => setActiveSubTab("dresscode")}
-          className={`px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-all flex items-center gap-1.5 ${
+          className={`px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all flex items-center gap-1.5 ${
             activeSubTab === "dresscode"
               ? "bg-[#121316] text-white"
               : "text-[#5C626C] hover:text-[#121316]"
@@ -152,7 +254,127 @@ export function WeddingConfigForm({ initialConfig }: ConfigFormProps) {
         </button>
       </div>
 
-      {/* 1. ÉDITION DE TOUS LES TEXTES DU SITE (TOUS LES INPUTS SONT MAINTENUS DANS LE DOM VIA HIDDEN) */}
+      {/* ========================================================
+          1. ÉDITION DU PROGRAMME (HEURES, TITRES, LIEUX, DESCRIPTIONS)
+         ======================================================== */}
+      <div className={`space-y-6 ${activeSubTab === "programme" ? "block" : "hidden"}`}>
+        <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
+          <div>
+            <h4 className="font-serif text-xl text-[#121316] flex items-center gap-2">
+              <ListOrdered className="w-4 h-4" />
+              Déroulé Chronologique de la Journée
+            </h4>
+            <p className="font-sans text-xs text-[#5C626C] mt-0.5">
+              Modifiez les horaires, intitulés, lieux spécifiques et descriptions de chaque étape.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={addScheduleStep}
+            className="px-3.5 py-1.5 rounded-xl convex-btn text-xs font-semibold font-sans text-[#121316] flex items-center gap-1.5 cursor-pointer"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Ajouter une étape
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          {schedule.map((step, idx) => (
+            <div
+              key={idx}
+              className="p-5 sm:p-6 rounded-2xl emboss-card border border-white space-y-4 relative group"
+            >
+              <div className="flex items-center justify-between border-b border-black/[0.06] pb-3">
+                <span className="text-xs uppercase tracking-wider font-semibold text-[#121316] flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-[#121316] text-white flex items-center justify-center text-[10px]">
+                    0{idx + 1}
+                  </span>
+                  Étape {idx + 1}
+                </span>
+
+                {schedule.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeScheduleStep(idx)}
+                    className="p-1.5 rounded-lg text-[#949BA5] hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer flex items-center gap-1 text-xs"
+                    title="Supprimer cette étape"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Supprimer
+                  </button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                {/* Heure */}
+                <div className="sm:col-span-3 space-y-1">
+                  <label className="text-[11px] uppercase tracking-wider text-[#5C626C] font-semibold flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    Horaire
+                  </label>
+                  <input
+                    type="text"
+                    value={step.time}
+                    onChange={(e) => updateScheduleStep(idx, "time", e.target.value)}
+                    placeholder="14:30"
+                    className="deboss-input w-full p-2.5 rounded-xl text-xs font-serif text-lg text-[#121316]"
+                  />
+                </div>
+
+                {/* Titre */}
+                <div className="sm:col-span-5 space-y-1">
+                  <label className="text-[11px] uppercase tracking-wider text-[#5C626C] font-semibold">
+                    Titre de l&apos;Étape
+                  </label>
+                  <input
+                    type="text"
+                    value={step.title}
+                    onChange={(e) => updateScheduleStep(idx, "title", e.target.value)}
+                    placeholder="Ex: La Cérémonie Laïque"
+                    className="deboss-input w-full p-2.5 rounded-xl text-xs font-sans font-medium text-[#121316]"
+                  />
+                </div>
+
+                {/* Lieu */}
+                <div className="sm:col-span-4 space-y-1">
+                  <label className="text-[11px] uppercase tracking-wider text-[#5C626C] font-semibold flex items-center gap-1">
+                    <MapPin className="w-3 h-3" />
+                    Lieu précis
+                  </label>
+                  <input
+                    type="text"
+                    value={step.location}
+                    onChange={(e) => updateScheduleStep(idx, "location", e.target.value)}
+                    placeholder="Ex: L'Oliveraie"
+                    className="deboss-input w-full p-2.5 rounded-xl text-xs font-sans text-[#121316]"
+                  />
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="space-y-1">
+                <label className="text-[11px] uppercase tracking-wider text-[#5C626C] font-semibold">
+                  Précisions & Déroulé
+                </label>
+                <input
+                  type="text"
+                  value={step.desc}
+                  onChange={(e) => updateScheduleStep(idx, "desc", e.target.value)}
+                  placeholder="Échange des vœux, rafraîchissements..."
+                  className="deboss-input w-full p-2.5 rounded-xl text-xs font-sans text-[#121316]"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Champ JSON sérialisé */}
+        <input type="hidden" name="programmeSchedule" value={serializedSchedule} />
+      </div>
+
+      {/* ========================================================
+          2. ÉDITION DES TEXTES DES CHAPITRES
+         ======================================================== */}
       <div className={`space-y-6 ${activeSubTab === "texts" ? "block" : "hidden"}`}>
         {/* Chapitre 01 : Invitation */}
         <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
@@ -228,21 +450,21 @@ export function WeddingConfigForm({ initialConfig }: ConfigFormProps) {
           </div>
         </div>
 
-        {/* Chapitre 03 : Programme */}
+        {/* Chapitre 03 : Programme (Titres) */}
         <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
           <div className="flex items-center gap-2 pb-2 border-b border-black/[0.06]">
             <span className="text-xs uppercase tracking-wider text-[#949BA5] font-semibold">
               Chapitre 03
             </span>
             <h4 className="font-serif text-lg text-[#121316]">
-              Le Programme
+              Titre du Chapitre Programme
             </h4>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <label className="text-xs uppercase tracking-wider text-[#5C626C] font-semibold">
-                Titre du programme
+                Titre
               </label>
               <input
                 type="text"
@@ -318,7 +540,9 @@ export function WeddingConfigForm({ initialConfig }: ConfigFormProps) {
         </div>
       </div>
 
-      {/* 2. ÉDITION INFORMATIONS GÉNÉRALES & MARIÉS */}
+      {/* ========================================================
+          3. ÉDITION INFORMATIONS GÉNÉRALES & MARIÉS
+         ======================================================== */}
       <div className={`space-y-6 ${activeSubTab === "general" ? "block" : "hidden"}`}>
         <div className="p-6 rounded-2xl emboss-card border border-white space-y-4">
           <h4 className="font-serif text-lg text-[#121316] pb-2 border-b border-black/[0.06]">
@@ -407,7 +631,9 @@ export function WeddingConfigForm({ initialConfig }: ConfigFormProps) {
         </div>
       </div>
 
-      {/* 3. ÉDITION DRESS CODE */}
+      {/* ========================================================
+          4. ÉDITION DRESS CODE
+         ======================================================== */}
       <div className={`space-y-6 ${activeSubTab === "dresscode" ? "block" : "hidden"}`}>
         <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
           <div>

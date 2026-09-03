@@ -29,6 +29,7 @@ export default async function Home() {
               countdownText: config.countdownText,
               programmeTitle: config.programmeTitle,
               programmeText: config.programmeText,
+              programmeSchedule: config.programmeSchedule,
               rsvpTitle: config.rsvpTitle,
               rsvpText: config.rsvpText,
               rsvpDeadline: config.rsvpDeadline,
