@@ -361,54 +361,6 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
         </div>
       </header>
 
-      {/* DOCK FLOTTANT MOBILE (NAVIGATION POÉTIQUE EN BAS D'ÉCRAN) */}
-      <div className="lg:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-md">
-        <div className="convex-btn rounded-2xl p-1.5 shadow-2xl border border-white/90 backdrop-blur-xl flex items-center justify-between gap-1">
-          {/* Bouton Précédent */}
-          <button
-            onClick={() => {
-              const prev = Math.max(0, activeChapter - 1);
-              scrollToChapter(chapters[prev].id, prev);
-            }}
-            disabled={activeChapter === 0}
-            className="p-2.5 rounded-xl text-[#5C626C] hover:text-[#121316] disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer shrink-0"
-            aria-label="Chapitre précédent"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-
-          {/* Numéros de chapitres avec transition active */}
-          <div className="flex items-center gap-1 flex-1">
-            {chapters.map((ch, idx) => (
-              <button
-                key={ch.id}
-                onClick={() => scrollToChapter(ch.id, idx)}
-                className={`flex-1 py-2 rounded-xl text-[11px] font-sans font-semibold uppercase tracking-wider transition-all duration-300 flex flex-col items-center justify-center cursor-pointer ${
-                  activeChapter === idx
-                    ? "convex-dark-btn text-white shadow-md scale-105"
-                    : "text-[#5C626C] hover:text-[#121316]"
-                }`}
-              >
-                <span>0{idx + 1}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Bouton Suivant */}
-          <button
-            onClick={() => {
-              const next = Math.min(chapters.length - 1, activeChapter + 1);
-              scrollToChapter(chapters[next].id, next);
-            }}
-            disabled={activeChapter === chapters.length - 1}
-            className="p-2.5 rounded-xl text-[#5C626C] hover:text-[#121316] disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer shrink-0"
-            aria-label="Chapitre suivant"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
       {/* DISPOSITION HYBRIDE : Plein écran Scroll Snap immersif sur mobile, Split-Screen interactif sur Desktop */}
       <div className="pt-14 lg:pt-0 lg:flex min-h-screen mobile-snap-container h-[100dvh] lg:h-auto overflow-x-hidden">
         {/* ========================================================
@@ -570,12 +522,16 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                     </p>
                   </div>
 
+                </div>
+
+                {/* Bouton de passage au chapitre suivant sur mobile */}
+                <div className="pt-2 lg:hidden">
                   <button
-                    onClick={() => scrollToChapter("rsvp", 4)}
-                    className="w-full sm:w-auto px-6 py-3.5 rounded-xl convex-dark-btn text-white text-xs uppercase tracking-[0.2em] font-semibold cursor-pointer flex items-center justify-center gap-2"
+                    onClick={() => scrollToChapter("countdown", 1)}
+                    className="w-full py-3.5 rounded-2xl convex-btn text-[#121316] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    Confirmer
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <span>Découvrir le Décompte</span>
+                    <ArrowRight className="w-4 h-4 text-[#5C626C]" />
                   </button>
                 </div>
               </div>
@@ -662,6 +618,24 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                       </span>
                     </div>
                   ))}
+                </div>
+
+                {/* Navigation mobile en bas de section */}
+                <div className="pt-4 lg:hidden flex items-center justify-between gap-3">
+                  <button
+                    onClick={() => scrollToChapter("invitation", 0)}
+                    className="flex-1 py-3.5 rounded-2xl convex-btn text-[#5C626C] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>Précédent</span>
+                  </button>
+                  <button
+                    onClick={() => scrollToChapter("programme", 2)}
+                    className="flex-1 py-3.5 rounded-2xl convex-dark-btn text-white text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <span>Programme</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -801,6 +775,24 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                   colors={config?.dressCodeColors}
                   advice={config?.dressCodeAdvice}
                 />
+
+                {/* Navigation mobile en bas de section */}
+                <div className="pt-4 lg:hidden flex items-center justify-between gap-3">
+                  <button
+                    onClick={() => scrollToChapter("countdown", 1)}
+                    className="flex-1 py-3.5 rounded-2xl convex-btn text-[#5C626C] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>Décompte</span>
+                  </button>
+                  <button
+                    onClick={() => scrollToChapter("cadeaux", 3)}
+                    className="flex-1 py-3.5 rounded-2xl convex-dark-btn text-white text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <span>Cadeaux</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
           </section>
@@ -914,6 +906,24 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                       </span>
                     </div>
                   )}
+                </div>
+
+                {/* Navigation mobile en bas de section */}
+                <div className="pt-4 lg:hidden flex items-center justify-between gap-3">
+                  <button
+                    onClick={() => scrollToChapter("programme", 2)}
+                    className="flex-1 py-3.5 rounded-2xl convex-btn text-[#5C626C] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>Programme</span>
+                  </button>
+                  <button
+                    onClick={() => scrollToChapter("rsvp", 4)}
+                    className="flex-1 py-3.5 rounded-2xl convex-dark-btn text-white text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <span>RSVP</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -1200,6 +1210,16 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                 {/* Footer discret */}
                 <div className="pt-8 text-center text-xs text-[#949BA5] font-sans border-t border-black/[0.05]">
                   <p>Anthony & Ophélie • 19.06.2027</p>
+                </div>
+
+                {/* Bouton retour chapitres sur mobile */}
+                <div className="pt-2 lg:hidden">
+                  <button
+                    onClick={() => scrollToChapter("invitation", 0)}
+                    className="w-full py-3.5 rounded-2xl convex-btn text-[#5C626C] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <span>Revenir au début</span>
+                  </button>
                 </div>
               </div>
             </div>
