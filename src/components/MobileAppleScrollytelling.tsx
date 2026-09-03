@@ -55,26 +55,38 @@ function ChapterSection({
   children: React.ReactNode;
 }) {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const isLast = index === total - 1;
 
-  // useScroll sur la section haute (220vh)
+  // useScroll sur la section haute (320vh pour donner une vraie amplitude de lecture sous le doigt)
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end end"],
   });
 
-  // 1. Légende photo pure (visible au début 0% -> 25%, puis s'estompe quand le texte monte)
-  const captionOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
-  const captionY = useTransform(scrollYProgress, [0, 0.25], [0, -20]);
+  // 1. Légende photo pure (visible au début 0% -> 18%, puis s'efface en douceur)
+  const captionOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+  const captionY = useTransform(scrollYProgress, [0, 0.15], [0, -20]);
 
-  // 2. Texte de contenu (monte et apparaît de 20% à 45%, reste lisible, s'estompe vers 85% pour laisser place au chapitre suivant)
-  const contentOpacity = useTransform(scrollYProgress, [0.15, 0.35, 0.75, 0.95], [0, 1, 1, 0]);
-  const contentY = useTransform(scrollYProgress, [0.15, 0.35, 0.75, 0.95], [80, 0, 0, -60]);
+  // 2. Texte de contenu :
+  // - Monte et devient 100% net de 12% à 25%
+  // - Reste 100% FIXE, STABLE et LISIBLE de 25% à 88% (immense plage de confort pour lire tout le texte)
+  // - S'estompe uniquement entre 88% et 98% pour accueillir la section suivante (pour la dernière section RSVP, il reste à 100% sans s'effacer !)
+  const contentOpacity = useTransform(
+    scrollYProgress,
+    isLast ? [0.12, 0.25, 1, 1] : [0.12, 0.25, 0.88, 0.98],
+    isLast ? [0, 1, 1, 1] : [0, 1, 1, 0]
+  );
+  const contentY = useTransform(
+    scrollYProgress,
+    isLast ? [0.12, 0.25, 1, 1] : [0.12, 0.25, 0.88, 0.98],
+    isLast ? [60, 0, 0, 0] : [60, 0, 0, -40]
+  );
 
   return (
     <div
       ref={sectionRef}
       className="relative w-full"
-      style={{ height: "240vh" }} // 240vh de scroll vertical confortable sous le pouce
+      style={{ height: isLast ? "240vh" : "320vh" }} // 320vh donne un grand confort sous le doigt
     >
       {/* Cadre fixé 100dvh pendant que l'utilisateur scrolle */}
       <div className="sticky top-0 h-[100dvh] w-full overflow-hidden">
@@ -89,13 +101,13 @@ function ChapterSection({
             className="object-cover object-center"
           />
           {/* Dégradé cinématique sombre sans bloc blanc */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/35" />
         </div>
 
         {/* 1. ÉTAT INITIAL : Photo Pleine avec Légende + Invitation au Scroll */}
         <motion.div
           style={{ opacity: captionOpacity, y: captionY }}
-          className="absolute inset-0 flex flex-col justify-end p-6 pb-12 text-white pointer-events-none"
+          className="absolute inset-0 flex flex-col justify-end p-6 pb-14 text-white pointer-events-none"
         >
           <span className="text-[10px] font-sans font-semibold tracking-[0.3em] uppercase text-white/75 block mb-1">
             Chapitre {chapter.number} • Lookbook
@@ -112,7 +124,7 @@ function ChapterSection({
         {/* 2. ÉTAT AU SCROLL : Contenu qui monte par-dessus la photo (sans halo blanc) */}
         <motion.div
           style={{ opacity: contentOpacity, y: contentY }}
-          className="absolute inset-0 flex flex-col justify-center p-5 sm:p-6 overflow-y-auto no-scrollbar pointer-events-auto"
+          className="absolute inset-0 flex flex-col justify-center p-4 sm:p-6 overflow-y-auto no-scrollbar pointer-events-auto"
         >
           {children}
         </motion.div>
