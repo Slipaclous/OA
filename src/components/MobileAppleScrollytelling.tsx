@@ -147,18 +147,14 @@ export function MobileAppleScrollytelling({
           <div className="space-y-6 text-white max-w-md mx-auto w-full">
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <span className="text-xs uppercase tracking-[0.3em] text-white/75 font-semibold font-sans">
-                  Chapitre 01
-                </span>
-                <div className="h-[1px] w-8 bg-white/30" />
-                <span className="text-xs uppercase tracking-[0.2em] text-white/60 font-sans">
-                  {config?.invitationSubtitle || "Invitation"}
+                <span className="text-xs uppercase tracking-[0.25em] text-white/70 font-sans font-semibold">
+                  {config?.invitationSubtitle || "Invitation Officielle"}
                 </span>
               </div>
 
               <h1 className="font-serif text-5xl tracking-tight leading-[0.98] font-light">
-                {config?.groomName || "Anthony"} <br />
-                <span className="font-serif italic text-white/75">&</span> {config?.brideName || "Ophélie"}
+                {config?.brideName || "Ophélie"} <br />
+                <span className="font-serif italic text-white/75">&</span> {config?.groomName || "Anthony"}
               </h1>
 
               <p className="font-sans text-sm sm:text-base text-white/85 leading-relaxed pt-1">

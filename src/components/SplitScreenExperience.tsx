@@ -274,13 +274,13 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
 
   return (
     <div className="relative min-h-screen bg-[#F8F9FA] text-[#121316]">
-      {/* HEADER ÉPURÉ FIXE */}
-      <header className="fixed top-0 left-0 right-0 z-40 px-5 sm:px-8 md:px-12 py-3.5 bg-[#F8F9FA]/90 backdrop-blur-md border-b border-black/[0.04] flex items-center justify-between">
+      {/* HEADER ÉPURÉ FIXE : Translucide sombre sur mobile pour se fondre dans la photo, clair sur desktop */}
+      <header className="fixed top-0 left-0 right-0 z-40 px-5 sm:px-8 md:px-12 py-3.5 bg-black/40 lg:bg-[#F8F9FA]/90 backdrop-blur-md border-b border-white/10 lg:border-black/[0.04] flex items-center justify-between text-white lg:text-[#121316]">
         <div className="flex items-center gap-3">
-          <span className="font-serif text-lg sm:text-xl font-medium tracking-tight text-[#121316]">
-            {config?.groomName || "Anthony"} <span className="font-serif italic text-[#5C626C]">&</span> {config?.brideName || "Ophélie"}
+          <span className="font-serif text-lg sm:text-xl font-medium tracking-tight text-white lg:text-[#121316]">
+            {config?.brideName || "Ophélie"} <span className="font-serif italic text-white/70 lg:text-[#5C626C]">&</span> {config?.groomName || "Anthony"}
           </span>
-          <span className="hidden sm:inline-block text-[10px] uppercase tracking-[0.25em] text-[#949BA5] font-sans">
+          <span className="hidden sm:inline-block text-[10px] uppercase tracking-[0.25em] text-white/60 lg:text-[#949BA5] font-sans">
             19.06.2027
           </span>
         </div>
@@ -318,18 +318,18 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
           </Link>
         </nav>
 
-        {/* Action rapide mobile dans le header */}
+        {/* Action rapide mobile dans le header (translucide sombre) */}
         <div className="flex lg:hidden items-center gap-2">
           <button
             onClick={() => openFullscreen(0)}
-            className="px-3 py-1.5 rounded-xl convex-btn text-[11px] font-sans font-semibold text-[#121316] flex items-center gap-1.5 cursor-pointer"
+            className="px-3 py-1.5 rounded-xl bg-white/15 border border-white/20 text-[11px] font-sans font-semibold text-white flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all"
           >
             <Maximize2 className="w-3 h-3" />
             Galerie
           </button>
           <Link
             href="/admin"
-            className="p-2 rounded-xl convex-btn text-[#5C626C]"
+            className="p-2 rounded-xl bg-white/15 border border-white/20 text-white/80"
           >
             <Lock className="w-3.5 h-3.5" />
           </Link>
@@ -479,8 +479,8 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
                   </div>
 
                   <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl tracking-tight leading-[0.98] font-light">
-                    {config?.groomName || "Anthony"} <br />
-                    <span className="font-serif italic text-white/75 lg:text-[#5C626C]">&</span> {config?.brideName || "Ophélie"}
+                    {config?.brideName || "Ophélie"} <br />
+                    <span className="font-serif italic text-white/75 lg:text-[#5C626C]">&</span> {config?.groomName || "Anthony"}
                   </h1>
 
                   <p className="font-sans text-sm sm:text-base md:text-lg text-white/85 lg:text-[#5C626C] leading-relaxed pt-1 max-w-lg">
