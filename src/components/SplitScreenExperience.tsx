@@ -227,24 +227,24 @@ export function SplitScreenExperience({ config, mediaList = [] }: SplitScreenPro
   // Détection du scroll synchronisé UNIQUEMENT sur Desktop (pour animer le Lookbook à gauche)
   useEffect(() => {
     const handleScroll = () => {
-      // Sur mobile, chaque chapitre est affiché individuellement en fondu : pas d'interférence avec le scroll
       if (window.innerWidth < 1024) return;
 
-      const scrollPosition = window.scrollY + window.innerHeight / 3;
-      const chapterElements = chapters.map((c) =>
-        document.getElementById(c.id)
-      );
-
-      for (let i = chapterElements.length - 1; i >= 0; i--) {
-        const el = chapterElements[i];
-        if (el && el.offsetTop <= scrollPosition) {
-          setActiveChapter(i);
-          break;
+      const triggerLine = window.innerHeight * 0.45;
+      for (let i = chapters.length - 1; i >= 0; i--) {
+        const el = document.getElementById(chapters[i].id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= triggerLine) {
+            setActiveChapter(i);
+            return;
+          }
         }
       }
+      setActiveChapter(0);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
